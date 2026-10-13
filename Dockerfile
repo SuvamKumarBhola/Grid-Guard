@@ -13,14 +13,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN groupadd -g 10001 gridguard && \
     useradd -u 10001 -g gridguard -s /bin/bash -m gridguard
 
-COPY pyproject.toml .
+COPY pyproject.toml README.md ./
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -e .
 
 COPY app/ ./app
 COPY model_artifacts/ ./model_artifacts
+COPY models-trained/ ./models-trained
 COPY frontend/ ./frontend
-COPY pyproject.toml .env.example ./
+COPY .env.example ./
 
 RUN chown -R gridguard:gridguard /app
 
