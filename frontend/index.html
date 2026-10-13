@@ -1812,6 +1812,138 @@
     </main>
   </div>
 
+  <!-- Field Dispatch Crew Modal Dialog -->
+  <div id="dispatch-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-inverse-surface/75 backdrop-blur-sm">
+    <div class="w-full max-w-2xl bg-surface-container-lowest border-2 border-primary/50 shadow-2xl rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+      <!-- Header -->
+      <div class="px-space-lg py-space-md bg-inverse-surface text-inverse-on-surface flex items-center justify-between border-b border-surface-variant">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-[1.5rem]">engineering</span>
+          <div>
+            <h2 class="font-headline-sm text-body-md font-bold uppercase tracking-wider text-on-primary">
+              Field Dispatch Authorization Desk
+            </h2>
+            <p class="font-label-meta text-[0.625rem] text-inverse-on-surface/80 uppercase">
+              SCADA DUAL-OPERATOR PROTOCOL • SOP-TX-10 COMPLIANT
+            </p>
+          </div>
+        </div>
+        <button onclick="closeDispatchModal()" class="p-1.5 text-inverse-on-surface/70 hover:text-on-primary hover:bg-surface-variant/40 rounded transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[1.25rem]">close</span>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="dispatch-form" onsubmit="handleDispatchFormSubmit(event)" class="p-space-lg space-y-space-md overflow-y-auto">
+        <!-- Target Asset Pill -->
+        <div class="p-space-sm bg-surface-container-low rounded-xl border border-surface-variant flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[1.25rem]">electric_meter</span>
+            <div>
+              <span class="font-label-meta text-[0.625rem] text-tertiary uppercase block">TARGET ASSET</span>
+              <span id="dispatch-modal-asset-id" class="font-headline-sm text-sm font-bold text-on-surface">TX-04</span>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 bg-primary text-on-primary font-label-code text-xs font-bold rounded">FEEDER F-03</span>
+        </div>
+
+        <!-- Priority Tier -->
+        <div>
+          <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+            Priority Tier
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-2 p-2 bg-surface border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container">
+              <input type="radio" name="dispatch-priority" value="P1-EMERGENCY" checked class="text-error" />
+              <span class="font-label-code text-xs font-bold text-error uppercase">P1 Emergency</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-surface border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container">
+              <input type="radio" name="dispatch-priority" value="P2-URGENT" class="text-tertiary" />
+              <span class="font-label-code text-xs font-bold text-tertiary uppercase">P2 Urgent</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-surface border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container">
+              <input type="radio" name="dispatch-priority" value="P3-SCHEDULED" class="text-secondary" />
+              <span class="font-label-code text-xs font-bold text-secondary uppercase">P3 Precautionary</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Crew Selection -->
+        <div>
+          <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+            Select Field Crew Unit
+          </label>
+          <select id="dispatch-crew-select" class="w-full p-2.5 bg-surface border border-outline-variant rounded-xl text-body-sm text-on-surface focus:border-primary focus:outline-none">
+            <option value="CREW-03-THERMAL">North Substation Crew 3 — Thermal & Radiator Cooling (ETA: 24 min, CH-9)</option>
+            <option value="CREW-01-RELAY">Metro Emergency Relay Unit 1 — Protection Systems (ETA: 18 min, CH-4)</option>
+            <option value="CREW-02-HV">West Substation Maintenance Crew 2 — High-Voltage Bushings (ETA: 35 min, CH-12)</option>
+            <option value="CREW-04-DGA">Mobile Diagnostic Unit 4 — DGA Oil Sampling & Gas Test (ETA: 45 min, CH-7)</option>
+            <option value="CREW-05-SCADA">RTU Fast Response — Antenna & Telemetry Protocol (ETA: 30 min, CH-2)</option>
+          </select>
+        </div>
+
+        <!-- Failure Mode -->
+        <div>
+          <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+            Observed Failure Mode / Inspection Scope
+          </label>
+          <input
+            id="dispatch-failure-mode"
+            type="text"
+            required
+            value="Auxiliary Cooling Fan Bank #2 Complete Trip (Thermal 94.2°C)"
+            class="w-full p-2.5 bg-surface border border-outline-variant rounded-xl text-body-sm text-on-surface focus:border-primary focus:outline-none"
+          />
+        </div>
+
+        <!-- SOP & Notes -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+              SOP Reference
+            </label>
+            <select id="dispatch-sop" class="w-full p-2 bg-surface border border-outline-variant rounded-xl text-body-sm text-on-surface">
+              <option value="SOP-TX-10">SOP-TX-10 (Forced Cooling & Hotspot)</option>
+              <option value="SOP-TX-04">SOP-TX-04 (Feeder Tie Synchronization)</option>
+              <option value="SOP-DGA-01">SOP-DGA-01 (Emergency DGA Oil Sampling)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+              Safety PPE Mandate
+            </label>
+            <div class="p-2 bg-surface-container rounded-xl text-[0.6875rem] font-label-code text-primary font-bold">
+              Class-4 Arc Flash PPE • Dual-Key Interlock
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-label-code text-xs text-on-surface font-bold uppercase tracking-wider block mb-1">
+            Operator Access Guidance & Notes
+          </label>
+          <textarea
+            id="dispatch-notes"
+            rows="2"
+            class="w-full p-2.5 bg-surface border border-outline-variant rounded-xl text-body-sm text-on-surface focus:border-primary focus:outline-none"
+            placeholder="e.g. North Substation Gate Access Code: 4921#. Verify breaker CB-104 lockout."
+          >Emergency on-site thermal radiator fan replacement authorized by SCADA lead dispatcher.</textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-space-sm border-t border-surface-variant flex items-center justify-between gap-space-sm">
+          <button type="button" onclick="closeDispatchModal()" class="py-2 px-space-md bg-surface hover:bg-surface-container border border-outline-variant rounded-xl font-label-code text-xs uppercase text-on-surface cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="py-2.5 px-space-lg bg-primary hover:bg-primary/90 text-on-primary rounded-xl font-headline-sm text-body-sm uppercase font-bold flex items-center gap-1.5 shadow-md cursor-pointer">
+            <span class="material-symbols-outlined text-[1.125rem]">send</span>
+            <span>Authorize & Dispatch Crew</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Real-Time Toast Notification Stack Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 

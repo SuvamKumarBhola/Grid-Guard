@@ -10,7 +10,8 @@ export default function AlertsPage() {
     navigateToAsset,
     navigateToSimulation,
     addToast,
-    searchQuery
+    searchQuery,
+    openDispatchModal,
   } = useGrid();
 
   const [assetTypeFilter, setAssetTypeFilter] = useState('All');
@@ -592,6 +593,24 @@ export default function AlertsPage() {
 
           {/* Action Buttons Panel */}
           <div className="p-space-md bg-surface-container flex flex-col gap-2 mt-auto border-t border-surface-variant">
+            {/* Direct Dispatch Crew Trigger */}
+            <button
+              onClick={() =>
+                openDispatchModal(selectedAlert.assetId, {
+                  failureMode: selectedAlert.narrative || selectedAlert.primaryTrigger,
+                  recommendedAction: selectedAlert.recommendedAction,
+                  priority: selectedAlert.severity === 'CRIT' ? 'P1-EMERGENCY' : 'P2-URGENT',
+                })
+              }
+              className="w-full py-2 px-3 bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-body-md uppercase font-bold flex items-center justify-between transition-colors shadow-sm cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[1.25rem]">engineering</span>
+                <span>Dispatch Field Crew to {selectedAlert.assetId}</span>
+              </div>
+              <span className="material-symbols-outlined text-[1.125rem]">arrow_forward</span>
+            </button>
+
             <button
               onClick={() => navigateToSimulation(selectedAlert.assetId, 'TX-Pine-02', 8.5)}
               className="w-full py-2 px-3 bg-inverse-surface hover:bg-on-surface text-inverse-on-surface font-headline-sm text-body-md uppercase font-semibold flex items-center justify-between transition-colors cursor-pointer"

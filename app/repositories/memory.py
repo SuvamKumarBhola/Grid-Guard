@@ -10,6 +10,8 @@ from app.domain.models import (
     AuditEvent,
     RiskPrediction,
     SimulationResult,
+    DispatchWorkOrder,
+    FieldCrew,
 )
 from app.repositories.base import (
     BaseAssetRepository,
@@ -19,6 +21,7 @@ from app.repositories.base import (
     BaseAuditRepository,
     BasePredictionRepository,
     BaseSimulationRepository,
+    BaseWorkOrderRepository,
 )
 
 
@@ -189,3 +192,146 @@ class InMemorySimulationRepository(BaseSimulationRepository):
                 key=lambda s: s.request_id,
                 reverse=True,
             )[:limit]
+
+
+class InMemoryWorkOrderRepository(BaseWorkOrderRepository):
+    def __init__(self):
+        self._work_orders: Dict[str, DispatchWorkOrder] = {}
+        self._crews: Dict[str, FieldCrew] = {}
+        self._lock = threading.RLock()
+        self._seed_initial_data()
+
+    def _seed_initial_data(self) -> None:
+        initial_crews = [
+            FieldCrew(
+                crew_id="CREW-03-THERMAL",
+                name="North Substation Crew 3",
+                specialty="Thermal & Radiator Forced Cooling",
+                lead_technician="Dave Miller (Master Tech)",
+                status="dispatched",
+                eta_minutes=24,
+                radio_channel="CH-9 DIRECT",
+                home_substation="Feeder F-03 Yard",
+                contact_number="+1-800-GRID-CR3",
+            ),
+            FieldCrew(
+                crew_id="CREW-01-RELAY",
+                name="Metro Emergency Relay Unit 1",
+                specialty="Relay Coordination & Protection Coordination",
+                lead_technician="Kenji Tanaka (Relay Eng)",
+                status="available",
+                eta_minutes=18,
+                radio_channel="CH-4 DISPATCH",
+                home_substation="Central Metro Depot",
+                contact_number="+1-800-GRID-CR1",
+            ),
+            FieldCrew(
+                crew_id="CREW-02-HV",
+                name="West Substation Maintenance Crew 2",
+                specialty="High-Voltage Transformer & Bushings",
+                lead_technician="Roberto Alvarez (Senior Electrician)",
+                status="dispatched",
+                eta_minutes=35,
+                radio_channel="CH-12 OPS",
+                home_substation="West Grid Terminal",
+                contact_number="+1-800-GRID-CR2",
+            ),
+            FieldCrew(
+                crew_id="CREW-04-DGA",
+                name="Mobile Diagnostic & DGA Sampling Unit 4",
+                specialty="Dissolved Gas & Oil Quality Analysis",
+                lead_technician="Dr. Maya Zhao (Insulation Specialist)",
+                status="available",
+                eta_minutes=45,
+                radio_channel="CH-7 DIAG",
+                home_substation="Regional Diagnostic Lab",
+                contact_number="+1-800-GRID-CR4",
+            ),
+            FieldCrew(
+                crew_id="CREW-05-SCADA",
+                name="RTU & Telecommunications Fast Response",
+                specialty="Antenna, RTU & DNP3 Telemetry Protocol",
+                lead_technician="Sarah Jenkins (Telemetry Tech)",
+                status="available",
+                eta_minutes=30,
+                radio_channel="CH-2 SCADA",
+                home_substation="Substation Comms Tower",
+                contact_number="+1-800-GRID-CR5",
+            ),
+        ]
+        for c in initial_crews:
+            self._crews[c.crew_id] = c
+
+        initial_orders = [
+            DispatchWorkOrder(
+                work_order_id="WO-2024-9941",
+                asset_id="TX-04",
+                crew_id="CREW-03-THERMAL",
+                crew_name="North Substation Crew 3",
+                lead_technician="Dave Miller (Master Tech)",
+                priority="P1-EMERGENCY",
+                status="en_route",
+                failure_mode="Auxiliary Cooling Fan Bank #2 Complete Trip (Thermal 94.2°C)",
+                sop_reference="SOP-TX-10 (Transformer Hotspot & Forced Cooling Mitigation)",
+                notes="Relay and substation cooling technicians dispatched to site. Emergency thermal fan bank #2 replacement and RTU telemetry validation in progress.",
+                eta_minutes=24,
+                radio_channel="CH-9 DIRECT",
+                dispatched_by="S. Vance, P.E. (Lead Dispatcher)",
+            ),
+            DispatchWorkOrder(
+                work_order_id="WO-2024-9952",
+                asset_id="TX-Pine-02",
+                crew_id="CREW-02-HV",
+                crew_name="West Substation Maintenance Crew 2",
+                lead_technician="Roberto Alvarez (Senior Electrician)",
+                priority="P2-URGENT",
+                status="en_route",
+                failure_mode="Standby tie feeder preparation & radiator inspect",
+                sop_reference="SOP-TX-04 (Feeder Tie Synchronization)",
+                notes="Inspect tie feeder bus alignment and radiator valve positions prior to load transfer.",
+                eta_minutes=48,
+                radio_channel="CH-12 OPS",
+                dispatched_by="K. Tanaka (Relay Eng)",
+            ),
+        ]
+        for wo in initial_orders:
+            self._work_orders[wo.work_order_id] = wo
+
+    def save(self, work_order: DispatchWorkOrder) -> None:
+        with self._lock:
+            self._work_orders[work_order.work_order_id] = work_order
+            if work_order.crew_id in self._crews:
+                self._crews[work_order.crew_id].status = "dispatched"
+
+    def get(self, work_order_id: str) -> Optional[DispatchWorkOrder]:
+        with self._lock:
+            return self._work_orders.get(work_order_id)
+
+    def list(
+        self,
+        asset_id: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[DispatchWorkOrder]:
+        with self._lock:
+            results = list(self._work_orders.values())
+            if asset_id:
+                results = [wo for wo in results if wo.asset_id == asset_id or (asset_id in ["TX-04", "TX-Oak-04"] and wo.asset_id in ["TX-04", "TX-Oak-04"])]
+            if status:
+                results = [wo for wo in results if wo.status == status]
+            return sorted(results, key=lambda w: w.created_at, reverse=True)[:limit]
+
+    def update(self, work_order: DispatchWorkOrder) -> None:
+        with self._lock:
+            self._work_orders[work_order.work_order_id] = work_order
+            if work_order.status in ["resolved", "cancelled"]:
+                if work_order.crew_id in self._crews:
+                    self._crews[work_order.crew_id].status = "available"
+
+    def list_crews(self) -> List[FieldCrew]:
+        with self._lock:
+            return list(self._crews.values())
+
+    def get_crew(self, crew_id: str) -> Optional[FieldCrew]:
+        with self._lock:
+            return self._crews.get(crew_id)

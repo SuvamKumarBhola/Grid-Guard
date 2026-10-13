@@ -18,6 +18,7 @@ from app.repositories.memory import (
     InMemoryAuditRepository,
     InMemoryPredictionRepository,
     InMemorySimulationRepository,
+    InMemoryWorkOrderRepository,
 )
 from app.services.telemetry_service import TelemetryService
 from app.services.feature_service import FeaturePreparationService
@@ -48,6 +49,7 @@ class AppState:
         self.audit_repo = InMemoryAuditRepository()
         self.prediction_repo = InMemoryPredictionRepository()
         self.simulation_repo = InMemorySimulationRepository()
+        self.work_order_repo = InMemoryWorkOrderRepository()
 
         # Services & Model Integration
         self.telemetry_service = TelemetryService(

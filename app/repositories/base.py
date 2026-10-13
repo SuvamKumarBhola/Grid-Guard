@@ -10,6 +10,8 @@ from app.domain.models import (
     AuditEvent,
     RiskPrediction,
     SimulationResult,
+    DispatchWorkOrder,
+    FieldCrew,
 )
 
 
@@ -113,4 +115,35 @@ class BaseSimulationRepository(ABC):
 
     @abstractmethod
     def list(self, limit: int = 50) -> List[SimulationResult]:
+        pass
+
+
+class BaseWorkOrderRepository(ABC):
+    @abstractmethod
+    def save(self, work_order: DispatchWorkOrder) -> None:
+        pass
+
+    @abstractmethod
+    def get(self, work_order_id: str) -> Optional[DispatchWorkOrder]:
+        pass
+
+    @abstractmethod
+    def list(
+        self,
+        asset_id: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[DispatchWorkOrder]:
+        pass
+
+    @abstractmethod
+    def update(self, work_order: DispatchWorkOrder) -> None:
+        pass
+
+    @abstractmethod
+    def list_crews(self) -> List[FieldCrew]:
+        pass
+
+    @abstractmethod
+    def get_crew(self, crew_id: str) -> Optional[FieldCrew]:
         pass

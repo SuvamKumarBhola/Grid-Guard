@@ -9,7 +9,10 @@ export default function AssetsPage() {
     assets,
     navigateToSimulation,
     addToast,
-    currentTime
+    currentTime,
+    openDispatchModal,
+    activeWorkOrder,
+    updateWorkOrderStatus,
   } = useGrid();
 
   // Search & Filter state
@@ -499,29 +502,121 @@ export default function AssetsPage() {
                   Work Orders &amp; Dispatch
                 </h3>
               </div>
-              <span className="px-2 py-0.5 bg-primary text-on-primary font-label-code text-label-code font-bold uppercase tracking-wider">
-                PRIORITY-1
+              <span
+                className={`px-2 py-0.5 font-label-code text-label-code font-bold uppercase tracking-wider ${
+                  activeWorkOrder?.priority === 'P1-EMERGENCY' || selectedAsset.riskClassification === 'CRITICAL'
+                    ? 'bg-error text-on-error'
+                    : 'bg-primary text-on-primary'
+                }`}
+              >
+                {activeWorkOrder?.priority || (selectedAsset.dispatchPriority || 'PRIORITY-1')}
               </span>
             </div>
 
-            {/* Ticket Summary */}
-            <div className="p-space-md bg-surface-container-low border border-surface-variant/40 space-y-space-xs">
-              <div className="flex items-center justify-between font-label-code text-label-code">
-                <span className="text-tertiary">FIELD TICKET:</span>
-                <span className="font-bold text-on-surface">
-                  {selectedAsset.dispatchTicket || '#WO-2024-9941'}
-                </span>
+            {/* Ticket Summary or Empty State */}
+            {activeWorkOrder || (selectedAsset.dispatchTicket && selectedAsset.dispatchTicket !== 'None') ? (
+              <div className="p-space-md bg-surface-container-low border border-surface-variant/40 space-y-space-xs">
+                <div className="flex items-center justify-between font-label-code text-label-code">
+                  <span className="text-tertiary">FIELD TICKET:</span>
+                  <span className="font-bold text-on-surface bg-surface-container px-2 py-0.5 border border-outline-variant">
+                    {activeWorkOrder?.workOrderId || selectedAsset.dispatchTicket}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between font-label-code text-label-code">
+                  <span className="text-tertiary">CREW ASSIGNED:</span>
+                  <span className="font-semibold text-secondary">
+                    {activeWorkOrder?.crewName || selectedAsset.fieldCrew}
+                  </span>
+                </div>
+                {activeWorkOrder?.leadTechnician && (
+                  <div className="flex items-center justify-between font-label-meta text-label-meta text-tertiary">
+                    <span>LEAD TECH:</span>
+                    <span className="font-semibold text-on-surface">{activeWorkOrder.leadTechnician}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between font-label-code text-label-code pt-1">
+                  <span className="text-tertiary">STATUS:</span>
+                  <span className="flex items-center gap-1.5 font-bold text-primary">
+                    <span className="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                    <span>{activeWorkOrder?.status || selectedAsset.dispatchStatus || 'EN ROUTE'}</span>
+                  </span>
+                </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed border-t border-surface-variant/40 pt-2">
+                  {activeWorkOrder?.notes ||
+                    'Relay and substation cooling technicians dispatched to site. Emergency thermal fan bank #2 replacement and RTU telemetry validation in progress (ETA: 24 mins).'}
+                </p>
+
+                {/* Inline Status Lifecycle Action Buttons */}
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-surface-variant/30 mt-2">
+                  {activeWorkOrder?.status === 'EN ROUTE' && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateWorkOrderStatus(
+                          activeWorkOrder.workOrderId,
+                          'ON SITE',
+                          'Crew verified arrival at substation gate. Beginning perimeter thermography.'
+                        )
+                      }
+                      className="py-1 px-2 bg-surface hover:bg-surface-container border border-primary text-primary font-label-code text-[0.6875rem] font-bold uppercase transition-colors cursor-pointer text-center"
+                    >
+                      ✓ Mark On-Site
+                    </button>
+                  )}
+                  {activeWorkOrder?.status === 'ON SITE' && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateWorkOrderStatus(
+                          activeWorkOrder.workOrderId,
+                          'RESOLVED',
+                          'Auxiliary fan motor starter replaced. RPM normalized to 1,200. Clear to close ticket.'
+                        )
+                      }
+                      className="py-1 px-2 bg-surface hover:bg-surface-container border border-secondary text-secondary font-label-code text-[0.6875rem] font-bold uppercase transition-colors cursor-pointer text-center"
+                    >
+                      ✓ Resolve Order
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openDispatchModal(selectedAsset.id, {
+                        failureMode: activeWorkOrder?.failureMode || selectedAsset.primaryFailureMode,
+                        priority: activeWorkOrder?.priority || 'P1-EMERGENCY',
+                      })
+                    }
+                    className="py-1 px-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant font-label-code text-[0.6875rem] text-on-surface uppercase transition-colors cursor-pointer text-center"
+                  >
+                    Modify / Dispatch Unit
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center justify-between font-label-code text-label-code">
-                <span className="text-tertiary">CREW ASSIGNED:</span>
-                <span className="font-semibold text-secondary">
-                  {selectedAsset.fieldCrew || 'North Substation Crew 3'}
+            ) : (
+              <div className="p-space-md bg-surface-container-low border border-dashed border-surface-variant text-center space-y-2">
+                <span className="material-symbols-outlined text-tertiary text-[2rem]">
+                  person_off
                 </span>
+                <div className="font-headline-sm text-body-sm font-bold text-on-surface uppercase">
+                  No Active Crew Dispatched
+                </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Unit is running under baseline SCADA monitoring. Authorize on-site crew if telemetry anomalies are identified.
+                </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    openDispatchModal(selectedAsset.id, {
+                      failureMode: selectedAsset.primaryFailureMode || 'Routine Inspection & Thermal Verification',
+                    })
+                  }
+                  className="mt-2 py-2 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-code text-label-code uppercase tracking-wider font-bold transition-colors w-full cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[1rem]">engineering</span>
+                  <span>Authorize Field Dispatch</span>
+                </button>
               </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
-                Relay and substation cooling technicians dispatched to site. Emergency thermal fan bank #2 replacement and RTU telemetry validation in progress (ETA: 24 mins).
-              </p>
-            </div>
+            )}
 
             {/* Tactical Mitigation Recommendation */}
             <div className="p-space-md bg-surface-container-low border border-surface-variant/40 space-y-space-xs">
@@ -543,9 +638,27 @@ export default function AssetsPage() {
 
           {/* Action Launcher Buttons */}
           <div className="flex flex-col gap-space-sm mt-space-md pt-space-sm border-t border-surface-variant/40">
+            {/* Primary Dispatch Launcher Button */}
+            <button
+              onClick={() =>
+                openDispatchModal(selectedAsset.id, {
+                  failureMode: selectedAsset.primaryFailureMode || 'Thermal Runaway & Cooling Fan Lockout',
+                  recommendedAction: `Inspect radiator fan bank and calibrate telemetry for ${selectedAsset.displayCode || selectedAsset.name}.`,
+                })
+              }
+              className="w-full py-2.5 px-space-md bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-headline-sm uppercase transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer font-bold"
+            >
+              <span className="material-symbols-outlined text-[1.25rem]">engineering</span>
+              <span>
+                {activeWorkOrder || (selectedAsset.dispatchTicket && selectedAsset.dispatchTicket !== 'None')
+                  ? 'Manage Field Dispatch Ticket'
+                  : 'Dispatch Field Crew'}
+              </span>
+            </button>
+
             <button
               onClick={() => navigateToSimulation(selectedAsset.id, 'TX-Pine-02', 8.5)}
-              className="w-full py-2.5 px-space-md bg-inverse-surface hover:bg-primary text-on-primary font-headline-sm text-headline-sm uppercase transition-colors flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+              className="w-full py-2 px-space-md bg-inverse-surface hover:bg-on-surface text-inverse-on-surface font-headline-sm text-headline-sm uppercase transition-colors flex items-center justify-center gap-2 shadow-sm cursor-pointer"
             >
               <span>Launch in Simulator</span>
               <span className="material-symbols-outlined text-[1.25rem]">arrow_forward</span>
@@ -559,7 +672,9 @@ export default function AssetsPage() {
             </button>
             <div className="flex items-center justify-between font-label-meta text-label-meta text-tertiary uppercase mt-1">
               <span>CONTACT: DISPATCH REGION 4</span>
-              <span className="text-on-surface font-bold">CH-9 DIRECT</span>
+              <span className="text-on-surface font-bold">
+                {activeWorkOrder?.radioChannel || 'CH-9 DIRECT'}
+              </span>
             </div>
           </div>
         </div>

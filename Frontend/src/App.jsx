@@ -8,6 +8,7 @@ import AssetsPage from './pages/AssetsPage';
 import AlertsPage from './pages/AlertsPage';
 import SimulationPage from './pages/SimulationPage';
 import StatusPage from './pages/StatusPage';
+import DispatchCrewModal from './components/dispatch/DispatchCrewModal';
 
 function AppContent() {
   const { activeTab } = useGrid();
@@ -30,6 +31,9 @@ function AppContent() {
           {activeTab === 'system-status' && <StatusPage />}
         </main>
       </div>
+
+      {/* Field Dispatch Crew Modal Dialog */}
+      <DispatchCrewModal />
 
       {/* Real-Time Action Toast Stack */}
       <ToastContainer />

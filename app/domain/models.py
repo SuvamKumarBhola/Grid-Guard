@@ -224,6 +224,8 @@ class AuditEvent(BaseModel):
         "alert_acknowledgement",
         "model_registration",
         "safety_fallback_triggered",
+        "work_order_dispatch",
+        "work_order_status_update",
     ]
     user_id: str
     user_role: Literal["operator", "planner", "reliability_manager", "administrator", "auditor", "system"]
@@ -234,6 +236,56 @@ class AuditEvent(BaseModel):
     route: Optional[str] = None
     payload_summary: Dict[str, Any]
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+# -------------------------------------------------------------------------
+# Field Crew & Work Order Dispatch Domains
+# -------------------------------------------------------------------------
+
+class FieldCrew(BaseModel):
+    crew_id: str
+    name: str
+    specialty: str
+    lead_technician: str
+    status: Literal["available", "dispatched", "on_site", "standby"] = "available"
+    eta_minutes: int = Field(default=24, ge=5, le=180)
+    radio_channel: str
+    home_substation: str
+    contact_number: Optional[str] = None
+
+
+class DispatchWorkOrderRequest(BaseModel):
+    asset_id: str
+    crew_id: str
+    priority: Literal["P1-EMERGENCY", "P2-URGENT", "P3-SCHEDULED"] = "P1-EMERGENCY"
+    failure_mode: str = Field(..., description="Observed anomaly or failure mode prompting dispatch")
+    sop_reference: str = Field(default="SOP-TX-10", description="Standard Operating Procedure reference")
+    notes: Optional[str] = Field(default="", description="Operator guidance or site access instructions")
+    eta_minutes: Optional[int] = Field(default=None, ge=5, le=180)
+    lead_technician: Optional[str] = None
+
+
+class DispatchWorkOrder(BaseModel):
+    work_order_id: str
+    asset_id: str
+    crew_id: str
+    crew_name: str
+    lead_technician: str
+    priority: Literal["P1-EMERGENCY", "P2-URGENT", "P3-SCHEDULED"]
+    status: Literal["dispatched", "en_route", "on_site", "resolved", "cancelled"] = "dispatched"
+    failure_mode: str
+    sop_reference: str
+    notes: str = ""
+    eta_minutes: int
+    radio_channel: str
+    dispatched_by: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class WorkOrderStatusUpdateRequest(BaseModel):
+    status: Literal["dispatched", "en_route", "on_site", "resolved", "cancelled"]
+    notes: Optional[str] = None
 
 
 # -------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_ASSETS, INITIAL_ALERTS } from '../data/mockGridData';
+import { INITIAL_CREWS, INITIAL_WORK_ORDERS } from '../data/mockCrews';
 
 const GridContext = createContext(null);
 
@@ -12,6 +13,16 @@ export function GridProvider({ children }) {
   const [isProbing, setIsProbing] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [currentTime, setCurrentTime] = useState(() => getFormattedTime());
+
+  // Dynamic assets & work orders state
+  const [assets, setAssets] = useState(INITIAL_ASSETS);
+  const [workOrders, setWorkOrders] = useState(INITIAL_WORK_ORDERS);
+  const [crews, setCrews] = useState(INITIAL_CREWS);
+
+  // Dispatch Crew Modal state
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
+  const [dispatchAssetId, setDispatchAssetId] = useState('TX-04');
+  const [dispatchPrefill, setDispatchPrefill] = useState({});
 
   // Real-time ticking UTC clock
   useEffect(() => {
@@ -84,16 +95,157 @@ export function GridProvider({ children }) {
   };
 
   const flagMaintenance = (assetId) => {
-    addToast(`Work order dispatch generated for field crew: [${assetId}] flagged for antenna & RTU inspection.`, 'success');
+    openDispatchModal(assetId, {
+      failureMode: 'Antenna & RTU Telemetry Degradation',
+      sopReference: 'SOP-TX-10',
+      priority: 'P2-URGENT',
+    });
   };
 
   const viewEventLog = (assetId) => {
     addToast(`Event log extracted for [${assetId}]: Auxiliary DC battery fluctuated between 10.4V and 12.1V at 14:28:10 UTC.`, 'info');
   };
 
-  // Selected asset & alert lookups
-  const selectedAsset = INITIAL_ASSETS.find((a) => a.id === selectedAssetId || a.name === selectedAssetId || a.alias === selectedAssetId || (selectedAssetId === 'TX-Oak-04' && (a.id === 'TX-04' || a.alias === 'TX-Oak-04'))) || INITIAL_ASSETS[0];
+  // ---------------------------------------------------------------------------
+  // Dispatch Crew Work Order Operations
+  // ---------------------------------------------------------------------------
+  const openDispatchModal = (assetId, prefill = {}) => {
+    const targetId = assetId || selectedAssetId;
+    setDispatchAssetId(targetId);
+    setDispatchPrefill(prefill);
+    setIsDispatchModalOpen(true);
+  };
+
+  const closeDispatchModal = () => {
+    setIsDispatchModalOpen(false);
+  };
+
+  const dispatchFieldCrew = ({
+    assetId,
+    crewId,
+    priority = 'P1-EMERGENCY',
+    failureMode,
+    sopReference = 'SOP-TX-10',
+    notes = '',
+    etaMinutes,
+  }) => {
+    const selectedCrew = crews.find((c) => c.crewId === crewId) || crews[0];
+    const finalEta = etaMinutes || selectedCrew.etaMinutes;
+    const ticketId = `#WO-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const newOrder = {
+      workOrderId: ticketId,
+      assetId,
+      crewId: selectedCrew.crewId,
+      crewName: selectedCrew.name,
+      leadTechnician: selectedCrew.leadTechnician,
+      priority,
+      status: 'EN ROUTE',
+      failureMode: failureMode || 'Anomaly Alarm / Forced Inspection Protocol',
+      sopReference,
+      notes: notes || 'Operator authorized field intervention.',
+      etaMinutes: finalEta,
+      radioChannel: selectedCrew.radioChannel,
+      dispatchedBy: 'S. Vance, P.E. (Lead Dispatcher)',
+      createdAt: getFormattedTime(),
+    };
+
+    // Update work orders list
+    setWorkOrders((prev) => [newOrder, ...prev]);
+
+    // Update crew status to dispatched
+    setCrews((prev) =>
+      prev.map((c) => (c.crewId === selectedCrew.crewId ? { ...c, status: 'Dispatched' } : c))
+    );
+
+    // Update asset in state
+    setAssets((prev) =>
+      prev.map((a) => {
+        if (a.id === assetId || a.alias === assetId || (assetId === 'TX-Oak-04' && a.id === 'TX-04')) {
+          return {
+            ...a,
+            dispatchTicket: ticketId,
+            fieldCrew: `${selectedCrew.name} (ETA: ${finalEta} mins)`,
+            dispatchPriority: priority,
+            dispatchStatus: 'EN ROUTE',
+            dispatchEta: finalEta,
+          };
+        }
+        return a;
+      })
+    );
+
+    addToast(
+      `Work Order ${ticketId} dispatched: ${selectedCrew.name} assigned to [${assetId}] (ETA: ${finalEta} mins). Radio: ${selectedCrew.radioChannel}.`,
+      'success'
+    );
+
+    setIsDispatchModalOpen(false);
+    return newOrder;
+  };
+
+  const updateWorkOrderStatus = (ticketId, newStatus, statusNotes = '') => {
+    setWorkOrders((prev) =>
+      prev.map((wo) => {
+        if (wo.workOrderId === ticketId) {
+          return {
+            ...wo,
+            status: newStatus,
+            notes: statusNotes ? `${wo.notes} | ${statusNotes}` : wo.notes,
+          };
+        }
+        return wo;
+      })
+    );
+
+    // If resolved or cancelled, release crew and update asset
+    if (newStatus === 'RESOLVED' || newStatus === 'CANCELLED') {
+      const order = workOrders.find((w) => w.workOrderId === ticketId);
+      if (order) {
+        setCrews((prev) =>
+          prev.map((c) => (c.crewId === order.crewId ? { ...c, status: 'Available' } : c))
+        );
+        setAssets((prev) =>
+          prev.map((a) => {
+            if (a.dispatchTicket === ticketId) {
+              return {
+                ...a,
+                dispatchTicket: 'None',
+                fieldCrew: 'Unassigned',
+                dispatchStatus: newStatus,
+              };
+            }
+            return a;
+          })
+        );
+      }
+      addToast(`Work Order ${ticketId} updated to status: ${newStatus}`, 'info');
+    } else {
+      addToast(`Work Order ${ticketId} updated: Status is now ${newStatus}`, 'success');
+    }
+  };
+
+  // Selected asset & alert lookups (using dynamic assets state)
+  const selectedAsset =
+    assets.find(
+      (a) =>
+        a.id === selectedAssetId ||
+        a.name === selectedAssetId ||
+        a.alias === selectedAssetId ||
+        (selectedAssetId === 'TX-Oak-04' && (a.id === 'TX-04' || a.alias === 'TX-Oak-04'))
+    ) || assets[0];
+
   const selectedAlert = INITIAL_ALERTS.find((a) => a.id === selectedAlertId) || INITIAL_ALERTS[0];
+
+  // Active work order for selected asset
+  const activeWorkOrder = workOrders.find(
+    (w) =>
+      (w.assetId === selectedAsset.id ||
+        w.assetId === selectedAsset.alias ||
+        w.workOrderId === selectedAsset.dispatchTicket) &&
+      w.status !== 'RESOLVED' &&
+      w.status !== 'CANCELLED'
+  );
 
   return (
     <GridContext.Provider
@@ -123,8 +275,18 @@ export function GridProvider({ children }) {
         viewEventLog,
         navigateToAsset,
         navigateToSimulation,
-        assets: INITIAL_ASSETS,
+        assets,
         alerts: INITIAL_ALERTS,
+        workOrders,
+        crews,
+        activeWorkOrder,
+        isDispatchModalOpen,
+        dispatchAssetId,
+        dispatchPrefill,
+        openDispatchModal,
+        closeDispatchModal,
+        dispatchFieldCrew,
+        updateWorkOrderStatus,
       }}
     >
       {children}

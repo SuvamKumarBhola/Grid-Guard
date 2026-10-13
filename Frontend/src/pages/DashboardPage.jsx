@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGrid } from '../context/GridContext';
 
 export default function DashboardPage() {
-  const { navigateToAsset, navigateToSimulation, assets, searchQuery } = useGrid();
+  const { navigateToAsset, navigateToSimulation, assets, searchQuery, openDispatchModal } = useGrid();
   const [selectedVoltage, setSelectedVoltage] = useState('345kV Bulk');
   const [riskFilter, setRiskFilter] = useState('all');
   const [assetCategoryFilter, setAssetCategoryFilter] = useState('All Assets');
@@ -545,8 +545,22 @@ export default function DashboardPage() {
 
             <div className="mt-space-md flex flex-col gap-2">
               <button
+                onClick={() =>
+                  openDispatchModal('TX-04', {
+                    failureMode: 'Auxiliary Cooling Fan Bank #2 Failure (Thermal 94.2°C)',
+                    recommendedAction: 'Immediate dispatch to replace fan bank #2 starter and assess coil B hotspot.',
+                    priority: 'P1-EMERGENCY',
+                  })
+                }
+                className="w-full flex items-center justify-center gap-2 py-2 px-space-md bg-primary text-on-primary hover:bg-primary/90 rounded font-headline-sm text-body-md transition-colors shadow cursor-pointer font-bold uppercase tracking-wider"
+              >
+                <span className="material-symbols-outlined text-[1.125rem]">engineering</span>
+                <span>Dispatch Field Crew to TX-Oak-04</span>
+              </button>
+
+              <button
                 onClick={() => navigateToSimulation('TX-Oak-04', 'TX-Pine-02', 8.5)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-space-md bg-secondary text-on-secondary hover:bg-on-secondary-container rounded font-headline-sm text-body-md transition-colors shadow cursor-pointer font-semibold"
+                className="w-full flex items-center justify-center gap-2 py-2 px-space-md bg-secondary text-on-secondary hover:bg-on-secondary-container rounded font-headline-sm text-body-md transition-colors shadow cursor-pointer font-semibold"
               >
                 <span>Test in Load Redistribution Simulator</span>
                 <span className="material-symbols-outlined text-[1.125rem]">arrow_forward</span>
