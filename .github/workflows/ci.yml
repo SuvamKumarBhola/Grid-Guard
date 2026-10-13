@@ -32,6 +32,10 @@ jobs:
             --require-approved \
             --verify-checksum
 
+      - name: Verify Anomaly Detector v2.0.0 Acceptance Criteria
+        run: |
+          python scripts/verify_anomaly_v2_model.py
+
       - name: Run Full Test Suite
         run: |
           pytest tests/ -v --junitxml=junit.xml
@@ -49,13 +53,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        uses: actions/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
+          load: true
           push: false
           tags: gridguard:latest
           cache-from: type=gha
