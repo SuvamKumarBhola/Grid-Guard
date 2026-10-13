@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-surface-container-high: #ebe8e0;
+  --color-on-surface: #1c1c17;
+  --color-on-secondary: #ffffff;
+  --color-inverse-on-surface: #f4f1e9;
+  --color-on-tertiary: #ffffff;
+  --color-surface-container: #f1eee6;
+  --color-tertiary: #555e57;
+  --color-inverse-primary: #ffb598;
+  --color-on-surface-variant: #55433c;
+  --color-on-secondary-fixed-variant: #2c4d3d;
+  --color-surface: #fcf9f1;
+  --color-tertiary-container: #6d776f;
+  --color-on-secondary-container: #486a58;
+  --color-on-tertiary-fixed: #151e18;
+  --color-outline-variant: #dbc1b8;
+  --color-tertiary-fixed: #dbe5dc;
+  --color-background: #fcf9f1;
+  --color-error-container: #ffdad6;
+  --color-surface-dim: #dddad2;
+  --color-tertiary-fixed-dim: #bfc9c0;
+  --color-secondary-fixed-dim: #aacfba;
+  --color-secondary-fixed: #c6ebd5;
+  --color-outline: #88726b;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed-dim: #ffb598;
+  --color-surface-variant: #e5e2da;
+  --color-on-secondary-fixed: #002114;
+  --color-error: #ba1a1a;
+  --color-primary: #944521;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #b35c36;
+  --color-surface-container-highest: #e5e2da;
+  --color-surface-container-low: #f6f3eb;
+  --color-secondary-container: #c3e8d2;
+  --color-on-primary-fixed: #370e00;
+  --color-on-primary-fixed-variant: #79300d;
+  --color-primary-fixed: #ffdbce;
+  --color-on-tertiary-container: #f6fff6;
+  --color-on-tertiary-fixed-variant: #404942;
+  --color-on-primary-container: #fffbff;
+  --color-surface-bright: #fcf9f1;
+  --color-surface-container-lowest: #ffffff;
+  --color-inverse-surface: #31312b;
+  --color-secondary: #446554;
+  --color-on-error: #ffffff;
+  --color-surface-tint: #974723;
+  --color-on-background: #1c1c17;
+
+  --font-headline-lg: "Outfit", sans-serif;
+  --font-headline-md: "Outfit", sans-serif;
+  --font-headline-sm: "Outfit", sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-label-code: "JetBrains Mono", monospace;
+  --font-body-lg: "Plus Jakarta Sans", sans-serif;
+  --font-body-md: "Plus Jakarta Sans", sans-serif;
+  --font-body-sm: "Plus Jakarta Sans", sans-serif;
+  --font-label-meta: "Plus Jakarta Sans", sans-serif;
+  --font-telemetry-num: "JetBrains Mono", monospace;
+
+  --spacing-gutter: 1rem;
+  --spacing-gutter-desktop: 1.5rem;
+  --spacing-margin: 1rem;
+  --spacing-margin-desktop: 2rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 0.75rem;
+  --spacing-space-lg: 1.25rem;
+  --spacing-space-xl: 2rem;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #fcf9f1;
+    color: #1c1c17;
+  }
+  #root {
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
+/* Material Symbols icon helper */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1eee6;
+}
+::-webkit-scrollbar-thumb {
+  background: #dbc1b8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #944521;
+}
+
+/* Card Elevation & Shadows */
+.card-elevated {
+  box-shadow: 0 4px 20px -2px rgba(49, 49, 43, 0.05), 0 2px 6px -1px rgba(49, 49, 43, 0.03);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -4px rgba(49, 49, 43, 0.09), 0 4px 12px -2px rgba(49, 49, 43, 0.04);
+}
+
+/* Typography Utility Classes */
+.font-display { font-family: 'Outfit', sans-serif; }
+.font-headline-lg { font-family: 'Outfit', sans-serif; }
+.font-headline-md { font-family: 'Outfit', sans-serif; }
+.font-headline-sm { font-family: 'Outfit', sans-serif; }
+.font-label-code { font-family: 'JetBrains Mono', monospace; }
+.font-body-lg { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-body-md { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-body-sm { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-label-meta { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-telemetry-num { font-family: 'JetBrains Mono', monospace; }
+
+.text-display { font-size: 3.5rem; line-height: 3.75rem; letter-spacing: -0.04em; font-weight: 700; }
+.text-headline-lg { font-size: 2rem; line-height: 2.25rem; letter-spacing: -0.03em; font-weight: 600; }
+.text-headline-md { font-size: 1.25rem; line-height: 1.5rem; letter-spacing: -0.02em; font-weight: 600; }
+.text-headline-sm { font-size: 1rem; line-height: 1.25rem; letter-spacing: -0.01em; font-weight: 600; }
+.text-label-code { font-size: 0.6875rem; line-height: 0.875rem; letter-spacing: 0.08em; font-weight: 700; }
+.text-body-lg { font-size: 1rem; line-height: 1.5rem; letter-spacing: -0.01em; }
+.text-body-md { font-size: 0.875rem; line-height: 1.25rem; }
+.text-body-sm { font-size: 0.75rem; line-height: 1rem; }
+.text-label-meta { font-size: 0.625rem; line-height: 0.75rem; letter-spacing: 0.06em; font-weight: 600; }
+.text-telemetry-num { font-size: 0.875rem; line-height: 1rem; letter-spacing: 0.02em; font-weight: 500; }

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "outline": "#88726b",
+        "on-surface-variant": "#55433c",
+        "tertiary-container": "#6d776f",
+        "secondary-fixed": "#c6ebd5",
+        "inverse-surface": "#31312b",
+        "on-tertiary-fixed-variant": "#404942",
+        "tertiary": "#555e57",
+        "on-primary-fixed-variant": "#79300d",
+        "on-error": "#ffffff",
+        "inverse-primary": "#ffb598",
+        "on-surface": "#1c1c17",
+        "on-background": "#1c1c17",
+        "on-error-container": "#93000a",
+        "outline-variant": "#dbc1b8",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#fffbff",
+        "secondary-container": "#c3e8d2",
+        "surface-container": "#f1eee6",
+        "error": "#ba1a1a",
+        "on-secondary-container": "#486a58",
+        "tertiary-fixed": "#dbe5dc",
+        "surface-dim": "#dddad2",
+        "surface-container-highest": "#e5e2da",
+        "on-primary-fixed": "#370e00",
+        "secondary": "#446554",
+        "error-container": "#ffdad6",
+        "background": "#fcf9f1",
+        "surface-container-high": "#ebe8e0",
+        "on-tertiary": "#ffffff",
+        "primary-fixed-dim": "#ffb598",
+        "tertiary-fixed-dim": "#bfc9c0",
+        "primary": "#944521",
+        "on-secondary": "#ffffff",
+        "secondary-fixed-dim": "#aacfba",
+        "inverse-on-surface": "#f4f1e9",
+        "primary-fixed": "#ffdbce",
+        "surface-variant": "#e5e2da",
+        "on-secondary-fixed-variant": "#2c4d3d",
+        "on-secondary-fixed": "#002114",
+        "surface-tint": "#974723",
+        "primary-container": "#b35c36",
+        "surface-container-low": "#f6f3eb",
+        "on-tertiary-container": "#f6fff6",
+        "surface-bright": "#fcf9f1",
+        "surface": "#fcf9f1",
+        "on-tertiary-fixed": "#151e18",
+        "surface-container-lowest": "#ffffff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "gutter-desktop": "1.5rem",
+        "space-xs": "0.25rem",
+        "gutter": "1rem",
+        "margin": "1rem",
+        "space-sm": "0.5rem",
+        "space-lg": "1.25rem",
+        "margin-desktop": "2rem",
+        "space-md": "0.75rem",
+        "space-xl": "2rem"
+      },
+      "fontFamily": {
+        "telemetry-num": ["Geist"],
+        "headline-sm": ["Space Grotesk"],
+        "headline-lg": ["Space Grotesk"],
+        "headline-lg-mobile": ["Space Grotesk"],
+        "label-code": ["Space Grotesk"],
+        "display": ["Space Grotesk"],
+        "body-lg": ["Geist"],
+        "body-sm": ["Geist"],
+        "body-md": ["Geist"],
+        "label-meta": ["Geist"],
+        "headline-md": ["Space Grotesk"]
+      },
+      "fontSize": {
+        "telemetry-num": ["0.875rem", {"lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "500"}],
+        "headline-sm": ["1rem", {"lineHeight": "1.25rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "headline-lg": ["2rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+        "headline-lg-mobile": ["1.5rem", {"lineHeight": "1.75rem", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+        "label-code": ["0.6875rem", {"lineHeight": "0.875rem", "letterSpacing": "0.08em", "fontWeight": "700"}],
+        "display": ["3.5rem", {"lineHeight": "3.75rem", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+        "body-lg": ["1rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+        "body-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "body-md": ["0.875rem", {"lineHeight": "1.25rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "label-meta": ["0.625rem", {"lineHeight": "0.75rem", "letterSpacing": "0.06em", "fontWeight": "600"}],
+        "headline-md": ["1.25rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+      }
+    }
+  }
+};
+</script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+<aside class="fixed left-0 top-0 h-screen w-72 bg-inverse-surface text-inverse-on-surface z-50 flex flex-col justify-between border-r border-tertiary-container/30">
+<div class="flex flex-col">
+<div class="p-space-lg border-b border-tertiary-container/30 bg-inverse-surface">
+<div class="flex items-center gap-space-md">
+<img alt="GridGuard Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3dIQeuSg8JoKFdxt3YfcNG5Fcbgyotje1oYGKKS3oAyJZFA9w8_fIKV-RyoAfrg-ahTIZ5htBf727u0BO0stCK4K2OCBPkpzjREg6HgOWh6IJhUNiJYODUTdXb5IvDKa7WzB-jh9EyOHmEfJXPH3q3Wn657E-wE4K0dTbamWT8M5LvkQ20yfCIuhKQ1yElf-LmrsXSOKsp-SM-JzGcRKjArOEEALsAI9tdpmzHNjRwGECKCBz5x0"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-inverse-on-surface font-bold">GRIDGUARD</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-code text-label-code uppercase">TX</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim uppercase tracking-widest mt-0.5">GRID INTELLIGENCE</span>
+</div>
+</div>
+<p class="mt-space-sm font-label-meta text-label-meta text-tertiary-fixed-dim uppercase tracking-wider border-l-2 border-primary pl-2">Understand the risk. Strengthen the grid.</p>
+</div>
+<div class="px-space-md py-space-sm bg-inverse-surface/60 border-b border-tertiary-container/20 flex items-center justify-between text-tertiary-fixed-dim font-label-code text-label-code">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>SUBSTATION TELEMETRY
+      </span>
+<span class="text-tertiary-fixed-dim">SYS: OK</span>
+</div>
+<nav class="flex flex-col gap-1 p-space-md" data-active-classes="bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm">
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="dashboard" href="#">Dashboard</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="assets" href="#">Assets</a>
+<a class="flex items-center justify-between px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="alerts" href="#">
+<span>Alerts</span>
+<span class="font-label-code text-label-code px-1.5 py-0.5 rounded bg-primary text-on-primary">7</span>
+</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="load-simulation" href="#">Load Simulation</a>
+<a aria-current="page" class="flex items-center px-space-md py-space-sm transition-colors bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm" data-path="system-status" href="#">System Status</a>
+</nav>
+</div>
+<div class="p-space-md border-t border-tertiary-container/30 bg-inverse-surface/80 flex flex-col gap-space-sm">
+<div class="p-space-sm bg-surface/5 border border-tertiary-container/30">
+<div class="flex items-center justify-between font-label-code text-label-code text-tertiary-fixed-dim">
+<span class="uppercase tracking-wider">BUS TOPOLOGY</span>
+<span class="text-secondary-fixed">LIVE (N-1 OK)</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-tertiary-container/20">
+<div class="h-1.5 flex-1 bg-tertiary-container/40 relative">
+<div class="absolute left-1/4 -top-1 w-2.5 h-3.5 bg-primary rounded-none"></div>
+<div class="absolute right-1/3 -top-1 w-2.5 h-3.5 bg-secondary-fixed rounded-none"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between font-label-meta text-label-meta text-tertiary-fixed-dim pt-space-xs">
+<span class="flex items-center gap-1.5 font-label-code text-label-code text-inverse-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>DNP3/IEC-61850 SECURE
+      </span>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim">v2.4-ENG</span>
+</div>
+</div>
+</aside>
+<div class="pl-72 flex flex-col min-h-screen">
+<header class="fixed top-0 left-72 right-0 h-16 bg-surface-container border-b border-surface-variant z-40 px-gutter-desktop flex items-center justify-between">
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface-variant">
+<span class="text-primary font-bold">GRIDGUARD</span>
+<span>/</span>
+<span class="text-on-surface uppercase">Workspace</span>
+</div>
+<div class="relative w-80 hidden md:block">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-[1.125rem] text-tertiary">search</span>
+<input class="w-full pl-9 pr-space-md py-1.5 bg-surface border border-outline-variant rounded text-body-sm font-body-sm text-on-surface placeholder:text-tertiary placeholder:font-body-sm focus:outline-none focus:border-on-surface transition-colors" placeholder="Search Substations, Feeders, TX-ID (e.g. TX-402)..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="hidden xl:flex items-center gap-space-md">
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>BACKEND: CONNECTED (REST v1 / 18ms)</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-high border border-outline-variant rounded font-label-code text-label-code text-primary">
+<span class="material-symbols-outlined text-[0.875rem]">sync</span>
+<span>SCADA FEED: 4s AGO</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-tertiary">
+<span class="material-symbols-outlined text-[0.875rem]">schedule</span>
+<span>16:42:19 UTC</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="relative p-1.5 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[1.25rem]">notifications</span>
+<span class="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary rounded-full font-label-code text-[0.5625rem] flex items-center justify-center font-bold">7</span>
+</button>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-space-sm">
+<img alt="Operator Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlhBWRBzsG3pQWeEAP6KNRtLKO2j4_67MsOqorHIMVY4crgXsUAYelvUiyjvnQ_z9HLY3QnYYMbyT1VuUmIFGKA5-x9NXj9VxWoTK8nAWdCh3jZDYSVCFMwbzdiqZ7X9ZxGaBDh5iPQaRHfUK_gGL8-CwJw2qeFQ6-7om88z0IGwykkSduAspcIfQVlITbpk6XUcbcRX08Ko4cOxaSQtvZCiZ6YI9zs4vFVcHqyjACwi-m4FL96I"/>
+<div class="flex flex-col text-left">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold">S. Vance, P.E.</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-wider">Grid Operations Lead</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="relative pt-16 flex-1 w-full bg-surface-container-low p-gutter-desktop">
+<div class="flex flex-col w-full gap-space-lg">
+<!-- TOP BAR: TELEMETRY PULSE & ACTIONS -->
+<div class="w-full bg-surface-container-lowest p-space-lg shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 bg-secondary"></span>
+<span class="font-label-code text-label-code text-on-surface-variant uppercase tracking-widest">DIAGNOSTIC WORKSPACE // CLUSTER 04-A</span>
+<span class="px-1.5 py-0.5 bg-secondary-container text-on-secondary-container font-label-code text-label-code">GRID INTERFACE ACTIVE</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">System Status &amp; Telemetry Ingestion</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitor SCADA backend availability, AI risk model health, telemetry ingestion queues, and sensor data freshness.</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm bg-surface-container-low p-space-sm">
+<div class="flex items-center gap-2 px-space-sm py-1 bg-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-primary text-[1rem]">satellite_alt</span>
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">TELEMETRY PROBE</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface">14:32:45 UTC <span class="text-secondary">(REST v1 / 18ms)</span></span>
+</div>
+</div>
+<button class="flex items-center gap-2 px-space-md py-2 bg-inverse-surface text-inverse-on-surface font-label-code text-label-code uppercase tracking-wider hover:bg-primary transition-colors cursor-pointer" id="btn-force-probe" onclick="runForceProbe()">
+<span class="material-symbols-outlined text-[1rem]" id="probe-icon">restart_alt</span>
+<span id="probe-text">Force Health Probe</span>
+</button>
+</div>
+</div>
+<!-- SECTION 1: SERVICE HEALTH & BACKEND ARCHITECTURE -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-on-surface uppercase font-bold tracking-wider">01 // SERVICE HEALTH &amp; BACKEND ARCHITECTURE</span>
+<span class="w-2 h-2 bg-secondary"></span>
+</div>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-widest">N-1 CONTINGENCY TOLERANCE: ENFORCED</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card 1: Core SCADA REST API -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between h-full">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between bg-surface-container-high px-space-sm py-1">
+<span class="font-label-code text-label-code text-on-surface font-semibold">SRV-01 // REST API</span>
+<span class="px-1.5 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-code text-label-code">OPERATIONAL</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Core SCADA REST API</h3>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Build release-v1.8.2 (DNP3 Translation)</span>
+</div>
+<div class="flex items-baseline justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Round-Trip Latency</span>
+<span class="font-display text-headline-lg text-secondary">18<span class="text-body-md font-body-md text-on-surface-variant ml-1">ms</span></span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">30-Day Availability</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">99.98%</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-code text-label-code text-on-surface-variant">
+<span>IEC-61850 SUBSTATION TRANSLATOR</span>
+<span class="text-secondary font-bold">NOMINAL</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5">
+<div class="bg-secondary h-1.5 w-[96%]"></div>
+</div>
+</div>
+</div>
+<!-- Card 2: AI Risk Assessment Inference Engine -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between h-full">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between bg-surface-container-high px-space-sm py-1">
+<span class="font-label-code text-label-code text-on-surface font-semibold">INF-04 // GPU ENSEMBLE</span>
+<span class="px-1.5 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-code text-label-code">OPERATIONAL</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AI Risk Assessment Engine</h3>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Ensemble Model Architecture v4.1</span>
+</div>
+<div class="flex items-baseline justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Inference Cycle</span>
+<span class="font-display text-headline-lg text-secondary">142<span class="text-body-md font-body-md text-on-surface-variant ml-1">ms</span></span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Batch Processing</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">128 Assets / 60s</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-code text-label-code text-on-surface-variant">
+<span>CUDA TENSOR CORE UTILIZATION</span>
+<span class="text-on-surface font-bold">24% VRAM</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5">
+<div class="bg-secondary h-1.5 w-[24%]"></div>
+</div>
+</div>
+</div>
+<!-- Card 3: Power Flow Simulation Engine -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between h-full">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between bg-surface-container-high px-space-sm py-1">
+<span class="font-label-code text-label-code text-on-surface font-semibold">SIM-02 // NEWTON-RAPHSON</span>
+<span class="px-1.5 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-code text-label-code">OPERATIONAL</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Power Flow Simulation</h3>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Grid Contingency Solver v2.3</span>
+</div>
+<div class="flex items-baseline justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Convergence Rate</span>
+<span class="font-display text-headline-lg text-secondary">99.4<span class="text-body-md font-body-md text-on-surface-variant ml-0.5">%</span></span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Average Solve Time</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">310ms / bus</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-code text-label-code text-on-surface-variant">
+<span>JACOBIAN MATRIX RE-FACTORING</span>
+<span class="text-secondary font-bold">STABLE</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5">
+<div class="bg-secondary h-1.5 w-[99%]"></div>
+</div>
+</div>
+</div>
+<!-- Card 4: SCADA Ingestion & Time-Series DB -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between h-full">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between bg-error-container px-space-sm py-1">
+<span class="font-label-code text-label-code text-on-error-container font-semibold">KFK-TS // PIPELINE</span>
+<span class="px-1.5 py-0.5 bg-primary text-on-primary font-label-code text-label-code font-bold">DEGRADED OBS</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Telemetry Ingestion Queue</h3>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">TimescaleDB + Kafka Stream Broker</span>
+</div>
+<div class="flex items-baseline justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Ingestion Stream</span>
+<span class="font-display text-headline-lg text-primary">4,820<span class="text-body-md font-body-md text-on-surface-variant ml-1">evt/s</span></span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-meta text-label-meta text-primary font-bold">STALE CHANNELS</span>
+<span class="font-telemetry-num text-telemetry-num text-primary font-bold">2 RTU TIMEOUTS</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center font-label-code text-label-code text-primary font-semibold">
+<span>POLL DELAY: &gt;120s THRESHOLD EXCEEDED</span>
+<span>2 OF 128 ASSETS</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5">
+<div class="bg-primary h-1.5 w-[85%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 2: AI MODEL STATUS & INFERENCE INTEGRITY -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-on-surface uppercase font-bold tracking-wider">02 // AI MODEL STATUS &amp; INFERENCE INTEGRITY</span>
+<span class="w-2 h-2 bg-secondary"></span>
+</div>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-widest">VALIDATION SUITE: SYNCHRONIZED</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Primary Model Architectural Sheet -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[1.5rem]">neurology</span>
+<div>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-wider">DEPLOYMENT SPECIFICATION</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Multi-Modal Risk Ensemble (release/v4.1.2-prod)</h2>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container font-label-code text-label-code uppercase">SHA-256: d8f3a8b2</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant font-label-code text-label-code">PROD-GRID-WEST</span>
+</div>
+</div>
+<!-- Technical Grid Specs -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-xs">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">ACTIVE ARCHITECTURE</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold">Dual-Path Physics Ensemble</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Physics-Informed Thermal Degradation Differential Equations + Acoustic FFT Wavelet Classifier for partial discharge signature isolation.</p>
+</div>
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-xs">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">TRAINING CORPUS &amp; GENERALIZATION</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold">14-Yr Regional SCADA + IEEE-118</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">IEEE 118-Bus Synthetic Contingency Matrix combined with 42,000 real-world extreme climate stress transients (freeze, heat dome, line sag).</p>
+</div>
+</div>
+<!-- Micro Telemetry Chart: Inference Latency Stream -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface uppercase">INFERENCE CYCLE LATENCY LOG (LAST 24 EPOCHS)</span>
+<span class="font-label-meta text-label-meta text-secondary font-bold">ALL SAMPLES &lt;200ms</span>
+</div>
+<!-- Scaled Inline SVG Sparkline -->
+<div class="w-full h-16 pt-2">
+<svg class="w-full h-full text-secondary" preserveaspectratio="none" viewbox="0 0 400 40">
+<path d="M 0,22 L 18,24 L 35,20 L 52,23 L 70,18 L 88,28 L 105,19 L 123,21 L 140,24 L 158,16 L 175,22 L 193,20 L 210,25 L 228,19 L 245,21 L 263,26 L 280,18 L 298,22 L 315,19 L 333,23 L 350,17 L 368,24 L 385,20 L 400,21" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<!-- Reference benchmark line at 35px representing 500ms limit -->
+<line stroke="#b35c36" stroke-dasharray="3,3" stroke-width="1" x1="0" x2="400" y1="6" y2="6"></line>
+</svg>
+</div>
+<div class="flex justify-between items-center font-label-meta text-label-meta text-on-surface-variant">
+<span>T-24m</span>
+<span class="text-primary font-bold">--- SAFE INFERENCE BOUNDARY (500ms FAILOVER CEILING)</span>
+<span>T-0s (142ms)</span>
+</div>
+</div>
+</div>
+<div class="pt-space-md flex flex-wrap items-center justify-between gap-space-sm">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">COMMIT REGISTRATION: 2024-10-14 03:19:22 UTC // AUTHOR: GRID-ML-TEAM</span>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 bg-secondary"></span>
+<span class="font-label-code text-label-code text-secondary font-bold">MODEL STATUS: HIGH CONFIDENCE</span>
+</div>
+</div>
+</div>
+<!-- Fallback Engine Status Inspector -->
+<div class="lg:col-span-4 bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-label-code text-label-code text-on-surface uppercase font-bold">FAILOVER SUBSYSTEM</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface font-label-code text-label-code font-bold">STANDBY</span>
+</div>
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-xs">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">MECHANISM DESIGNATION</span>
+<h3 class="font-headline-sm text-body-md text-on-surface font-semibold">Automated Heuristic Thermal Baseline Rule Engine</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Direct algorithmic computation based on IEEE 738 ambient load curves. Triggers immediately if primary ML Ensemble inference latency exceeds 500ms timeout window.</p>
+</div>
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-code text-label-code text-on-surface-variant">ACTIVE FALLBACK STATE</span>
+<span class="font-label-code text-label-code text-secondary font-bold">INACTIVE (NOMINAL PRIMARY)</span>
+</div>
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-code text-label-code text-on-surface-variant">TIMEOUT TRIP THRESHOLD</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">500 ms</span>
+</div>
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-code text-label-code text-on-surface-variant">LAST FAILOVER DRILL</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface">36h AGO (PASSED 0.04ms TRIP)</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-md bg-surface-container-high p-space-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">security</span>
+<span class="font-label-meta text-label-meta text-on-surface uppercase">Failover interlock disengages instantly on primary ML telemetry recovery. Zero blackouts permitted.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 3: TELEMETRY FRESHNESS & DATA QUALITY REGISTRY -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-on-surface uppercase font-bold tracking-wider">03 // TELEMETRY FRESHNESS &amp; DATA QUALITY REGISTRY</span>
+<span class="w-2 h-2 bg-primary"></span>
+</div>
+<span class="font-label-meta text-label-meta text-primary font-bold uppercase tracking-widest">2 ASSETS REQUIRE ATTENTION</span>
+</div>
+<!-- Telemetry Count Metric Strips -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">FRESH TELEMETRY (&lt;5s)</span>
+<span class="w-2 h-2 bg-secondary"></span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-display text-display text-secondary">126</span>
+<span class="font-label-code text-label-code text-on-surface-variant">ASSETS</span>
+</div>
+<span class="font-label-meta text-label-meta text-secondary uppercase font-semibold">98.4% SUBSTATION FLEET</span>
+</div>
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">WARNING / DELAYED (5-60s)</span>
+<span class="w-2 h-2 bg-surface-container-highest"></span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-display text-display text-on-surface">00</span>
+<span class="font-label-code text-label-code text-on-surface-variant">ASSETS</span>
+</div>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">WITHIN RETRY TOLERANCE</span>
+</div>
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-primary uppercase font-bold">STALE / DEGRADED (&gt;120s)</span>
+<span class="w-2 h-2 bg-primary"></span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-display text-display text-primary">02</span>
+<span class="font-label-code text-label-code text-primary font-bold">ASSETS</span>
+</div>
+<span class="font-label-meta text-label-meta text-primary uppercase font-bold">REQUIRES RTU INTERVENTION</span>
+</div>
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">TOTAL DISCONNECTED</span>
+<span class="w-2 h-2 bg-secondary"></span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-display text-display text-on-surface">00</span>
+<span class="font-label-code text-label-code text-on-surface-variant">ASSETS</span>
+</div>
+<span class="font-label-meta text-label-meta text-secondary uppercase font-semibold">ZERO COMPLETE OUTAGES</span>
+</div>
+</div>
+<!-- Degraded Data Table / Attention List -->
+<div class="bg-surface-container-lowest shadow-sm overflow-hidden">
+<div class="p-space-md bg-surface-container-high flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">warning</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold uppercase">DEGRADED TELEMETRY WATCHLIST // ACTIVE ATTENTION REQUIRED</span>
+</div>
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">POLLING EXPIRATION WINDOW: 60 SECONDS MAX</span>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container font-label-meta text-label-meta text-on-surface-variant uppercase tracking-wider">
+<tr>
+<th class="p-space-md">ASSET IDENTIFIER / LOCATION</th>
+<th class="p-space-md">LAST PING</th>
+<th class="p-space-md">ROOT CAUSE / SCADA DIAGNOSTIC</th>
+<th class="p-space-md text-right">LAST RECORDED VALUE</th>
+<th class="p-space-md">QUALITY STATE</th>
+<th class="p-space-md text-right">REMEDIATION ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface">
+<!-- Row 1: Feeder-14B -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface font-bold">Feeder-14B</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">North Substation Outfeed (Bus 4)</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col">
+<span class="font-telemetry-num text-telemetry-num text-primary font-bold">142s ago</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Threshold: 60s</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Cellular RTU Gateway Packet Drop (Carrier APN Timeout)</span>
+</div>
+</td>
+<td class="p-space-md text-right">
+<span class="font-telemetry-num text-body-md text-on-surface font-bold">14.2 MW</span>
+<div class="font-label-meta text-label-meta text-primary uppercase font-bold">FROZEN TELEMETRY</div>
+</td>
+<td class="p-space-md">
+<span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant font-label-code text-label-code font-bold">STALE (HELD)</span>
+</td>
+<td class="p-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-2.5 py-1 bg-inverse-surface text-inverse-on-surface hover:bg-primary font-label-code text-label-code uppercase transition-colors cursor-pointer" onclick="pingRTU('Feeder-14B')">Ping RTU</button>
+<button class="px-2.5 py-1 bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-code text-label-code uppercase transition-colors cursor-pointer" onclick="flagMaintenance('Feeder-14B')">Flag Maintenance</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Sensor T-88 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/50">
+<td class="p-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface font-bold">Sensor T-88</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">West Substation Ambient Probe</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col">
+<span class="font-telemetry-num text-telemetry-num text-primary font-bold">185s ago</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">Threshold: 60s</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Power fluctuation on RTU aux battery circuit (Float Voltage 10.8V)</span>
+</div>
+</td>
+<td class="p-space-md text-right">
+<span class="font-telemetry-num text-body-md text-on-surface font-bold">36.4°C</span>
+<div class="font-label-meta text-label-meta text-primary uppercase font-bold">FROZEN TELEMETRY</div>
+</td>
+<td class="p-space-md">
+<span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant font-label-code text-label-code font-bold">STALE (HELD)</span>
+</td>
+<td class="p-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-2.5 py-1 bg-surface-container-high text-on-surface hover:bg-inverse-surface hover:text-inverse-on-surface font-label-code text-label-code uppercase transition-colors cursor-pointer" onclick="viewEventLog('Sensor-T88')">View Event Log</button>
+<button class="px-2.5 py-1 bg-inverse-surface text-inverse-on-surface hover:bg-primary font-label-code text-label-code uppercase transition-colors cursor-pointer" onclick="pingRTU('Sensor T-88')">Ping RTU</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Explicit Engineering Quality Disclaimer Callout -->
+<div class="p-space-md bg-surface-container-high flex items-center gap-space-md">
+<span class="material-symbols-outlined text-primary text-[1.75rem] flex-shrink-0">gavel</span>
+<div class="flex flex-col">
+<span class="font-label-code text-label-code text-on-surface font-bold uppercase tracking-wider">NERC-CIP &amp; IEEE RELIABILITY INTEGRITY STANDARD</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Degraded telemetry assets maintain their last known values with visual stale warnings. GridGuard never substitutes missing telemetry with zero readings.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 4: SCADA PROTOCOL & NETWORK DIAGNOSTICS -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-on-surface uppercase font-bold tracking-wider">04 // SCADA PROTOCOL &amp; NETWORK DIAGNOSTICS</span>
+<span class="w-2 h-2 bg-secondary"></span>
+</div>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-widest">TLS 1.3 // SECURE AUTHENTICATION v5</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Diagnostic 1: Protocol Transport -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">SECURITY LAYER</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-code text-label-code">AES-256-GCM</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Protocol Transport</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">DNP3 Secure Authentication (SAv5) operating over mutual TLS 1.3 tunneling. Cryptographic HMAC validation active on all trip commands.</p>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-meta text-label-meta text-on-surface-variant uppercase">
+<span>KEY REFRESH CADENCE</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">1,800s (ACTIVE)</span>
+</div>
+<div class="flex items-center justify-between font-label-meta text-label-meta text-on-surface-variant uppercase">
+<span>HMAC INTEGRITY SUITE</span>
+<span class="font-label-code text-label-code text-secondary font-bold">SHA-256-128</span>
+</div>
+</div>
+</div>
+<!-- Diagnostic 2: Packet Integrity -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">LINK LAYER CRC</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-code text-label-code">1.2M CHECKED</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Packet Integrity Ratio</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-display text-display text-secondary">99.994<span class="text-headline-md font-headline-md text-on-surface-variant ml-0.5">%</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cumulative CRC-16 check pass rate across 1,248,930 SCADA communication frame packets ingested during the current dispatch cycle.</p>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-meta text-label-meta text-on-surface-variant uppercase">
+<span>FRAMES DROPPED TODAY</span>
+<span class="font-telemetry-num text-telemetry-num text-on-surface font-bold">78 FRAMES</span>
+</div>
+<div class="flex items-center justify-between font-label-meta text-label-meta text-on-surface-variant uppercase">
+<span>BURST CORRUPTION RATE</span>
+<span class="font-label-code text-label-code text-secondary font-bold">&lt; 0.0001%</span>
+</div>
+</div>
+</div>
+<!-- Diagnostic 3: Active Dispatch Client Sessions -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">DISPATCH ROSTER</span>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container font-label-code text-label-code">3 CONCURRENT</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Active Client Sessions</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Authorized control room operators with active command relay authorization and bus topology override rights.</p>
+</div>
+<div class="mt-space-md flex flex-col gap-space-xs">
+<!-- Session 1: S. Vance (Lead) -->
+<div class="p-space-xs bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-on-surface font-bold">S. Vance, P.E.</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">LEAD DISPATCHER (STATION 01)</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 bg-primary text-on-primary font-label-code text-label-code">ACTIVE TX</span>
+</div>
+<!-- Session 2: K. Tanaka -->
+<div class="p-space-xs bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-on-surface">K. Tanaka, Relay Eng.</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">PROTECTION COORD (STATION 04)</span>
+</div>
+</div>
+<span class="font-label-code text-label-code text-on-surface-variant">READ ONLY</span>
+</div>
+<!-- Session 3: M. Sterling -->
+<div class="p-space-xs bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-on-surface">M. Sterling, Analyst</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">ANALYTICS DESK (STATION 09)</span>
+</div>
+</div>
+<span class="font-label-code text-label-code text-on-surface-variant">READ ONLY</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- NOTIFICATION TOAST CONTAINER FOR TACTICAL ACTIONS -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" id="toast-container"></div>
+<!-- INTERACTIVE DISPATCH SCRIPT -->
+<script>
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-space-md bg-inverse-surface text-inverse-on-surface shadow-xl flex items-center gap-space-sm transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto max-w-md`;
+      
+      const icon = type === 'success' ? 'check_circle' : (type === 'warn' ? 'warning' : 'info');
+      const iconColor = type === 'success' ? 'text-secondary-fixed' : (type === 'warn' ? 'text-primary' : 'text-on-primary');
+      
+      toast.innerHTML = `
+        <span class="material-symbols-outlined ${iconColor} text-[1.25rem]">${icon}</span>
+        <div class="flex flex-col">
+          <span class="font-label-code text-label-code text-tertiary-fixed uppercase font-bold">SYSTEM TELEMETRY ENGINE</span>
+          <span class="font-body-sm text-body-sm text-inverse-on-surface font-medium">${message}</span>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      }, 10);
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4500);
+    }
+
+    function runForceProbe() {
+      const icon = document.getElementById('probe-icon');
+      const text = document.getElementById('probe-text');
+      
+      icon.classList.add('animate-spin');
+      text.textContent = 'Probing SCADA Nodes...';
+      
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        text.textContent = 'Force Health Probe';
+        showToast('Probe Complete: 128 assets polled. 126 responding (&lt;18ms), 2 RTUs degraded in sector North/West.', 'success');
+      }, 1100);
+    }
+
+    function pingRTU(assetId) {
+      showToast(`Initiating cryptographic DNP3 ping handshake to RTU Gateway on [${assetId}]... Carrier ACK received with 1,240ms jitter.`, 'warn');
+    }
+
+    function flagMaintenance(assetId) {
+      showToast(`Work order dispatch generated for field crew: [${assetId}] flagged for antenna & RTU inspection.`, 'success');
+    }
+
+    function viewEventLog(assetId) {
+      showToast(`Event log extracted for [${assetId}]: Auxiliary DC battery fluctuated between 10.4V and 12.1V at 14:28:10 UTC.`, 'info');
+    }
+  </script>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,21 +1,4 @@
-# syntax=docker/dockerfile:1
-FROM python:3.11-slim AS builder
-
-WORKDIR /app
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY pyproject.toml .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -e .
-
-# Runtime Stage
-FROM python:3.11-slim AS runner
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -26,12 +9,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     GRIDGUARD_PORT=8000 \
     GRIDGUARD_MODEL_MODE=stub
 
-# Create non-root user for security
+# Create non-root user
 RUN groupadd -g 10001 gridguard && \
     useradd -u 10001 -g gridguard -s /bin/bash -m gridguard
 
-COPY --from=builder /app/wheels /wheels
-RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
+COPY pyproject.toml .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -e .
 
 COPY app/ ./app
 COPY model_artifacts/ ./model_artifacts

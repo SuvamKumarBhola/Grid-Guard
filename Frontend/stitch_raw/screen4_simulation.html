@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "outline": "#88726b",
+        "on-surface-variant": "#55433c",
+        "tertiary-container": "#6d776f",
+        "secondary-fixed": "#c6ebd5",
+        "inverse-surface": "#31312b",
+        "on-tertiary-fixed-variant": "#404942",
+        "tertiary": "#555e57",
+        "on-primary-fixed-variant": "#79300d",
+        "on-error": "#ffffff",
+        "inverse-primary": "#ffb598",
+        "on-surface": "#1c1c17",
+        "on-background": "#1c1c17",
+        "on-error-container": "#93000a",
+        "outline-variant": "#dbc1b8",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#fffbff",
+        "secondary-container": "#c3e8d2",
+        "surface-container": "#f1eee6",
+        "error": "#ba1a1a",
+        "on-secondary-container": "#486a58",
+        "tertiary-fixed": "#dbe5dc",
+        "surface-dim": "#dddad2",
+        "surface-container-highest": "#e5e2da",
+        "on-primary-fixed": "#370e00",
+        "secondary": "#446554",
+        "error-container": "#ffdad6",
+        "background": "#fcf9f1",
+        "surface-container-high": "#ebe8e0",
+        "on-tertiary": "#ffffff",
+        "primary-fixed-dim": "#ffb598",
+        "tertiary-fixed-dim": "#bfc9c0",
+        "primary": "#944521",
+        "on-secondary": "#ffffff",
+        "secondary-fixed-dim": "#aacfba",
+        "inverse-on-surface": "#f4f1e9",
+        "primary-fixed": "#ffdbce",
+        "surface-variant": "#e5e2da",
+        "on-secondary-fixed-variant": "#2c4d3d",
+        "on-secondary-fixed": "#002114",
+        "surface-tint": "#974723",
+        "primary-container": "#b35c36",
+        "surface-container-low": "#f6f3eb",
+        "on-tertiary-container": "#f6fff6",
+        "surface-bright": "#fcf9f1",
+        "surface": "#fcf9f1",
+        "on-tertiary-fixed": "#151e18",
+        "surface-container-lowest": "#ffffff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "gutter-desktop": "1.5rem",
+        "space-xs": "0.25rem",
+        "gutter": "1rem",
+        "margin": "1rem",
+        "space-sm": "0.5rem",
+        "space-lg": "1.25rem",
+        "margin-desktop": "2rem",
+        "space-md": "0.75rem",
+        "space-xl": "2rem"
+      },
+      "fontFamily": {
+        "telemetry-num": ["Geist"],
+        "headline-sm": ["Space Grotesk"],
+        "headline-lg": ["Space Grotesk"],
+        "headline-lg-mobile": ["Space Grotesk"],
+        "label-code": ["Space Grotesk"],
+        "display": ["Space Grotesk"],
+        "body-lg": ["Geist"],
+        "body-sm": ["Geist"],
+        "body-md": ["Geist"],
+        "label-meta": ["Geist"],
+        "headline-md": ["Space Grotesk"]
+      },
+      "fontSize": {
+        "telemetry-num": ["0.875rem", {"lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "500"}],
+        "headline-sm": ["1rem", {"lineHeight": "1.25rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "headline-lg": ["2rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+        "headline-lg-mobile": ["1.5rem", {"lineHeight": "1.75rem", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+        "label-code": ["0.6875rem", {"lineHeight": "0.875rem", "letterSpacing": "0.08em", "fontWeight": "700"}],
+        "display": ["3.5rem", {"lineHeight": "3.75rem", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+        "body-lg": ["1rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+        "body-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "body-md": ["0.875rem", {"lineHeight": "1.25rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "label-meta": ["0.625rem", {"lineHeight": "0.75rem", "letterSpacing": "0.06em", "fontWeight": "600"}],
+        "headline-md": ["1.25rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+      }
+    }
+  }
+};
+</script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+<aside class="fixed left-0 top-0 h-screen w-72 bg-inverse-surface text-inverse-on-surface z-50 flex flex-col justify-between border-r border-tertiary-container/30">
+<div class="flex flex-col">
+<div class="p-space-lg border-b border-tertiary-container/30 bg-inverse-surface">
+<div class="flex items-center gap-space-md">
+<img alt="GridGuard Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3dIQeuSg8JoKFdxt3YfcNG5Fcbgyotje1oYGKKS3oAyJZFA9w8_fIKV-RyoAfrg-ahTIZ5htBf727u0BO0stCK4K2OCBPkpzjREg6HgOWh6IJhUNiJYODUTdXb5IvDKa7WzB-jh9EyOHmEfJXPH3q3Wn657E-wE4K0dTbamWT8M5LvkQ20yfCIuhKQ1yElf-LmrsXSOKsp-SM-JzGcRKjArOEEALsAI9tdpmzHNjRwGECKCBz5x0"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-inverse-on-surface font-bold">GRIDGUARD</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-code text-label-code uppercase">TX</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim uppercase tracking-widest mt-0.5">GRID INTELLIGENCE</span>
+</div>
+</div>
+<p class="mt-space-sm font-label-meta text-label-meta text-tertiary-fixed-dim uppercase tracking-wider border-l-2 border-primary pl-2">Understand the risk. Strengthen the grid.</p>
+</div>
+<div class="px-space-md py-space-sm bg-inverse-surface/60 border-b border-tertiary-container/20 flex items-center justify-between text-tertiary-fixed-dim font-label-code text-label-code">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>SUBSTATION TELEMETRY
+      </span>
+<span class="text-tertiary-fixed-dim">SYS: OK</span>
+</div>
+<nav class="flex flex-col gap-1 p-space-md" data-active-classes="bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm">
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="dashboard" href="#">Dashboard</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="assets" href="#">Assets</a>
+<a class="flex items-center justify-between px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="alerts" href="#">
+<span>Alerts</span>
+<span class="font-label-code text-label-code px-1.5 py-0.5 rounded bg-primary text-on-primary">7</span>
+</a>
+<a aria-current="page" class="flex items-center px-space-md py-space-sm transition-colors bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm" data-path="load-simulation" href="#">Load Simulation</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="system-status" href="#">System Status</a>
+</nav>
+</div>
+<div class="p-space-md border-t border-tertiary-container/30 bg-inverse-surface/80 flex flex-col gap-space-sm">
+<div class="p-space-sm bg-surface/5 border border-tertiary-container/30">
+<div class="flex items-center justify-between font-label-code text-label-code text-tertiary-fixed-dim">
+<span class="uppercase tracking-wider">BUS TOPOLOGY</span>
+<span class="text-secondary-fixed">LIVE (N-1 OK)</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-tertiary-container/20">
+<div class="h-1.5 flex-1 bg-tertiary-container/40 relative">
+<div class="absolute left-1/4 -top-1 w-2.5 h-3.5 bg-primary rounded-none"></div>
+<div class="absolute right-1/3 -top-1 w-2.5 h-3.5 bg-secondary-fixed rounded-none"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between font-label-meta text-label-meta text-tertiary-fixed-dim pt-space-xs">
+<span class="flex items-center gap-1.5 font-label-code text-label-code text-inverse-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>DNP3/IEC-61850 SECURE
+      </span>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim">v2.4-ENG</span>
+</div>
+</div>
+</aside>
+<div class="pl-72 flex flex-col min-h-screen">
+<header class="fixed top-0 left-72 right-0 h-16 bg-surface-container border-b border-surface-variant z-40 px-gutter-desktop flex items-center justify-between">
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface-variant">
+<span class="text-primary font-bold">GRIDGUARD</span>
+<span>/</span>
+<span class="text-on-surface uppercase">Workspace</span>
+</div>
+<div class="relative w-80 hidden md:block">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-[1.125rem] text-tertiary">search</span>
+<input class="w-full pl-9 pr-space-md py-1.5 bg-surface border border-outline-variant rounded text-body-sm font-body-sm text-on-surface placeholder:text-tertiary placeholder:font-body-sm focus:outline-none focus:border-on-surface transition-colors" placeholder="Search Substations, Feeders, TX-ID (e.g. TX-402)..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="hidden xl:flex items-center gap-space-md">
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>BACKEND: CONNECTED (REST v1 / 18ms)</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-high border border-outline-variant rounded font-label-code text-label-code text-primary">
+<span class="material-symbols-outlined text-[0.875rem]">sync</span>
+<span>SCADA FEED: 4s AGO</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-tertiary">
+<span class="material-symbols-outlined text-[0.875rem]">schedule</span>
+<span>16:42:19 UTC</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="relative p-1.5 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[1.25rem]">notifications</span>
+<span class="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary rounded-full font-label-code text-[0.5625rem] flex items-center justify-center font-bold">7</span>
+</button>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-space-sm">
+<img alt="Operator Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlhBWRBzsG3pQWeEAP6KNRtLKO2j4_67MsOqorHIMVY4crgXsUAYelvUiyjvnQ_z9HLY3QnYYMbyT1VuUmIFGKA5-x9NXj9VxWoTK8nAWdCh3jZDYSVCFMwbzdiqZ7X9ZxGaBDh5iPQaRHfUK_gGL8-CwJw2qeFQ6-7om88z0IGwykkSduAspcIfQVlITbpk6XUcbcRX08Ko4cOxaSQtvZCiZ6YI9zs4vFVcHqyjACwi-m4FL96I"/>
+<div class="flex flex-col text-left">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold">S. Vance, P.E.</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-wider">Grid Operations Lead</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="relative pt-16 flex-1 w-full bg-surface-container-low p-gutter-desktop">
+<div class="flex flex-col w-full gap-space-lg">
+<!-- SAFETY DISCLAIMER BANNER -->
+<div class="w-full bg-error-container text-on-error-container px-space-lg py-space-sm rounded-none shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[1.5rem] text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-bold uppercase tracking-wider text-error">Simulated Dispatch Protocol</span>
+<span class="font-body-sm text-body-sm text-on-surface">
+          HYPOTHETICAL SIMULATION ENGINE ONLY. This tool does not physically actuate breakers, energize bus ties, or execute SCADA supervisory control commands.
+        </span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-auto bg-error text-on-error px-space-md py-1 font-label-code text-label-code uppercase tracking-widest shadow-sm">
+<span class="w-2 h-2 rounded-full bg-surface-bright animate-ping"></span>
+<span>NON-DISPATCH RUNTIME</span>
+</div>
+</div>
+<!-- PAGE HEADER & DIAGNOSTIC META -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md bg-surface-container p-space-lg shadow-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-code text-label-code text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5">SUBSTATION STUDY LAB • WEST 138kV RING</span>
+<span class="font-label-code text-label-code text-tertiary uppercase">MODEL ID: SIM-DNP3-8821</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">Load Redistribution Simulation</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+        Evaluate hypothetical power flow transfers and N-1 contingency headroom against asset thermal limits. Real-time topology snapshot verified at 16:42:19 UTC.
+      </p>
+</div>
+<!-- Quick Telemetry HUD -->
+<div class="flex items-center gap-space-md shrink-0">
+<div class="flex flex-col items-end px-space-md py-space-xs bg-surface-container-lowest shadow-sm">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Grid Solver Mode</span>
+<span class="font-headline-sm text-body-sm text-on-surface font-bold uppercase">Newton-Raphson (AC)</span>
+</div>
+<div class="flex flex-col items-end px-space-md py-space-xs bg-surface-container-lowest shadow-sm">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Convergence Target</span>
+<span class="font-headline-sm text-body-sm text-secondary font-bold">0.0012 MW/MVAR [OK]</span>
+</div>
+<div class="flex items-center gap-2 px-space-md py-space-xs bg-primary text-on-primary shadow-sm font-label-code text-label-code uppercase tracking-wider">
+<span class="material-symbols-outlined text-[1rem]">tune</span>
+<span>STUDY BENCH v4.2</span>
+</div>
+</div>
+</div>
+<!-- MAIN THREE-PART ENGINEERING COMPOSITION -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- ========================================================== -->
+<!-- SECTION A: SCENARIO CONFIGURATION (Left Panel - ~30%)      -->
+<!-- ========================================================== -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest shadow-sm p-space-lg flex flex-col gap-space-lg">
+<!-- Panel Title Bar -->
+<div class="flex items-center justify-between pb-space-sm bg-surface-container-high -mx-space-lg -mt-space-lg px-space-lg py-space-sm mb-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">settings_input_composite</span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface">Configuration</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary bg-surface-container-lowest px-2 py-0.5">MOD: STATIC_N-1</span>
+</div>
+<form class="flex flex-col gap-space-md" id="simForm" onsubmit="event.preventDefault(); runSimulation();">
+<!-- Source Overloaded Asset -->
+<div class="flex flex-col gap-1">
+<label class="font-label-meta text-label-meta uppercase text-on-surface-variant flex justify-between">
+<span>Source Overloaded Asset</span>
+<span class="text-error font-bold">OVERLOAD PROBABLE</span>
+</label>
+<div class="bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between font-headline-sm text-body-sm text-on-surface">
+<span class="font-bold">TX-Oak-04</span>
+<span class="font-label-code text-label-code bg-error text-on-error px-1.5 py-0.2">138kV / 13.8kV</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-telemetry-num text-on-surface-variant">
+<span>Load: 49.2 MVA / 98.4%</span>
+<span class="text-error font-bold">Margin: 0.8 MVA</span>
+</div>
+</div>
+</div>
+<!-- Target Receiving Asset -->
+<div class="flex flex-col gap-1">
+<label class="font-label-meta text-label-meta uppercase text-on-surface-variant flex justify-between">
+<span>Target Receiving Asset</span>
+<span class="text-secondary font-bold">ACCEPTOR CANDIDATE</span>
+</label>
+<div class="bg-surface-container-low p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between font-headline-sm text-body-sm text-on-surface">
+<span class="font-bold">TX-Pine-02</span>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-1.5 py-0.2">138kV / 13.8kV</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-telemetry-num text-on-surface-variant">
+<span>Load: 38.6 MVA / 77.2%</span>
+<span class="text-secondary font-bold">Headroom: +11.4 MVA</span>
+</div>
+</div>
+</div>
+<!-- Interconnecting Transfer Pathway -->
+<div class="flex flex-col gap-1">
+<label class="font-label-meta text-label-meta uppercase text-on-surface-variant">
+              Interconnecting Transfer Pathway
+            </label>
+<div class="bg-surface-container-high p-space-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-on-surface">Feeder Tie F-104</span>
+<span class="font-label-code text-label-code text-tertiary">Max Cap: 15.0 MVA • XLPE Subterranean</span>
+</div>
+<span class="font-label-code text-label-code bg-surface-container px-2 py-1 text-on-surface-variant uppercase">De-energized Tie</span>
+</div>
+</div>
+<!-- Proposed Load Transfer Input Stepper -->
+<div class="bg-surface-container p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-meta text-label-meta uppercase text-on-surface font-bold tracking-wider">
+                Proposed Shift Magnitude
+              </label>
+<div class="flex bg-surface-container-highest p-0.5">
+<button class="px-2 py-0.5 font-label-code text-label-code bg-primary text-on-primary" type="button">MVA</button>
+<button class="px-2 py-0.5 font-label-code text-label-code text-on-surface hover:bg-surface transition-colors" type="button">MW</button>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="w-10 h-10 bg-inverse-surface text-inverse-on-surface hover:bg-primary transition-colors flex items-center justify-center font-bold text-headline-sm select-none" onclick="adjustShift(-0.5)" type="button">−</button>
+<div class="flex-1 bg-surface-container-lowest px-space-md py-2 text-center">
+<span class="font-display text-headline-lg font-bold text-primary font-telemetry-num" id="shiftDisplay">8.5</span>
+<span class="font-label-code text-label-code text-tertiary ml-1">MVA</span>
+</div>
+<button class="w-10 h-10 bg-inverse-surface text-inverse-on-surface hover:bg-primary transition-colors flex items-center justify-center font-bold text-headline-sm select-none" onclick="adjustShift(0.5)" type="button">+</button>
+</div>
+<div class="flex justify-between items-center text-body-sm font-label-meta text-tertiary uppercase">
+<span>Feeder Min: 1.0 MVA</span>
+<span>Tie Limit: 15.0 MVA</span>
+</div>
+</div>
+<!-- Power Factor Assumption -->
+<div class="flex flex-col gap-1">
+<label class="font-label-meta text-label-meta uppercase text-on-surface-variant">Power Factor Baseline</label>
+<div class="bg-surface-container-low px-space-md py-2 flex items-center justify-between font-body-sm text-body-sm text-on-surface">
+<span class="font-telemetry-num font-semibold">0.95 Lagging (Standard Grid Baseline)</span>
+<span class="font-label-code text-label-code text-tertiary">Q = 2.79 MVAR</span>
+</div>
+</div>
+<!-- Contingency Constraints Checkboxes -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-meta text-label-meta uppercase text-on-surface-variant font-bold tracking-wider mb-1">Active Mathematical Constraints</span>
+<label class="flex items-center gap-space-sm p-space-xs bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input checked="" class="w-4 h-4 accent-primary rounded-none" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold">N-1 Bus Contingency Headroom Check</span>
+</label>
+<label class="flex items-center gap-space-sm p-space-xs bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input checked="" class="w-4 h-4 accent-primary rounded-none" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold">Thermal Time Constant Dynamic Model (τ = 90m)</span>
+</label>
+<label class="flex items-center gap-space-sm p-space-xs bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer select-none">
+<input checked="" class="w-4 h-4 accent-primary rounded-none" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold">Secondary Voltage Sag Bounds (±5% nominal)</span>
+</label>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-space-sm pt-space-md">
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-3 px-space-md flex items-center justify-center gap-2 font-headline-sm text-headline-sm uppercase tracking-wider shadow-sm transition-all" type="submit">
+<span class="material-symbols-outlined text-[1.25rem]">bolt</span>
+<span>Compute Power Flow Simulation</span>
+</button>
+<button class="w-full bg-surface-container-high hover:bg-surface-container text-on-surface py-2 px-space-md font-label-code text-label-code uppercase tracking-widest text-center transition-colors" onclick="resetDefaults()" type="button">
+              Reset Parameters to Baseline
+            </button>
+</div>
+</form>
+</div>
+<!-- Quick Dispatch Telemetry Vector Card -->
+<div class="bg-surface-container p-space-md shadow-sm flex flex-col gap-space-xs">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Real-time SCADA Bus Vector</span>
+<div class="flex items-center justify-between text-body-sm font-telemetry-num text-on-surface">
+<span>OAK_138_BUS_V: <span class="font-bold text-secondary">1.004 pu</span></span>
+<span>PINE_138_BUS_V: <span class="font-bold text-secondary">0.998 pu</span></span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-telemetry-num text-on-surface">
+<span>AMBIENT_TEMP: <span class="font-bold">31.4°C</span></span>
+<span>SYSTEM_FREQ: <span class="font-bold text-secondary">60.002 Hz</span></span>
+</div>
+</div>
+</div>
+<!-- ========================================================== -->
+<!-- SECTION B: BEFORE & AFTER VISUAL LOADING ANALYSIS (~42%)   -->
+<!-- ========================================================== -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Header Ribbon -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">compare_arrows</span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface">Dual Asset Loading Shift Analysis</span>
+</div>
+<span class="font-label-code text-label-code text-secondary font-bold px-2 py-0.5 bg-secondary-container text-on-secondary-container uppercase">
+          ΔP Flow: 8.5 MVA
+        </span>
+</div>
+<!-- SOURCE ASSET CARD (TX-Oak-04) -->
+<div class="bg-surface-container-lowest shadow-sm flex flex-col">
+<!-- Header Tag Bar -->
+<div class="bg-surface-container px-space-lg py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 bg-error inline-block"></span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">SOURCE: TX-Oak-04</span>
+<span class="font-label-code text-label-code bg-surface-container-highest px-1.5 py-0.2 text-on-surface-variant">RATING: 50.0 MVA</span>
+</div>
+<span class="font-label-code text-label-code bg-error text-on-error px-2 py-0.5 uppercase tracking-widest font-bold animate-pulse">OVERLOAD RISK</span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Numerical Metrics Row -->
+<div class="grid grid-cols-3 gap-space-md">
+<div class="bg-surface-container-low p-space-sm flex flex-col">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Pre-Transfer</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-error font-bold leading-none mt-1">49.2</span>
+<span class="font-body-sm text-body-sm text-error font-bold">98.4% (CRITICAL)</span>
+</div>
+<div class="bg-primary/10 p-space-sm flex flex-col justify-center items-center text-center">
+<span class="font-label-meta text-label-meta uppercase text-primary font-bold">Relief Offset</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-primary font-bold leading-none mt-1">-8.5</span>
+<span class="font-body-sm text-body-sm text-primary font-bold">MVA SHIFT</span>
+</div>
+<div class="bg-surface-container-low p-space-sm flex flex-col">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Post-Transfer</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-primary-container font-bold leading-none mt-1">40.7</span>
+<span class="font-body-sm text-body-sm text-on-surface font-bold">81.4% (NORMAL)</span>
+</div>
+</div>
+<!-- Horizontal Segmented Capacity Bar Gauge -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex justify-between font-label-meta text-label-meta uppercase text-on-surface-variant font-bold">
+<span>Dynamic Nameplate Utilization</span>
+<span>Thermal Relief: -17.0%</span>
+</div>
+<!-- Custom Horizontal Bar with Thresholds -->
+<div class="relative w-full h-8 bg-surface-container flex overflow-hidden">
+<!-- Zone 0-75% Safe -->
+<div class="h-full bg-secondary-fixed/50" style="width: 75%;"></div>
+<!-- Zone 75-90% Caution -->
+<div class="h-full bg-secondary/30" style="width: 15%;"></div>
+<!-- Zone 90-100% Trip/Overload -->
+<div class="h-full bg-error-container" style="width: 10%;"></div>
+<!-- Pre-Shift Level Indicator (98.4%) -->
+<div class="absolute top-0 bottom-0 bg-error w-1.5 z-20" style="left: 98.4%;" title="Pre-Shift: 98.4%">
+<div class="absolute -top-1 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-t-error"></div>
+</div>
+<!-- Post-Shift Fill Bar (81.4%) -->
+<div class="absolute top-1.5 bottom-1.5 left-0 bg-primary/75 z-10 transition-all duration-700" style="width: 81.4%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-label-code text-tertiary">
+<span>0 MVA (0%)</span>
+<span class="text-secondary font-bold">75% NOMINAL</span>
+<span class="text-primary font-bold">90% CAUTION</span>
+<span class="text-error font-bold">50 MVA (100%)</span>
+</div>
+</div>
+<!-- Top-Oil Thermal Projection Box -->
+<div class="bg-surface-container-high p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">thermostat</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-bold text-on-surface">Top-Oil Temp Trajectory</span>
+<span class="font-body-sm text-body-sm text-tertiary">Projected steady-state within 35 minutes</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-telemetry-num text-body-sm text-error line-through">94.2°C</span>
+<span class="material-symbols-outlined text-secondary text-[1rem]">trending_down</span>
+<span class="font-headline-sm text-headline-sm font-telemetry-num text-secondary font-bold">83.0°C</span>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-1 py-0.5">-11.2°C</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RECEIVING ASSET CARD (TX-Pine-02) -->
+<div class="bg-surface-container-lowest shadow-sm flex flex-col">
+<!-- Header Tag Bar -->
+<div class="bg-surface-container px-space-lg py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 bg-secondary inline-block"></span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">RECEIVING: TX-Pine-02</span>
+<span class="font-label-code text-label-code bg-surface-container-highest px-1.5 py-0.2 text-on-surface-variant">RATING: 50.0 MVA</span>
+</div>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-2 py-0.5 uppercase tracking-widest font-bold">N-1 ABSORBER</span>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Numerical Metrics Row -->
+<div class="grid grid-cols-3 gap-space-md">
+<div class="bg-surface-container-low p-space-sm flex flex-col">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Pre-Transfer</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-secondary font-bold leading-none mt-1">38.6</span>
+<span class="font-body-sm text-body-sm text-secondary font-bold">77.2% (HEALTHY)</span>
+</div>
+<div class="bg-secondary/10 p-space-sm flex flex-col justify-center items-center text-center">
+<span class="font-label-meta text-label-meta uppercase text-secondary font-bold">Injected Inflow</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-secondary font-bold leading-none mt-1">+8.5</span>
+<span class="font-body-sm text-body-sm text-secondary font-bold">MVA LOAD</span>
+</div>
+<div class="bg-surface-container-low p-space-sm flex flex-col">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Post-Transfer</span>
+<span class="font-headline-lg text-headline-lg font-telemetry-num text-primary font-bold leading-none mt-1">47.1</span>
+<span class="font-body-sm text-body-sm text-primary font-bold">94.2% (ELEVATED)</span>
+</div>
+</div>
+<!-- Horizontal Segmented Capacity Bar Gauge -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex justify-between font-label-meta text-label-meta uppercase text-on-surface-variant font-bold">
+<span>Dynamic Nameplate Utilization</span>
+<span class="text-primary font-bold">Remaining Headroom: 2.9 MVA</span>
+</div>
+<!-- Custom Horizontal Bar with Thresholds -->
+<div class="relative w-full h-8 bg-surface-container flex overflow-hidden">
+<!-- Zone 0-75% Safe -->
+<div class="h-full bg-secondary-fixed/50" style="width: 75%;"></div>
+<!-- Zone 75-90% Caution -->
+<div class="h-full bg-secondary/30" style="width: 15%;"></div>
+<!-- Zone 90-100% Overload Buffer -->
+<div class="h-full bg-error-container" style="width: 10%;"></div>
+<!-- Pre-Shift Level Indicator (77.2%) -->
+<div class="absolute top-0 bottom-0 bg-secondary w-1.5 z-20" style="left: 77.2%;" title="Pre-Shift: 77.2%">
+<div class="absolute -top-1 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-t-secondary"></div>
+</div>
+<!-- Post-Shift Fill Bar (94.2%) -->
+<div class="absolute top-1.5 bottom-1.5 left-0 bg-primary/75 z-10 transition-all duration-700" style="width: 94.2%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-label-code text-tertiary">
+<span>0 MVA (0%)</span>
+<span class="text-secondary font-bold">75% NOMINAL</span>
+<span class="text-primary font-bold">90% CAUTION</span>
+<span class="text-error font-bold">50 MVA (100%)</span>
+</div>
+</div>
+<!-- Top-Oil Thermal Projection Box -->
+<div class="bg-surface-container-high p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[1.25rem]">thermostat</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm font-bold text-on-surface">Top-Oil Temp Trajectory</span>
+<span class="font-body-sm text-body-sm text-tertiary">Calculated thermal equilibrium</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-telemetry-num text-body-sm text-tertiary">68.4°C</span>
+<span class="material-symbols-outlined text-primary text-[1rem]">trending_up</span>
+<span class="font-headline-sm text-headline-sm font-telemetry-num text-on-surface font-bold">74.6°C</span>
+<span class="font-label-code text-label-code bg-surface-container-highest text-on-surface px-1 py-0.5">+6.2°C (&lt; 85°C Max)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- INLINE VECTOR SCHEMATIC: TRANSFER PATHWAY -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta uppercase text-tertiary">Path Impedance &amp; Line Reactance Diagram</span>
+<span class="font-label-code text-label-code text-primary font-bold">X/R RATIO = 8.42</span>
+</div>
+<div class="w-full bg-surface-container-high p-space-sm">
+<svg class="w-full h-16" fill="none" viewbox="0 0 600 64" xmlns="http://www.w3.org/2000/svg">
+<!-- Oak Substation Bus -->
+<rect fill="#944521" height="40" width="12" x="20" y="12"></rect>
+<text fill="#1c1c17" font-family="Space Grotesk" font-size="10" font-weight="bold" x="38" y="24">BUS-OAK-13.8kV</text>
+<text fill="#55433c" font-family="Geist" font-size="9" x="38" y="38">TX-Oak-04 Primary</text>
+<!-- Breaker 52-OAK -->
+<line stroke="#944521" stroke-dasharray="2 2" stroke-width="2" x1="32" x2="160" y1="32" y2="32"></line>
+<rect fill="#1c1c17" height="16" width="16" x="160" y="24"></rect>
+<text fill="#fcf9f1" font-family="Space Grotesk" font-size="8" font-weight="bold" x="163" y="36">52-A</text>
+<!-- Feeder Cable Pathway F-104 -->
+<line stroke="#446554" stroke-width="3" x1="176" x2="280" y1="32" y2="32"></line>
+<!-- Tie Breaker (Open -> Simulated Closed) -->
+<circle cx="300" cy="32" fill="#fcf9f1" r="14" stroke="#944521" stroke-width="2"></circle>
+<text fill="#944521" font-family="Space Grotesk" font-size="9" font-weight="bold" x="293" y="35">TIE</text>
+<text fill="#944521" font-family="Geist" font-size="8" font-weight="bold" x="282" y="56">F-104 (SIM CLOSED)</text>
+<!-- Feeder Cable to Pine -->
+<line stroke="#446554" stroke-width="3" x1="320" x2="424" y1="32" y2="32"></line>
+<!-- Breaker 52-PINE -->
+<rect fill="#1c1c17" height="16" width="16" x="424" y="24"></rect>
+<text fill="#fcf9f1" font-family="Space Grotesk" font-size="8" font-weight="bold" x="427" y="36">52-B</text>
+<line stroke="#446554" stroke-width="2" x1="440" x2="568" y1="32" y2="32"></line>
+<!-- Pine Substation Bus -->
+<rect fill="#446554" height="40" width="12" x="568" y="12"></rect>
+<text fill="#1c1c17" font-family="Space Grotesk" font-size="10" font-weight="bold" x="495" y="24">BUS-PINE-13.8kV</text>
+<text fill="#55433c" font-family="Geist" font-size="9" x="495" y="38">TX-Pine-02 Secondary</text>
+</svg>
+</div>
+</div>
+</div>
+<!-- ========================================================== -->
+<!-- SECTION C & D: FINDINGS & DECISION SUMMARY (~28%)          -->
+<!-- ========================================================== -->
+<div class="lg:col-span-3 flex flex-col gap-space-md">
+<!-- Status Verdict Card -->
+<div class="bg-secondary-fixed/30 p-space-lg shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[2rem]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta uppercase text-on-secondary-fixed font-bold tracking-wider">Feasibility Verdict</span>
+<span class="font-headline-sm text-body-sm font-bold text-on-secondary-fixed-variant uppercase">CONSTRAINTS SATISFIED</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-secondary-container">
+          The proposed 8.5 MVA shift via Feeder Tie F-104 falls entirely within transient thermal headroom models and complies with NERC PRC-023 loadability metrics.
+        </p>
+</div>
+<!-- Constraint Validation Checklist -->
+<div class="bg-surface-container-lowest shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface">Criteria Matrix</span>
+<span class="font-label-code text-label-code text-tertiary">3 PASS / 1 ATTN</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Item 1 -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-sm text-secondary font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[1rem]">check</span>
+<span>Thermal Capacity Limit</span>
+</span>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-1.5 py-0.2">PASS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Neither asset exceeds 50.0 MVA maximum nameplate. Source relief = 8.5 MVA.
+            </p>
+</div>
+<!-- Item 2 -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-sm text-secondary font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[1rem]">check</span>
+<span>Feeder Tie Rating</span>
+</span>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-1.5 py-0.2">PASS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              8.5 MVA transfer is within Feeder Tie F-104 physical cable rating of 15.0 MVA (56.6% utilization).
+            </p>
+</div>
+<!-- Item 3 -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-sm text-secondary font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[1rem]">check</span>
+<span>Bus Voltage Stability</span>
+</span>
+<span class="font-label-code text-label-code bg-secondary text-on-secondary px-1.5 py-0.2">PASS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Post-shift bus voltages remain between 0.98 pu and 1.01 pu; zero tap changer hunting predicted.
+            </p>
+</div>
+<!-- Item 4 (Attention) -->
+<div class="p-space-sm bg-surface-container-high flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-sm text-primary font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[1rem]">warning</span>
+<span>Receiving Asset Margin</span>
+</span>
+<span class="font-label-code text-label-code bg-primary text-on-primary px-1.5 py-0.2">ATTENTION</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              TX-Pine-02 will operate at 94.2% capacity (47.1 MVA). Operator must monitor closely if ambient load climbs past 18:00 UTC evening ramp.
+            </p>
+</div>
+</div>
+</div>
+<!-- Engineering Recommendation Summary -->
+<div class="bg-surface-container-lowest shadow-sm p-space-lg flex flex-col gap-space-sm">
+<span class="font-label-meta text-label-meta uppercase text-on-surface-variant font-bold tracking-wider">
+          Engineering Recommendation
+        </span>
+<blockquote class="font-body-sm text-body-sm text-on-surface italic pl-space-sm bg-surface-container-low py-space-xs">
+          “Hypothetical transfer of 8.5 MVA via Tie F-104 eliminates immediate thermal runaway condition on TX-Oak-04 while maintaining operational N-1 compliance on West Substation.”
+        </blockquote>
+<div class="flex items-center justify-between pt-space-xs font-label-meta text-label-meta text-tertiary">
+<span>SIGN-OFF: Automated Study Engine</span>
+<span>STAMP: 16:42:19 UTC</span>
+</div>
+</div>
+<!-- Dispatch Operational Actions (Non-Actuating) -->
+<div class="bg-surface-container shadow-sm p-space-md flex flex-col gap-space-sm">
+<span class="font-label-meta text-label-meta uppercase text-on-surface-variant font-bold tracking-wider">
+          Artifact Export &amp; Logging
+        </span>
+<button class="w-full bg-inverse-surface hover:bg-on-surface text-inverse-on-surface py-2.5 px-space-md flex items-center justify-center gap-2 font-headline-sm text-body-sm uppercase tracking-wider shadow-sm transition-colors" onclick="triggerExportNotice('DNP3 Sheet')" type="button">
+<span class="material-symbols-outlined text-[1.125rem]">assignment</span>
+<span>Export Switching Plan (DNP3)</span>
+</button>
+<button class="w-full bg-surface-container-lowest hover:bg-surface text-on-surface py-2 px-space-md flex items-center justify-center gap-2 font-label-code text-label-code uppercase tracking-wider transition-colors shadow-sm" onclick="triggerExportNotice('Log Entry')" type="button">
+<span class="material-symbols-outlined text-[1rem]">save</span>
+<span>Save Scenario to Dispatch Log</span>
+</button>
+</div>
+<!-- Toast Feedback Area -->
+<div class="hidden bg-inverse-surface text-inverse-on-surface p-space-sm font-label-code text-label-code flex items-center justify-between shadow-sm" id="actionToast">
+<span id="toastMsg">Exporting operational manifest...</span>
+<span class="material-symbols-outlined text-[1rem] text-secondary-fixed">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- INTERACTION SCRIPT FOR TELEMETRY STEPPERS & EXPORT NOTICES -->
+<script>
+  let currentShift = 8.5;
+  const maxTie = 15.0;
+  const minTie = 1.0;
+
+  function adjustShift(delta) {
+    let newVal = parseFloat((currentShift + delta).toFixed(1));
+    if (newVal >= minTie && newVal <= maxTie) {
+      currentShift = newVal;
+      document.getElementById('shiftDisplay').innerText = currentShift.toFixed(1);
+    }
+  }
+
+  function resetDefaults() {
+    currentShift = 8.5;
+    document.getElementById('shiftDisplay').innerText = currentShift.toFixed(1);
+    showToast("Parameters reset to SCADA default (8.5 MVA)");
+  }
+
+  function runSimulation() {
+    showToast("Recomputing Newton-Raphson power flow for " + currentShift.toFixed(1) + " MVA...");
+  }
+
+  function triggerExportNotice(type) {
+    showToast("Generated " + type + " successfully for Operator S. Vance, P.E.");
+  }
+
+  function showToast(text) {
+    const toast = document.getElementById('actionToast');
+    const msg = document.getElementById('toastMsg');
+    msg.innerText = text;
+    toast.classList.remove('hidden');
+    setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 3800);
+  }
+</script>
+</main>
+</div>
+</body></html>

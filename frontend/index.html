@@ -1,423 +1,1160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GridGuard — Autonomous Reliability Intelligence for Power Distribution Networks</title>
-  <meta name="description" content="AI-powered reliability control plane predicting transformer and feeder failure risk, explaining multi-sensor evidence, and simulating counterfactual load redistribution.">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2224%22>⚡</text></svg>">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GridGuard — Engineering Command Center & Grid Intelligence</title>
+  <meta name="description" content="Autonomous reliability intelligence predicting transformer and feeder failure risk, explaining multi-sensor evidence, and simulating counterfactual load redistribution." />
+
+  <!-- Google Fonts: Material Symbols Outlined, Geist, Space Grotesk -->
+  <!-- Google Fonts: Material Symbols Outlined, Outfit, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#ebe8e0",
+            "on-surface": "#1c1c17",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f4f1e9",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#f1eee6",
+            "tertiary": "#555e57",
+            "inverse-primary": "#ffb598",
+            "on-surface-variant": "#55433c",
+            "on-secondary-fixed-variant": "#2c4d3d",
+            "surface": "#fcf9f1",
+            "tertiary-container": "#6d776f",
+            "on-secondary-container": "#486a58",
+            "on-tertiary-fixed": "#151e18",
+            "outline-variant": "#dbc1b8",
+            "tertiary-fixed": "#dbe5dc",
+            "background": "#fcf9f1",
+            "error-container": "#ffdad6",
+            "surface-dim": "#dddad2",
+            "tertiary-fixed-dim": "#bfc9c0",
+            "secondary-fixed-dim": "#aacfba",
+            "secondary-fixed": "#c6ebd5",
+            "outline": "#88726b",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#ffb598",
+            "surface-variant": "#e5e2da",
+            "on-secondary-fixed": "#002114",
+            "error": "#ba1a1a",
+            "primary": "#944521",
+            "on-primary": "#ffffff",
+            "primary-container": "#b35c36",
+            "surface-container-highest": "#e5e2da",
+            "surface-container-low": "#f6f3eb",
+            "secondary-container": "#c3e8d2",
+            "on-primary-fixed": "#370e00",
+            "on-primary-fixed-variant": "#79300d",
+            "primary-fixed": "#ffdbce",
+            "on-tertiary-container": "#f6fff6",
+            "on-tertiary-fixed-variant": "#404942",
+            "on-primary-container": "#fffbff",
+            "surface-bright": "#fcf9f1",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#31312b",
+            "secondary": "#446554",
+            "on-error": "#ffffff",
+            "surface-tint": "#974723",
+            "on-background": "#1c1c17"
+          },
+          borderRadius: {
+            DEFAULT: "0.375rem",
+            sm: "0.25rem",
+            md: "0.5rem",
+            lg: "0.75rem",
+            xl: "1rem",
+            "2xl": "1.25rem",
+            full: "9999px"
+          },
+          spacing: {
+            gutter: "1rem",
+            "gutter-desktop": "1.5rem",
+            margin: "1rem",
+            "margin-desktop": "2rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-lg": "1.25rem",
+            "space-xl": "2rem"
+          },
+          fontFamily: {
+            "telemetry-num": ["JetBrains Mono", "monospace"],
+            "headline-sm": ["Outfit", "sans-serif"],
+            "headline-md": ["Outfit", "sans-serif"],
+            "headline-lg": ["Outfit", "sans-serif"],
+            display: ["Outfit", "sans-serif"],
+            "label-code": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-meta": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
 </head>
-<body>
 
-  <!-- Top Operational Header -->
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-icon">⚡</div>
-      <div class="brand-text">
-        <h1>GridGuard</h1>
-        <div class="brand-subtitle">Autonomous Reliability Intelligence</div>
+<body class="bg-background font-body-md text-on-surface antialiased flex">
+
+  <!-- ========================================================================= -->
+  <!-- 1. FIXED LEFT SIDEBAR (Dark Industrial Basalt)                           -->
+  <!-- ========================================================================= -->
+  <aside class="fixed left-0 top-0 h-screen w-72 bg-inverse-surface text-inverse-on-surface z-50 flex flex-col justify-between border-r border-tertiary-container/30">
+    <div class="flex flex-col">
+      <!-- Sidebar Brand Header -->
+      <div class="p-space-lg border-b border-tertiary-container/30 bg-inverse-surface">
+        <div class="flex items-center gap-space-md">
+          <div class="w-9 h-9 rounded bg-primary flex items-center justify-center text-on-primary font-headline-lg font-bold shadow-sm">
+            ⚡
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-space-xs">
+              <span class="font-headline-sm uppercase tracking-wider text-inverse-on-surface font-bold text-[1.125rem]">GRIDGUARD</span>
+              <span class="px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-code text-[0.625rem] uppercase font-bold">TX</span>
+            </div>
+            <span class="font-label-code text-[0.625rem] text-tertiary-fixed-dim uppercase tracking-widest mt-0.5">GRID INTELLIGENCE</span>
+          </div>
+        </div>
+        <p class="mt-space-sm font-label-meta text-[0.6875rem] text-tertiary-fixed-dim uppercase tracking-wider border-l-2 border-primary pl-2">
+          Understand the risk. Strengthen the grid.
+        </p>
       </div>
+
+      <!-- Telemetry Sub-bar -->
+      <div class="px-space-md py-space-sm bg-inverse-surface/60 border-b border-tertiary-container/20 flex items-center justify-between text-tertiary-fixed-dim font-label-code text-[0.6875rem]">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-pulse"></span>
+          SUBSTATION TELEMETRY
+        </span>
+        <span class="text-secondary-fixed font-bold" id="sidebar-telemetry-status">SYS: OK</span>
+      </div>
+
+      <!-- Tab Navigation Menu -->
+      <nav class="flex flex-col gap-1 p-space-md">
+        <!-- Dashboard -->
+        <button id="nav-btn-dashboard" onclick="switchTab('dashboard')" class="nav-item flex items-center gap-space-md px-space-md py-space-sm transition-all rounded-xl bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm text-left w-full shadow-xs">
+          <span class="material-symbols-outlined text-[1.25rem]">grid_view</span>
+          <span>Dashboard</span>
+        </button>
+
+        <!-- Assets -->
+        <button id="nav-btn-assets" onclick="switchTab('assets')" class="nav-item flex items-center gap-space-md px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
+          <span class="material-symbols-outlined text-[1.25rem]">account_tree</span>
+          <span>Assets Deep-Dive</span>
+        </button>
+
+        <!-- Alerts -->
+        <button id="nav-btn-alerts" onclick="switchTab('alerts')" class="nav-item flex items-center justify-between px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
+          <span class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-[1.25rem]">warning</span>
+            <span>Alerts Center</span>
+          </span>
+          <span class="font-label-code text-[0.6875rem] px-2 py-0.5 rounded-full bg-primary text-on-primary font-bold shadow-2xs" id="sidebar-alert-badge">3</span>
+        </button>
+
+        <!-- Load Simulation -->
+        <button id="nav-btn-simulation" onclick="switchTab('simulation')" class="nav-item flex items-center gap-space-md px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
+          <span class="material-symbols-outlined text-[1.25rem]">bolt</span>
+          <span>Load Simulation</span>
+        </button>
+
+        <!-- System Status -->
+        <button id="nav-btn-status" onclick="switchTab('status')" class="nav-item flex items-center gap-space-md px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
+          <span class="material-symbols-outlined text-[1.25rem]">tune</span>
+          <span>System Status</span>
+        </button>
+      </nav>
     </div>
 
-    <!-- Live Operational Tickers -->
-    <div class="header-stats">
-      <div class="stat-pill" title="Total active transformers registered in network">
-        <span class="label">Distribution Assets</span>
-        <span class="value" id="ticker-assets-count">50 Active</span>
+    <!-- Sidebar Bottom Bus Topology Info -->
+    <div class="p-space-md border-t border-tertiary-container/30 bg-inverse-surface/80 flex flex-col gap-space-sm">
+      <div class="p-space-sm bg-surface/5 border border-tertiary-container/30 rounded-xl">
+        <div class="flex items-center justify-between font-label-code text-[0.6875rem] text-tertiary-fixed-dim">
+          <span class="uppercase tracking-wider">BUS TOPOLOGY</span>
+          <span class="text-secondary-fixed font-bold">LIVE (N-1 OK)</span>
+        </div>
+        <div class="flex items-center justify-between mt-2 pt-2 border-t border-tertiary-container/20">
+          <div class="h-1.5 flex-1 bg-tertiary-container/40 rounded-full relative overflow-hidden">
+            <div class="absolute left-1/4 -top-1 w-2.5 h-3.5 bg-primary rounded-xs"></div>
+            <div class="absolute right-1/3 -top-1 w-2.5 h-3.5 bg-secondary-fixed rounded-xs"></div>
+          </div>
+        </div>
       </div>
-
-      <div class="stat-pill" title="Inference latency percentile 95">
-        <span class="label">Inference p95</span>
-        <span class="value" id="ticker-p95">-- ms</span>
-      </div>
-
-      <div class="stat-pill" title="Current safety fallback activation rate">
-        <span class="label">Fallback Rate</span>
-        <span class="value" id="ticker-fallback">-- %</span>
-      </div>
-
-      <div class="mode-badge" id="runtime-mode-badge">
-        Mode: <span id="runtime-mode-val">Stub Dev</span>
-      </div>
-
-      <div class="advisory-badge" title="Advisory system: Does not execute physical switching">
-        ⚠️ Operator Advisory Only
+      <div class="flex items-center justify-between font-label-meta text-[0.625rem] text-tertiary-fixed-dim pt-space-xs">
+        <span class="flex items-center gap-1.5 font-label-code text-[0.625rem] text-inverse-on-surface">
+          <span class="w-2 h-2 rounded-full bg-secondary-fixed shadow-2xs"></span>
+          DNP3/IEC-61850 SECURE
+        </span>
+        <span class="font-label-code text-[0.625rem] text-tertiary-fixed-dim" id="model-mode-indicator">v1.0-CHAMPION</span>
       </div>
     </div>
-  </header>
+  </aside>
 
-  <!-- Navigation Tabs -->
-  <nav class="app-tabs">
-    <button class="tab-btn active" id="tab-nav-risk" onclick="switchTab('risk')">
-      ⚡ Asset Risk Intelligence
-    </button>
-    <button class="tab-btn" id="tab-nav-simulator" onclick="switchTab('simulator')">
-      🔄 Counterfactual Load Simulator
-    </button>
-    <button class="tab-btn" id="tab-nav-alerts" onclick="switchTab('alerts')">
-      🚨 Operational Alert Center (<span id="unack-alert-count">0</span>)
-    </button>
-    <button class="tab-btn" id="tab-nav-observability" onclick="switchTab('observability')">
-      📈 MLOps & System Health
-    </button>
-  </nav>
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN APPLICATION CONTENT AREA                                         -->
+  <!-- ========================================================================= -->
+  <div class="pl-72 flex flex-col flex-1 min-h-screen w-full">
 
-  <!-- Main Application Container -->
-  <main class="container">
+    <!-- Top Operational Header -->
+    <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container/90 backdrop-blur-md border-b border-surface-variant z-40 px-gutter-desktop flex items-center justify-between">
+      <div class="flex items-center gap-gutter">
+        <!-- Search Input -->
+        <div class="relative w-96">
+          <span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-[1.125rem] text-tertiary">search</span>
+          <input
+            id="global-search-input"
+            type="text"
+            placeholder="Search Substations, Feeders, TX-ID (e.g. TX-04, TX-MUM-1042)..."
+            class="w-full pl-9 pr-space-md py-1.5 bg-surface border border-outline-variant/80 rounded-xl text-body-sm font-body-sm text-on-surface placeholder:text-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 transition-colors"
+            oninput="handleGlobalSearch(this.value)"
+          />
+        </div>
+      </div>
 
-    <!-- TAB 1: ASSET RISK INTELLIGENCE -->
-    <section class="tab-content active" id="tab-content-risk">
-      <div class="dashboard-grid">
-        
-        <!-- Left Column: Risk-Ranked Asset Table -->
-        <div class="glass table-panel" style="padding: 1.5rem;">
-          <div class="section-header">
-            <h2 class="section-title">
-              <span>Grid Asset Fleet</span>
-              <span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 500;">(Ranked by Imminent Failure Risk)</span>
-            </h2>
+      <!-- Right Header Status Tickers -->
+      <div class="flex items-center gap-space-lg">
+        <div class="hidden xl:flex items-center gap-space-md">
+          <div class="flex items-center gap-1.5 px-3 py-1 bg-surface border border-outline-variant/80 rounded-full font-label-code text-[0.6875rem] text-on-surface shadow-2xs" title="Real-time REST API gateway latency">
+            <span class="w-2 h-2 rounded-full bg-secondary shadow-2xs"></span>
+            <span id="backend-status-pill">BACKEND: CONNECTED (REST v1 / <span id="ticker-p95-val">18</span>ms)</span>
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-high border border-outline-variant/80 rounded-full font-label-code text-[0.6875rem] text-primary" title="SCADA poll cycle synchronization">
+            <span class="material-symbols-outlined text-[0.875rem] animate-spin">sync</span>
+            <span>SCADA FEED: <span id="scada-feed-time">LIVE</span></span>
+          </div>
+        </div>
 
-            <div class="filter-bar">
-              <select class="control-select" id="filter-feeder" onchange="applyAssetFilters()">
-                <option value="">All Feeders (5)</option>
-                <option value="FDR-MUM-11">Bandra West (FDR-11)</option>
-                <option value="FDR-MUM-22">Andheri East (FDR-22)</option>
-                <option value="FDR-MUM-33">Kurla Central (FDR-33)</option>
-                <option value="FDR-MUM-44">Colaba Port (FDR-44)</option>
-                <option value="FDR-MUM-55">Thane Industrial (FDR-55)</option>
-              </select>
+        <div class="flex items-center gap-space-md">
+          <div class="advisory-badge px-3 py-1 rounded-full bg-surface border border-outline-variant/80 font-label-code text-[0.625rem] text-tertiary font-bold tracking-wider" title="Advisory system: Operator confirmation required">
+            ⚠️ Operator Advisory Only
+          </div>
+          <button class="relative p-1.5 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg hover:bg-surface/50" onclick="switchTab('alerts')" title="Open Alert Center">
+            <span class="material-symbols-outlined text-[1.25rem]">notifications</span>
+            <span class="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary rounded-full font-label-code text-[0.5625rem] flex items-center justify-center font-bold shadow-2xs" id="header-alert-count">3</span>
+          </button>
+          <div class="h-6 w-px bg-outline-variant"></div>
+          <!-- Operator Avatar -->
+          <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center font-headline-sm font-bold text-primary text-xs">
+              SV
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="font-headline-sm text-body-sm text-on-surface font-semibold leading-tight">S. Vance, P.E.</span>
+              <span class="font-label-meta text-[0.625rem] text-on-surface-variant uppercase tracking-wider">Grid Operations Lead</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
 
-              <select class="control-select" id="filter-severity" onchange="applyAssetFilters()">
-                <option value="">All Severities</option>
-                <option value="critical">Critical Risk</option>
-                <option value="watch">Watchlist</option>
-                <option value="normal">Normal</option>
-              </select>
+    <!-- Main Views Router Container -->
+    <main class="relative pt-16 flex-1 w-full bg-surface-container-low p-gutter-desktop">
+
+      <!-- ===================================================================== -->
+      <!-- TAB 1: DASHBOARD PAGE                                                 -->
+      <!-- ===================================================================== -->
+      <section id="tab-dashboard" class="tab-pane flex flex-col w-full gap-space-lg">
+        <!-- Top Editorial Dispatch Header -->
+        <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-code text-[0.6875rem] uppercase tracking-widest text-primary px-1.5 py-0.5 bg-primary/10 font-bold">MISSION CRITICAL DISPATCH</span>
+              <span class="font-label-meta text-[0.6875rem] uppercase tracking-wider text-tertiary">SECTOR-04 REGIONAL GRID</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Grid Operations Overview</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+              Real-time telemetry, AI failure probability analysis, and hypothetical mitigation pathways across 4 primary transmission substations.
+            </p>
+          </div>
+          <!-- Quick Toolbar -->
+          <div class="flex flex-wrap items-center gap-space-sm">
+            <div class="flex items-center gap-2 px-space-md py-1.5 bg-surface border border-outline-variant rounded font-label-code text-[0.6875rem] text-on-surface">
+              <span class="material-symbols-outlined text-[1rem] text-tertiary">schedule</span>
+              <span>SYS TIME: <strong class="text-on-surface" id="live-utc-time">--:--:-- UTC</strong></span>
+            </div>
+            <button class="flex items-center gap-1.5 px-space-md py-1.5 bg-surface hover:bg-surface-container border border-outline-variant rounded font-headline-sm text-body-sm text-on-surface transition-colors" onclick="exportScadaLog()">
+              <span class="material-symbols-outlined text-[1.125rem]">download</span>
+              <span>Export SCADA Log</span>
+            </button>
+            <button class="flex items-center gap-1.5 px-space-md py-1.5 bg-primary text-on-primary hover:bg-primary-container rounded font-headline-sm text-body-sm transition-colors shadow-sm" onclick="navigateToSimulation('TX-04', 'TX-Pine-02', 8.5)">
+              <span class="material-symbols-outlined text-[1.125rem]">emergency_heat</span>
+              <span>Simulate Emergency Shed</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 KPI Metrics Row (Refined Modern Engineering Cards) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <!-- Card 1 -->
+          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">TOTAL MONITORED ASSETS</span>
+              <span class="font-label-code text-[0.6875rem] text-secondary px-2 py-0.5 rounded-full bg-secondary-fixed/60 font-bold status-indicator-glow-nominal">100% ONLINE</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm my-space-sm">
+              <span class="font-display text-4xl text-on-surface tracking-tight font-bold" id="kpi-total-assets">128</span>
+              <span class="font-body-sm text-body-sm text-tertiary">active nodes</span>
+            </div>
+            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center justify-between">
+              <span>12 Subs</span>
+              <span class="text-tertiary">•</span>
+              <span>38 Transformers</span>
+              <span class="text-tertiary">•</span>
+              <span>78 Feeders</span>
             </div>
           </div>
 
-          <div class="table-wrapper">
-            <table class="asset-table" id="asset-table">
+          <!-- Card 2 -->
+          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">HIGH-RISK ASSETS</span>
+              <span class="font-label-code text-[0.6875rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10 status-indicator-glow-amber">+1 IN PAST 4H</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm my-space-sm">
+              <span class="font-display text-4xl text-primary tracking-tight font-bold" id="kpi-high-risk-count">3</span>
+              <span class="font-body-sm text-body-sm text-primary font-medium">requires load relief</span>
+            </div>
+            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center gap-1.5 truncate">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+              <span>TX-Oak-04, TX-Pine-02, Feeder-14A</span>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-error"></div>
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">CRITICAL ALERTS</span>
+              <span class="font-label-code text-[0.6875rem] text-error font-bold px-2 py-0.5 rounded-full bg-error-container status-indicator-glow-critical">PRIORITY 1</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm my-space-sm">
+              <span class="font-display text-4xl text-error tracking-tight font-bold" id="kpi-critical-alerts">1</span>
+              <span class="font-body-sm text-body-sm text-error font-medium">thermal runaway risk</span>
+            </div>
+            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
+              <span>Active breaker threshold on <strong class="text-error font-headline-sm">TX-Oak-04</strong></span>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-tertiary"></div>
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">STALE / DEGRADED TELEMETRY</span>
+              <span class="font-label-code text-[0.6875rem] text-tertiary px-2 py-0.5 rounded-full bg-surface-container-high">POLL DELAY</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm my-space-sm">
+              <span class="font-display text-4xl text-on-surface tracking-tight font-bold">2</span>
+              <span class="font-body-sm text-body-sm text-tertiary">&gt;120s latency</span>
+            </div>
+            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
+              <span>Feeder 14B &amp; Sensor T-88 out of sync</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central Grid: Interactive Vector Topology Schematic (65%) & AI Immediate Action Card (35%) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+          
+          <!-- LEFT 8 COLS: INTERACTIVE TOPOLOGY SCHEMATIC -->
+          <div class="lg:col-span-8 flex flex-col bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+            <div class="p-space-md bg-surface-container border-b border-surface-variant flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-space-xs">
+                  <span class="material-symbols-outlined text-[1.125rem] text-primary">account_tree</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">ELECTRICAL GRID TOPOLOGY — REGIONAL INTERCONNECT</span>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Single-line bus schematic with real-time transformer and feeder load vectors</span>
+              </div>
+              <!-- Controls: Voltage Levels & Risk Filter & Zoom -->
+              <div class="flex flex-wrap items-center gap-space-xs">
+                <div class="inline-flex rounded border border-outline-variant bg-surface p-0.5 text-label-code font-label-code text-[0.6875rem]">
+                  <button class="voltage-btn px-2 py-1 rounded bg-inverse-surface text-inverse-on-surface font-bold" onclick="selectVoltageLevel('345kV Bulk', this)">345kV Bulk</button>
+                  <button class="voltage-btn px-2 py-1 text-on-surface-variant hover:text-on-surface" onclick="selectVoltageLevel('138kV Sub', this)">138kV Sub</button>
+                  <button class="voltage-btn px-2 py-1 text-on-surface-variant hover:text-on-surface" onclick="selectVoltageLevel('13.8kV Dist', this)">13.8kV Dist</button>
+                </div>
+                <div class="flex items-center border border-outline-variant rounded bg-surface px-1.5 py-1 text-label-code font-label-code text-[0.6875rem] gap-1">
+                  <span class="text-tertiary">FILTER:</span>
+                  <span class="text-error font-bold cursor-pointer hover:underline" onclick="filterTableByRisk('CRITICAL')">CRIT (1)</span>
+                  <span class="text-tertiary">|</span>
+                  <span class="text-tertiary hover:text-on-surface cursor-pointer" onclick="filterTableByRisk('all')">ALL (128)</span>
+                </div>
+                <div class="flex items-center border border-outline-variant rounded bg-surface">
+                  <button class="p-1 text-tertiary hover:text-on-surface" onclick="zoomTopology(0.15)" title="Zoom In"><span class="material-symbols-outlined text-[1rem]">add</span></button>
+                  <div class="w-px h-4 bg-outline-variant"></div>
+                  <button class="p-1 text-tertiary hover:text-on-surface" onclick="zoomTopology(-0.15)" title="Zoom Out"><span class="material-symbols-outlined text-[1rem]">remove</span></button>
+                  <div class="w-px h-4 bg-outline-variant"></div>
+                  <button class="p-1 text-tertiary hover:text-on-surface" onclick="resetZoomTopology()" title="Reset View"><span class="material-symbols-outlined text-[1rem]">restart_alt</span></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schematic Canvas -->
+            <div class="relative w-full h-[520px] bg-[#fbf9f3] overflow-hidden select-none flex items-center justify-center p-4">
+              <!-- Technical Pattern Grid -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="grid-pattern" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#D9D3C7" stroke-width="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+              </svg>
+
+              <!-- Single-Line Vector Topology Diagram -->
+              <svg id="topology-svg" class="w-full h-full relative z-10 transition-transform duration-300" viewBox="0 0 880 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 345kV Backbone -->
+                <path d="M 180 120 L 440 120 L 700 120" stroke="#31312b" stroke-width="4" stroke-linecap="square" />
+                <text x="440" y="105" text-anchor="middle" fill="#6d776f" class="font-label-code text-[11px] font-bold">
+                  345kV TRANSMISSION TRUNK • T-LINE-3401 (940 MVA NOMINAL)
+                </text>
+
+                <!-- Tie lines -->
+                <path d="M 180 120 L 180 250" stroke="#446554" stroke-width="2.5" class="animate-power-flow" />
+                <path d="M 440 120 L 440 210" stroke="#944521" stroke-width="3" />
+                <path d="M 700 120 L 700 250" stroke="#446554" stroke-width="2.5" />
+
+                <!-- SUBSTATION A - NORTH BUS -->
+                <rect x="360" y="210" width="160" height="12" fill="#31312b" />
+                <text x="440" y="202" text-anchor="middle" fill="#1c1c17" class="font-headline-sm text-[12px] font-bold">
+                  NORTH SUBSTATION • 138kV MAIN BUS
+                </text>
+
+                <!-- Branch to TX-Oak-04 -->
+                <path d="M 400 222 L 400 270" stroke="#ba1a1a" stroke-width="2.5" />
+                <!-- Breaker CB-104 -->
+                <rect x="393" y="240" width="14" height="14" fill="#ffffff" stroke="#ba1a1a" stroke-width="2" />
+                <text x="415" y="251" fill="#ba1a1a" class="font-label-code text-[9px] font-bold">CB-104 [CLOSED]</text>
+
+                <!-- Branch to TX-Maple-01 -->
+                <path d="M 480 222 L 480 270" stroke="#446554" stroke-width="2.5" />
+                <!-- Breaker CB-105 -->
+                <rect x="473" y="240" width="14" height="14" fill="#ffffff" stroke="#446554" stroke-width="2" />
+                <text x="495" y="251" fill="#446554" class="font-label-code text-[9px]">CB-105 [OK]</text>
+
+                <!-- TX-Oak-04 Critical Focal Pod -->
+                <g transform="translate(320, 275)" class="cursor-pointer" onclick="selectAndInspectAsset('TX-04')">
+                  <rect x="0" y="0" width="160" height="100" rx="4" fill="#ffffff" stroke="#ba1a1a" stroke-width="2" stroke-dasharray="4,2" />
+                  <rect x="0" y="0" width="160" height="24" rx="4" fill="#ffdad6" />
+                  <text x="8" y="16" fill="#93000a" class="font-label-code text-[11px] font-bold">TX-Oak-04 • CRITICAL</text>
+                  <circle cx="146" cy="12" r="5" fill="#ba1a1a" class="animate-ping" />
+                  <circle cx="146" cy="12" r="5" fill="#ba1a1a" />
+                  <text x="8" y="42" fill="#1c1c17" class="font-label-meta text-[11px] font-bold">Risk: 92% (Tier 4)</text>
+                  <text x="8" y="58" fill="#55433c" class="font-body-sm text-[10px]">Temp: 94.2°C (Limit: 85°)</text>
+                  <text x="8" y="74" fill="#55433c" class="font-body-sm text-[10px]">Load: 44.2 / 45.0 MVA (98%)</text>
+                  <text x="8" y="90" fill="#944521" class="font-label-code text-[9px] font-bold">PYROLYSIS RISK IMMINENT</text>
+                </g>
+
+                <!-- TX-Maple-01 Nominal Pod -->
+                <g transform="translate(490, 275)" class="cursor-pointer" onclick="selectAndInspectAsset('TX-Maple-01')">
+                  <rect x="0" y="0" width="140" height="76" rx="4" fill="#ffffff" stroke="#c6ebd5" stroke-width="1.5" />
+                  <rect x="0" y="0" width="140" height="22" rx="4" fill="#f1eee6" />
+                  <text x="8" y="15" fill="#1c1c17" class="font-label-code text-[10px] font-bold">TX-Maple-01</text>
+                  <rect x="100" y="6" width="32" height="12" rx="2" fill="#c6ebd5" />
+                  <text x="116" y="15" text-anchor="middle" fill="#002114" class="font-label-meta text-[9px] font-bold">14.1%</text>
+                  <text x="8" y="38" fill="#555e57" class="font-body-sm text-[10px]">Temp: 42.1°C • NOMINAL</text>
+                  <text x="8" y="52" fill="#555e57" class="font-body-sm text-[10px]">Load: 28.5 MVA (63%)</text>
+                  <text x="8" y="66" fill="#446554" class="font-label-code text-[9px]">DGA H2: 12 ppm (OK)</text>
+                </g>
+
+                <!-- Distribution Feeders -->
+                <path d="M 370 375 L 370 410" stroke="#ba1a1a" stroke-width="2" />
+                <path d="M 430 375 L 430 410" stroke="#944521" stroke-width="2" />
+
+                <!-- Feeder F-101 -->
+                <g transform="translate(330, 410)">
+                  <rect x="0" y="0" width="80" height="34" rx="2" fill="#ffffff" stroke="#dbc1b8" stroke-width="1" />
+                  <text x="6" y="14" fill="#1c1c17" class="font-label-code text-[9px] font-bold">F-101 (13.8kV)</text>
+                  <text x="6" y="27" fill="#446554" class="font-label-meta text-[9px]">12.4 MW • NOM</text>
+                </g>
+
+                <!-- Feeder F-102 -->
+                <g transform="translate(420, 410)">
+                  <rect x="0" y="0" width="90" height="34" rx="2" fill="#ffdbce" stroke="#944521" stroke-width="1.5" />
+                  <text x="6" y="14" fill="#370e00" class="font-label-code text-[9px] font-bold">F-102 (13.8kV)</text>
+                  <text x="6" y="27" fill="#944521" class="font-label-meta text-[9px] font-bold">28.1 MW • HEAVY</text>
+                </g>
+
+                <!-- Interconnect Feeder Tie F-104 towards West Substation -->
+                <path d="M 440 444 L 440 465 L 240 465 L 240 360" stroke="#944521" stroke-width="1.5" stroke-dasharray="4,4" class="animate-power-flow" />
+                <text x="340" y="460" text-anchor="middle" fill="#944521" class="font-label-code text-[9px] font-bold bg-surface">
+                  HYPOTHETICAL MITIGATION TIE F-104 (-8.5 MVA CAPACITY)
+                </text>
+
+                <!-- SUBSTATION B - WEST BUS -->
+                <g transform="translate(110, 250)">
+                  <rect x="0" y="0" width="140" height="10" fill="#31312b" />
+                  <text x="70" y="-8" text-anchor="middle" fill="#1c1c17" class="font-headline-sm text-[11px] font-bold">
+                    WEST SUBSTATION (138kV)
+                  </text>
+                  <!-- TX-Pine-02 -->
+                  <g class="cursor-pointer" onclick="selectAndInspectAsset('TX-Pine-02')">
+                    <rect x="10" y="30" width="120" height="74" rx="3" fill="#ffffff" stroke="#944521" stroke-width="1.5" />
+                    <rect x="10" y="30" width="120" height="20" rx="3" fill="#ffdbce" />
+                    <text x="16" y="44" fill="#370e00" class="font-label-code text-[10px] font-bold">TX-Pine-02 • HIGH</text>
+                    <text x="16" y="66" fill="#1c1c17" class="font-label-meta text-[10px] font-bold">Risk: 76% (Watch)</text>
+                    <text x="16" y="80" fill="#55433c" class="font-body-sm text-[9px]">Harmonic distortion 2nd</text>
+                    <text x="16" y="94" fill="#446554" class="font-label-code text-[9px]">Reserve head: 11.4 MVA</text>
+                  </g>
+                </g>
+
+                <!-- SUBSTATION C - EAST BUS -->
+                <g transform="translate(630, 250)">
+                  <rect x="0" y="0" width="140" height="10" fill="#31312b" />
+                  <text x="70" y="-8" text-anchor="middle" fill="#1c1c17" class="font-headline-sm text-[11px] font-bold">
+                    EAST SUBSTATION (138kV)
+                  </text>
+                  <!-- TX-Elm-01 -->
+                  <g class="cursor-pointer" onclick="selectAndInspectAsset('TX-Elm-01')">
+                    <rect x="10" y="30" width="120" height="74" rx="3" fill="#ffffff" stroke="#dbc1b8" stroke-width="1" />
+                    <rect x="10" y="30" width="120" height="20" rx="3" fill="#f1eee6" />
+                    <text x="16" y="44" fill="#1c1c17" class="font-label-code text-[10px] font-bold">TX-Elm-01</text>
+                    <text x="16" y="66" fill="#446554" class="font-label-meta text-[10px] font-bold">Risk: 22% • NOMINAL</text>
+                    <text x="16" y="80" fill="#555e57" class="font-body-sm text-[9px]">38.2°C • 54% Load</text>
+                    <text x="16" y="94" fill="#555e57" class="font-label-code text-[9px]">Feeder tie active</text>
+                  </g>
+                </g>
+              </svg>
+
+              <!-- Floating SCADA Badge -->
+              <div class="absolute top-4 left-4 flex items-center gap-2 bg-surface/90 border border-outline-variant px-2.5 py-1 rounded shadow-sm text-label-code font-label-code text-on-surface text-[0.6875rem]">
+                <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                <span>TOPOLOGY FEED: N-1 CONTINGENCY VERIFIED</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT 4 COLS: AI RISK ASSESSMENT & IMMEDIATE DISPATCH CARD -->
+          <div class="lg:col-span-4 flex flex-col gap-gutter">
+            <div class="p-space-lg bg-surface-container-lowest border-2 border-primary/70 rounded-2xl card-elevated flex flex-col justify-between relative overflow-hidden">
+              <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-primary/5 pointer-events-none blur-xl"></div>
+              <div class="flex flex-col gap-space-sm">
+                <!-- Top Badge -->
+                <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant">
+                  <span class="font-label-code text-[0.6875rem] uppercase tracking-wider text-primary font-bold">
+                    CRITICAL ASSET FOCUS
+                  </span>
+                  <span class="font-label-code text-[0.6875rem] px-2 py-0.5 rounded bg-error text-on-error font-bold animate-pulse">
+                    TIER 4 CRITICAL
+                  </span>
+                </div>
+
+                <div class="flex items-start justify-between mt-1">
+                  <div>
+                    <h3 class="font-headline-md text-headline-md text-on-surface font-bold">TX-Oak-04</h3>
+                    <p class="font-body-sm text-body-sm text-tertiary">Feeder F-03 • 45 MVA Substation</p>
+                  </div>
+                  <!-- Risk Score Stamp -->
+                  <div class="text-right">
+                    <span class="font-display text-4xl text-error font-bold leading-none" id="focal-risk-score">92%</span>
+                    <span class="block font-label-meta text-[0.625rem] text-tertiary uppercase">Failure Risk</span>
+                  </div>
+                </div>
+
+                <!-- Primary Failure Mode -->
+                <div class="p-space-sm bg-error-container/40 border border-error/30 rounded mt-2">
+                  <div class="flex items-center gap-1.5 text-error font-headline-sm text-xs font-bold">
+                    <span class="material-symbols-outlined text-[1rem]">local_fire_department</span>
+                    <span>PRIMARY FAILURE MODE</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface mt-1 font-semibold">
+                    Accelerated Insulation Pyrolysis &amp; Hot-Spot Runaway
+                  </p>
+                  <p class="font-label-meta text-[0.6875rem] text-tertiary mt-0.5">
+                    Est. Thermal Runaway Window: <strong>4 to 18 Hours</strong>
+                  </p>
+                </div>
+
+                <!-- Contributing Factors Bars -->
+                <div class="flex flex-col gap-2 mt-3">
+                  <span class="font-label-meta text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+                    AI ATTRIBUTION FACTORS (SHAP)
+                  </span>
+
+                  <div>
+                    <div class="flex justify-between text-xs font-body-sm">
+                      <span>Winding Hot-Spot Temp (94.2°C vs 85°C limit)</span>
+                      <strong class="text-primary font-label-code">38.4%</strong>
+                    </div>
+                    <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+                      <div class="h-full bg-primary" style="width: 38.4%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs font-body-sm">
+                      <span>Cooling Fan Bank #2 Complete Lockout</span>
+                      <strong class="text-primary font-label-code">31.2%</strong>
+                    </div>
+                    <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+                      <div class="h-full bg-primary" style="width: 31.2%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs font-body-sm">
+                      <span>Overdue Periodic Maintenance (45 days)</span>
+                      <strong class="text-tertiary font-label-code">18.5%</strong>
+                    </div>
+                    <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+                      <div class="h-full bg-tertiary" style="width: 18.5%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recommended Operator Action -->
+                <div class="p-space-sm bg-surface-container rounded border border-outline-variant mt-3">
+                  <span class="font-label-code text-[0.6875rem] text-primary uppercase font-bold">RECOMMENDED CONTROL PLANE ACTION</span>
+                  <p class="font-body-sm text-body-sm text-on-surface mt-1">
+                    Execute urgent counterfactual load transfer of <strong>8.5 MVA</strong> from <strong>Feeder F-03</strong> to <strong>TX-Pine-02</strong> to drop hot-spot temp below 80°C.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Action Triggers -->
+              <div class="flex flex-col gap-2 mt-space-lg pt-space-sm border-t border-surface-variant">
+                <button class="w-full py-2 bg-primary text-on-primary hover:bg-primary-container rounded font-headline-sm text-body-sm font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm" onclick="navigateToSimulation('TX-04', 'TX-Pine-02', 8.5)">
+                  <span class="material-symbols-outlined text-[1.125rem]">bolt</span>
+                  <span>Simulate Load Transfer (8.5 MVA)</span>
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                  <button class="py-1.5 bg-surface hover:bg-surface-container border border-outline-variant rounded font-headline-sm text-xs text-on-surface transition-colors flex items-center justify-center gap-1" onclick="selectAndInspectAsset('TX-04')">
+                    <span class="material-symbols-outlined text-[1rem]">search</span>
+                    <span>Deep Inspect</span>
+                  </button>
+                  <button class="py-1.5 bg-surface hover:bg-surface-container border border-outline-variant rounded font-headline-sm text-xs text-on-surface transition-colors flex items-center justify-center gap-1" onclick="dispatchFieldCrew('TX-04')">
+                    <span class="material-symbols-outlined text-[1rem]">engineering</span>
+                    <span>Dispatch Crew</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fleet Asset Inventory Table Section -->
+        <div class="flex flex-col bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+          <div class="p-space-md bg-surface-container border-b border-surface-variant flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-[1.25rem] text-primary">list_alt</span>
+              <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Substation Asset Inventory &amp; Live Telemetry Feed</h2>
+            </div>
+            <!-- Category Filter Pills -->
+            <div class="flex items-center gap-1.5">
+              <button class="category-pill active px-2.5 py-1 rounded bg-inverse-surface text-inverse-on-surface font-label-code text-[0.6875rem] font-bold" onclick="filterTableByCategory('All Assets', this)">All Assets</button>
+              <button class="category-pill px-2.5 py-1 rounded bg-surface border border-outline-variant text-on-surface-variant font-label-code text-[0.6875rem]" onclick="filterTableByCategory('Transformers', this)">Transformers</button>
+              <button class="category-pill px-2.5 py-1 rounded bg-surface border border-outline-variant text-on-surface-variant font-label-code text-[0.6875rem]" onclick="filterTableByCategory('Feeders', this)">Feeders</button>
+            </div>
+          </div>
+
+          <!-- Table Content -->
+          <div class="overflow-x-auto">
+            <table id="asset-table" class="w-full text-left border-collapse text-body-sm">
               <thead>
-                <tr>
-                  <th>Asset ID</th>
-                  <th>Feeder</th>
-                  <th>Risk Score</th>
-                  <th>Severity</th>
-                  <th>Model Route</th>
-                  <th>Sensor Health</th>
+                <tr class="bg-surface-container-high/60 border-b border-surface-variant font-label-code text-[0.6875rem] text-tertiary uppercase">
+                  <th class="py-2.5 px-space-md">Asset Identifier</th>
+                  <th class="py-2.5 px-space-md">Substation / Line</th>
+                  <th class="py-2.5 px-space-md">Active Load (MVA)</th>
+                  <th class="py-2.5 px-space-md">Winding Temp</th>
+                  <th class="py-2.5 px-space-md">Risk Score</th>
+                  <th class="py-2.5 px-space-md">Status</th>
+                  <th class="py-2.5 px-space-md">Telemetry Lag</th>
+                  <th class="py-2.5 px-space-md text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody id="asset-table-body">
-                <!-- Dynamically populated via app.js -->
+              <tbody id="fleet-table-body" class="divide-y divide-surface-variant/70 font-body-sm">
+                <!-- Dynamically populated by app.js -->
               </tbody>
             </table>
           </div>
         </div>
+      </section>
 
-        <!-- Right Column: Detail & Explainability Panel -->
-        <div class="glass asset-detail-card" id="detail-card">
-          <div class="card-hero">
-            <div class="hero-title">
-              <h2 id="detail-asset-id">TX-MUM-1042</h2>
-              <span id="detail-asset-feeder">Substation SUB-ANDHERI • Feeder FDR-MUM-22</span>
+      <!-- ===================================================================== -->
+      <!-- TAB 2: ASSET DETAILS DEEP-DIVE                                        -->
+      <!-- ===================================================================== -->
+      <section id="tab-assets" class="tab-pane hidden flex flex-col w-full gap-space-lg">
+        <!-- Asset Header & Dropdown Selector -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-code text-[0.6875rem] uppercase tracking-widest text-primary px-1.5 py-0.5 bg-primary/10 font-bold" id="detail-asset-code">TX-04 • STEP-DOWN TRANSFORMER</span>
+              <span class="font-label-meta text-[0.6875rem] uppercase tracking-wider text-tertiary">ASSET HEALTH INTELLIGENCE</span>
             </div>
-            <div class="risk-gauge-box">
-              <div class="risk-score-display critical" id="detail-risk-score">0.87</div>
-              <span class="severity-pill critical" id="detail-severity-pill">CRITICAL</span>
-            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight" id="detail-asset-name">TX-Oak-04 Engineering Inspector</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl" id="detail-asset-substation">
+              Feeder F-03 • 45 MVA Substation • Commissioned: 2014-Q3 (10.4 yrs)
+            </p>
           </div>
-
-          <!-- Failure Window & Context Tiles -->
-          <div class="detail-metric-grid">
-            <div class="metric-tile">
-              <div class="tile-label">Failure Window</div>
-              <div class="tile-value" id="detail-window" style="color: var(--color-critical);">4 - 18 hrs</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Confidence</div>
-              <div class="tile-value" id="detail-confidence">91%</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Connected Customers</div>
-              <div class="tile-value" id="detail-customers">1,840</div>
-            </div>
-          </div>
-
-          <!-- Physical Telemetry Observation Tiles -->
-          <div class="detail-metric-grid">
-            <div class="metric-tile">
-              <div class="tile-label">Winding Temp</div>
-              <div class="tile-value" id="detail-winding-temp">108.4 °C</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Load Factor</div>
-              <div class="tile-value" id="detail-load-factor">0.91x rated</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Maint Overdue</div>
-              <div class="tile-value" id="detail-maint-overdue">45 days</div>
-            </div>
-          </div>
-
-          <!-- SHAP Contributing Factors -->
-          <div>
-            <h3 style="font-size: 0.82rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.75rem;">
-              TreeSHAP Decision Explanations & Evidence
-            </h3>
-            <div class="factors-list" id="detail-factors-list">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
-
-          <!-- Recommended Operator Action -->
-          <div class="action-box" id="detail-action-box">
-            <div class="action-title">Advisory Operator Action</div>
-            <div class="action-text" id="detail-action-text">
-              Dispatch emergency inspection crew and review feeder load transfer.
-            </div>
-          </div>
-
-          <!-- Operational Interactive Triggers -->
-          <div class="button-row">
-            <button class="btn-primary" id="btn-rescore" onclick="rescoreSelectedAsset()">
-              ⚡ Score Real-Time Risk
-            </button>
-            <button class="btn-secondary" id="btn-inject-fault" onclick="simulateSensorFault()">
-              🧪 Inject Sensor Degradation
-            </button>
-            <button class="btn-secondary" id="btn-detect-anom" onclick="detectAnomalySelectedAsset()">
-              🔍 Run Anomaly Isolation
+          <!-- Asset Select Dropdown -->
+          <div class="flex items-center gap-space-sm">
+            <label class="font-label-code text-xs text-tertiary uppercase font-semibold">Select Asset:</label>
+            <select id="asset-inspector-select" class="px-space-md py-1.5 bg-surface border border-outline-variant/80 rounded-xl font-headline-sm text-body-sm text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer" onchange="selectAndInspectAsset(this.value)">
+              <option value="TX-04">TX-Oak-04 (Critical - 92%)</option>
+              <option value="TX-Pine-02">TX-Pine-02 (High - 76%)</option>
+              <option value="TX-Maple-01">TX-Maple-01 (Nominal - 14%)</option>
+              <option value="TX-Elm-01">TX-Elm-01 (Nominal - 22%)</option>
+            </select>
+            <button class="px-space-md py-1.5 bg-primary hover:bg-primary-container text-on-primary rounded-xl font-headline-sm text-body-sm font-semibold transition-all shadow-xs" onclick="pingRTU(document.getElementById('asset-inspector-select').value)">
+              Ping RTU
             </button>
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- TAB 2: COUNTERFACTUAL LOAD SIMULATOR -->
-    <section class="tab-content" id="tab-content-simulator">
-      <div class="simulator-layout">
-
-        <!-- Simulation Scenario Input Card -->
-        <div class="glass" style="padding: 1.75rem;">
-          <h2 class="section-title" style="margin-bottom: 0.5rem;">
-            🔄 Counterfactual Load Redistribution
-          </h2>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-            Simulate dynamic load transfer from an at-risk transformer to an adjacent distribution feeder before an outage occurs.
-          </p>
-
-          <form id="sim-form" onsubmit="event.preventDefault(); runSimulation();">
-            <div class="form-group">
-              <label for="sim-source-asset">Source Transformer</label>
-              <select class="control-select" id="sim-source-asset" style="width: 100%;">
-                <option value="TX-MUM-1042">TX-MUM-1042 (Critical • 108.4°C • FDR-22)</option>
-                <option value="TX-MUM-1015">TX-MUM-1015 (Watch • Degraded Sensor • FDR-11)</option>
-                <option value="TX-MUM-1028">TX-MUM-1028 (Watch • Stale Telemetry • FDR-33)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="sim-target-feeder">Target Feeder (Recipient of shifted load)</label>
-              <select class="control-select" id="sim-target-feeder" style="width: 100%;">
-                <option value="FDR-MUM-11">FDR-MUM-11 (Bandra West • 25 MVA Cap • Ample Headroom)</option>
-                <option value="FDR-MUM-33">FDR-MUM-33 (Kurla Central • 20 MVA Cap)</option>
-                <option value="FDR-MUM-44">FDR-MUM-44 (Colaba Port • 18 MVA Cap • Constrained)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="sim-percent">Load Shift Percentage (<span id="sim-percent-val">15%</span>)</label>
-              <input type="range" class="range-slider" id="sim-percent" min="5" max="50" step="5" value="15" oninput="document.getElementById('sim-percent-val').innerText = this.value + '%'">
-              <div class="range-display">
-                <span>5% (Conservative)</span>
-                <span>50% (Max Relief)</span>
+        <!-- 3 Column Deep Engineering Inspector Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+          <!-- Col 1: Thermal & Load -->
+          <div class="flex flex-col gap-gutter">
+            <!-- Thermal Model Card -->
+            <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden flex flex-col justify-between">
+              <div class="absolute top-0 left-0 right-0 h-1 bg-error"></div>
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">IEEE C57.91 THERMAL MODEL</span>
+                <span class="font-label-code text-[0.6875rem] text-error font-bold px-2 py-0.5 rounded-full bg-error-container status-indicator-glow-critical" id="detail-temp-status">HOT-SPOT LIMIT BREACHED</span>
+              </div>
+              <div class="my-space-md flex items-baseline justify-between">
+                <div>
+                  <span class="font-display text-4xl text-error font-bold tracking-tight" id="detail-winding-temp">94.2°C</span>
+                  <span class="block font-label-meta text-[0.625rem] text-tertiary mt-0.5">Winding Temp (Limit: 85°C)</span>
+                </div>
+                <div class="text-right">
+                  <span class="font-headline-lg text-2xl text-primary font-bold" id="detail-thermal-headroom">-9.2°C</span>
+                  <span class="block font-label-meta text-[0.625rem] text-tertiary mt-0.5">Thermal Headroom</span>
+                </div>
+              </div>
+              <div class="p-space-sm bg-surface-container/70 rounded-xl text-xs space-y-1.5 border border-surface-variant/40">
+                <div class="flex justify-between"><span>Ambient Temperature:</span><strong id="detail-ambient-temp">38.6°C (Heatwave)</strong></div>
+                <div class="flex justify-between"><span>IEEE 110°C Trip Ceiling:</span><strong class="text-error">105.0°C Trip Setpoint</strong></div>
+                <div class="flex justify-between"><span>Radiator Heat Dissipation:</span><strong class="text-primary">-48% Deficit</strong></div>
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="sim-duration">Duration of Intervention (<span id="sim-duration-val">6 hrs</span>)</label>
-              <input type="range" class="range-slider" id="sim-duration" min="1" max="24" step="1" value="6" oninput="document.getElementById('sim-duration-val').innerText = this.value + ' hrs'">
-              <div class="range-display">
-                <span>1 Hour</span>
-                <span>24 Hours</span>
+            <!-- Cooling System Card -->
+            <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+              <div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">COOLING SYSTEM &amp; OIL CIRCULATION</span>
+                <span class="font-label-code text-[0.6875rem] text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary-fixed/50">ACTIVE MONITOR</span>
+              </div>
+              <div class="mt-space-sm space-y-2">
+                <div class="p-space-sm bg-surface-container-high rounded-xl flex items-center justify-between">
+                  <span class="text-xs font-semibold">Fan Bank #1 (Primary)</span>
+                  <span class="font-label-code text-[0.6875rem] text-secondary font-bold">Running (100% RPM)</span>
+                </div>
+                <div class="p-space-sm bg-error-container/60 border border-error/40 rounded-xl flex items-center justify-between">
+                  <span class="text-xs font-semibold text-error">Fan Bank #2 (Auxiliary)</span>
+                  <span class="font-label-code text-[0.6875rem] text-error font-bold">LOCKED OUT (Mtr Fault)</span>
+                </div>
+                <div class="p-space-sm bg-surface-container-high rounded-xl flex items-center justify-between">
+                  <span class="text-xs font-semibold">Forced Oil Circulation Pump</span>
+                  <span class="font-label-code text-[0.6875rem] text-secondary font-bold">Normal (2.4 Bar)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: DGA & Mechanical Vibration -->
+          <div class="flex flex-col gap-gutter">
+            <!-- DGA Key Gases Card -->
+            <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+              <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">DISSOLVED GAS ANALYSIS (DGA)</span>
+                <span class="font-label-code text-[0.6875rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">DUVAL TRIANGLE EVAL</span>
+              </div>
+              <div class="my-space-md space-y-2.5 text-xs">
+                <div>
+                  <div class="flex justify-between"><span>Hydrogen (H₂):</span><strong class="text-error font-label-code" id="detail-dga-h2">185 ppm (Severe &gt;100)</strong></div>
+                  <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1"><div class="h-full bg-error" style="width: 85%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between"><span>Methane (CH₄):</span><strong class="text-primary font-label-code">82 ppm (Moderate)</strong></div>
+                  <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1"><div class="h-full bg-primary" style="width: 52%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between"><span>Acetylene (C₂H₂):</span><strong class="text-error font-label-code">Trace Gas (Arced Oil)</strong></div>
+                  <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-1"><div class="h-full bg-error" style="width: 40%"></div></div>
+                </div>
+              </div>
+              <div class="p-space-sm bg-surface-container rounded-xl text-xs flex items-center justify-between">
+                <span>Buchholz Relay:</span> <strong class="text-error">Trace Free Gas Detected</strong>
               </div>
             </div>
 
-            <button type="submit" class="btn-primary" id="btn-run-sim" style="width: 100%; justify-content: center; margin-top: 1rem;">
-              ⚡ Compute Counterfactual Impact
+            <!-- Vibration FFT Spectrum -->
+            <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
+              <div class="absolute top-0 left-0 right-0 h-1 bg-tertiary"></div>
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">MECHANICAL &amp; CORE VIBRATION</span>
+                <span class="font-label-code text-[0.6875rem] px-2 py-0.5 rounded-full bg-error text-on-error font-bold">CORE LOOSENING</span>
+              </div>
+              <div class="my-space-sm flex items-baseline justify-between">
+                <div>
+                  <span class="font-display text-3xl text-on-surface font-bold tracking-tight" id="detail-vibration">4.8 mm/s</span>
+                  <span class="block font-label-meta text-[0.625rem] text-tertiary mt-0.5">RMS Vibration (Threshold: 4.5 mm/s)</span>
+                </div>
+              </div>
+              <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+                100 Hz / 120 Hz magnetostrictive harmonic peak exceeds baseline by 2.4x. Core silicon steel clamping tension requires physical inspection.
+              </p>
+            </div>
+          </div>
+
+          <!-- Col 3: AI Feature Attribution & Action Dispatch -->
+          <div class="flex flex-col gap-gutter">
+            <div class="relative p-space-lg bg-surface-container-lowest border-2 border-primary/40 rounded-2xl card-elevated overflow-hidden">
+              <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-primary font-bold tracking-wider">AI ATTRIBUTION (TREESHAP)</span>
+                <span class="font-label-code text-[0.6875rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">EXPLAINABLE ML</span>
+              </div>
+              <div class="my-space-sm space-y-3" id="detail-attribution-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Direct Control Action Panel -->
+            <div class="p-space-lg bg-surface-container rounded-2xl border border-outline-variant/80 flex flex-col gap-space-sm shadow-xs">
+              <span class="font-label-code text-[0.6875rem] uppercase text-on-surface font-bold tracking-wider">FIELD INTERVENTION</span>
+              <button class="w-full py-2.5 bg-primary text-on-primary hover:bg-primary-container rounded-xl font-headline-sm text-body-sm font-semibold transition-all flex items-center justify-center gap-1.5 shadow-sm hover:shadow" onclick="dispatchFieldCrew('TX-04')">
+                <span class="material-symbols-outlined text-[1.125rem]">engineering</span>
+                <span>Dispatch Maintenance Crew</span>
+              </button>
+              <button class="w-full py-2 bg-surface hover:bg-surface-container border border-outline-variant/80 rounded-xl font-headline-sm text-body-sm text-on-surface transition-all flex items-center justify-center gap-1.5" onclick="navigateToSimulation('TX-04', 'TX-Pine-02', 8.5)">
+                <span class="material-symbols-outlined text-[1.125rem]">bolt</span>
+                <span>Launch Load Simulation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 3: OPERATIONAL ALERTS CENTER                                      -->
+      <!-- ===================================================================== -->
+      <section id="tab-alerts" class="tab-pane hidden flex flex-col w-full gap-space-lg">
+        <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-code text-[0.6875rem] uppercase tracking-widest text-primary px-1.5 py-0.5 bg-primary/10 font-bold">RELIABILITY ALARM QUEUE</span>
+              <span class="font-label-meta text-[0.6875rem] uppercase tracking-wider text-tertiary">SCADA &amp; AI PREDICTIVE TRIPS</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Operational Alert Center</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+              Chronological priority alerts generated from streaming thermal runaway models, telemetry lag detectors, and DGA sensor thresholds.
+            </p>
+          </div>
+          <div class="flex items-center gap-space-sm">
+            <button class="alert-filter-btn active px-3.5 py-1.5 rounded-xl bg-inverse-surface text-inverse-on-surface font-label-code text-xs font-bold transition-all" onclick="filterAlerts('all', this)">All (3)</button>
+            <button class="alert-filter-btn px-3.5 py-1.5 rounded-xl bg-surface border border-outline-variant/80 text-error font-label-code text-xs font-bold hover:bg-error-container/30 transition-all" onclick="filterAlerts('CRITICAL', this)">Priority 1 (1)</button>
+            <button class="alert-filter-btn px-3.5 py-1.5 rounded-xl bg-surface border border-outline-variant/80 text-primary font-label-code text-xs font-bold hover:bg-primary/10 transition-all" onclick="filterAlerts('HIGH', this)">Priority 2 (1)</button>
+            <button class="alert-filter-btn px-3.5 py-1.5 rounded-xl bg-surface border border-outline-variant/80 text-tertiary font-label-code text-xs hover:bg-surface-container transition-all" onclick="filterAlerts('ADVISORY', this)">Advisory (1)</button>
+          </div>
+        </div>
+
+        <!-- Alert Cards Queue -->
+        <div class="flex flex-col gap-space-md" id="alert-cards-container">
+          <!-- Dynamically populated by app.js -->
+        </div>
+
+        <!-- Audit Trail Table -->
+        <div class="flex flex-col bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden mt-space-lg">
+          <div class="p-space-md bg-surface-container border-b border-surface-variant/80 flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-[1.25rem] text-tertiary">history</span>
+              <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Operator Action Audit Trail &amp; SCADA Command Log</h3>
+            </div>
+            <span class="font-label-code text-xs text-tertiary px-2 py-0.5 rounded-full bg-surface border border-outline-variant/60 font-semibold">IMMUTABLE LOG</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-body-sm divide-y divide-surface-variant/80">
+              <thead>
+                <tr class="bg-surface-container-high/60 font-label-code text-[0.6875rem] text-tertiary uppercase">
+                  <th class="py-2.5 px-space-md">Timestamp (UTC)</th>
+                  <th class="py-2.5 px-space-md">Operator ID</th>
+                  <th class="py-2.5 px-space-md">Action Executed</th>
+                  <th class="py-2.5 px-space-md">Target Asset</th>
+                  <th class="py-2.5 px-space-md">Verification Digest</th>
+                </tr>
+              </thead>
+              <tbody id="audit-trail-tbody" class="divide-y divide-surface-variant/60 font-body-sm text-xs">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 4: COUNTERFACTUAL LOAD REDISTRIBUTION SIMULATOR                   -->
+      <!-- ===================================================================== -->
+      <section id="tab-simulation" class="tab-pane hidden flex flex-col w-full gap-space-lg">
+        <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-code text-[0.6875rem] uppercase tracking-widest text-primary px-1.5 py-0.5 bg-primary/10 font-bold">N-1 CONTINGENCY SIMULATOR</span>
+              <span class="font-label-meta text-[0.6875rem] uppercase tracking-wider text-tertiary">COUNTERFACTUAL CONTROL PLANE</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Counterfactual Load Redistribution Simulator</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+              Model non-linear thermal relief and stability vectors when transferring feeder blocks between substations before dispatching SCADA switching orders.
+            </p>
+          </div>
+          <div class="flex items-center gap-space-sm">
+            <button class="px-space-md py-1.5 bg-surface hover:bg-surface-container border border-outline-variant/80 rounded-xl font-headline-sm text-body-sm text-on-surface transition-all" onclick="resetSimulation()">
+              Reset SCADA Default
             </button>
-          </form>
-        </div>
-
-        <!-- Simulation Comparison Results Card -->
-        <div class="glass sim-comparison-card" id="sim-result-card">
-          <div class="section-header">
-            <h3 style="font-size: 1.1rem; font-weight: 700;">Scenario Evaluation & Constraints</h3>
-            <span class="severity-pill normal" id="sim-status-badge">ADVISABLE WITH REVIEW</span>
-          </div>
-
-          <div class="comparison-columns">
-            <div class="comp-box before">
-              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Source Risk (Before)</div>
-              <div class="comp-score" id="sim-risk-before" style="color: var(--color-critical);">0.87</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted);">Critical Stress State</div>
-            </div>
-
-            <div class="comp-box after">
-              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Predicted Risk (After Shift)</div>
-              <div class="comp-score" id="sim-risk-after" style="color: var(--color-normal);">0.56</div>
-              <div style="font-size: 0.78rem; color: var(--color-normal);">Relieved by 35%</div>
-            </div>
-          </div>
-
-          <div class="detail-metric-grid" style="margin-top: 1rem;">
-            <div class="metric-tile">
-              <div class="tile-label">Target Overload Risk</div>
-              <div class="tile-value" id="sim-target-risk" style="color: var(--color-watch);">0.18</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Customers Protected</div>
-              <div class="tile-value" id="sim-customers-protected">1,840</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Est. Energy Loss</div>
-              <div class="tile-value" id="sim-energy-loss">42 kWh</div>
-            </div>
-          </div>
-
-          <!-- Constraints & Safety Boundary -->
-          <div style="margin-top: 1rem;">
-            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem;">
-              Enforced Grid Constraints
-            </div>
-            <ul id="sim-constraints-list" style="padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
-              <li>Human operator approval is strictly required before physical action</li>
-              <li>Target feeder capacity must maintain &ge; 5% continuous headroom buffer</li>
-            </ul>
-          </div>
-
-          <div class="advisory-badge" style="margin-top: 0.5rem; justify-content: center;">
-            🔒 Safety Boundary: GridGuard never commands breaker switches. Operator authorization mandatory.
+            <button class="px-space-md py-1.5 bg-primary text-on-primary hover:bg-primary-container rounded-xl font-headline-sm text-body-sm font-semibold transition-all shadow-sm" onclick="commitSimulationSwitching()">
+              Commit Switching Path
+            </button>
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- TAB 3: OPERATIONAL ALERTS & AUDIT -->
-    <section class="tab-content" id="tab-content-alerts">
-      <div class="glass" style="padding: 1.5rem; margin-bottom: 1.5rem;">
-        <div class="section-header">
-          <h2 class="section-title">🚨 Active Operational Alerts</h2>
-          <button class="btn-secondary" onclick="loadAlerts()">🔄 Refresh Alerts</button>
-        </div>
-
-        <div class="table-wrapper">
-          <table class="asset-table" id="alerts-table">
-            <thead>
-              <tr>
-                <th>Alert ID</th>
-                <th>Asset ID</th>
-                <th>Type</th>
-                <th>Severity</th>
-                <th>Description</th>
-                <th>Created</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="alerts-table-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="glass" style="padding: 1.5rem;">
-        <div class="section-header">
-          <h2 class="section-title">📜 Immutable Compliance Audit Trail</h2>
-          <button class="btn-secondary" onclick="loadAuditTrail()">🔄 Refresh Trail</button>
-        </div>
-
-        <div class="table-wrapper" style="max-height: 350px;">
-          <table class="asset-table" id="audit-table">
-            <thead>
-              <tr>
-                <th>Audit ID</th>
-                <th>Event Type</th>
-                <th>User / Role</th>
-                <th>Asset</th>
-                <th>Input SHA-256</th>
-                <th>Route / Decision</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody id="audit-table-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: MLOPS & OBSERVABILITY -->
-    <section class="tab-content" id="tab-content-observability">
-      <div class="dashboard-grid">
-
-        <!-- System & Model Health -->
-        <div class="glass" style="padding: 1.5rem;">
-          <h2 class="section-title" style="margin-bottom: 1rem;">System & ML Health Metrics</h2>
-          
-          <div class="detail-metric-grid" style="margin-bottom: 1.5rem;">
-            <div class="metric-tile">
-              <div class="tile-label">Service Status</div>
-              <div class="tile-value" style="color: var(--color-normal);" id="obs-status">HEALTHY</div>
+        <!-- Simulation Control Bar -->
+        <div id="sim-form" class="p-space-lg bg-surface-container border border-surface-variant/80 rounded-2xl card-elevated flex flex-col gap-space-md">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md items-center">
+            <!-- Source Transformer -->
+            <div>
+              <label class="font-label-code text-xs text-tertiary uppercase font-bold tracking-wider">Overloaded Source Transformer:</label>
+              <div class="p-space-sm bg-surface border border-outline-variant/80 rounded-xl font-headline-sm text-body-sm text-error font-bold mt-1 shadow-2xs">
+                TX-Oak-04 (Feeder F-03 • 44.2 MVA / 98.4% Load)
+              </div>
             </div>
-            <div class="metric-tile">
-              <div class="tile-label">Total Predictions</div>
-              <div class="tile-value" id="obs-pred-count">--</div>
-            </div>
-            <div class="metric-tile">
-              <div class="tile-label">Feature Drift Index</div>
-              <div class="tile-value" id="obs-drift">0.082</div>
-            </div>
-          </div>
 
-          <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;">Model Route Distribution</h3>
-          <div class="factors-list" id="obs-routes-list">
-            <!-- Dynamically populated -->
-          </div>
+            <!-- Target Feeder -->
+            <div>
+              <label class="font-label-code text-xs text-tertiary uppercase font-bold tracking-wider">Receiving Alternate Transformer:</label>
+              <div class="p-space-sm bg-surface border border-outline-variant/80 rounded-xl font-headline-sm text-body-sm text-secondary font-bold mt-1 shadow-2xs">
+                TX-Pine-02 (Feeder F-07 • 26.5 MVA / 58.9% Load)
+              </div>
+            </div>
 
-          <div style="margin-top: 1.5rem;">
-            <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;">Cost Economics</h3>
-            <div class="metric-tile">
-              <div class="tile-label">Cost per 1,000 Inferences</div>
-              <div class="tile-value">$0.045 USD</div>
+            <!-- Transfer Amount Slider -->
+            <div>
+              <div class="flex justify-between items-center">
+                <label class="font-label-code text-xs text-tertiary uppercase font-bold tracking-wider">Transfer Load Amount:</label>
+                <span class="font-display text-2xl text-primary font-bold" id="slider-display-val">8.5 MVA</span>
+              </div>
+              <div class="flex items-center gap-2 mt-2">
+                <button type="button" class="px-2.5 py-1 bg-surface border border-outline-variant/80 hover:bg-surface-container rounded-lg text-xs font-bold transition-colors" onclick="adjustSimulationStep(-1.0)">-1.0</button>
+                <input
+                  type="range"
+                  id="sim-load-slider"
+                  min="1.0"
+                  max="15.0"
+                  step="0.5"
+                  value="8.5"
+                  class="w-full"
+                  oninput="handleSimulationSlider(this.value)"
+                />
+                <button type="button" class="px-2.5 py-1 bg-surface border border-outline-variant/80 hover:bg-surface-container rounded-lg text-xs font-bold transition-colors" onclick="adjustSimulationStep(1.0)">+1.0</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Model Manifest & Artifact Lineage -->
-        <div class="glass" style="padding: 1.5rem;">
-          <h2 class="section-title" style="margin-bottom: 1rem;">Champion Model Lineage & Contract</h2>
-          <div class="table-wrapper" style="max-height: 480px;">
-            <pre id="model-manifest-viewer" style="font-family: var(--font-mono); font-size: 0.8rem; color: #a5b4fc; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">
-Loading model contract metadata...
-            </pre>
+        <!-- Side-by-Side Impact Matrix -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+          <!-- Source Transformer Before vs After -->
+          <div class="p-space-lg bg-surface-container-lowest border-2 border-primary/50 rounded-2xl card-elevated flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-space-sm border-b border-surface-variant/80">
+                <span class="font-headline-sm text-headline-sm text-on-surface font-bold">SOURCE: TX-Oak-04 Relief Analysis</span>
+                <span class="font-label-code text-[0.6875rem] px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold">PREDICTED STABLE</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-space-md my-space-md">
+                <!-- Pre Transfer -->
+                <div class="p-space-md bg-surface-container rounded-xl border border-surface-variant/40">
+                  <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-semibold">CURRENT SCADA STATE</span>
+                  <div class="my-space-xs">
+                    <span class="font-display text-2xl text-error font-bold">44.2 MVA</span>
+                    <span class="block text-xs text-tertiary">98.4% Rated Loading</span>
+                  </div>
+                  <div class="text-xs space-y-1 mt-2">
+                    <div>Winding Temp: <strong class="text-error">94.2°C</strong></div>
+                    <div>Headroom: <strong class="text-error">-9.2°C</strong></div>
+                    <div>Failure Risk: <strong class="text-error">92% (CRITICAL)</strong></div>
+                  </div>
+                </div>
+
+                <!-- Post Transfer -->
+                <div class="p-space-md bg-secondary-container/30 border border-secondary/40 rounded-xl">
+                  <span class="font-label-meta text-[0.625rem] text-secondary uppercase font-bold">POST-SWITCHING COUNTERFACTUAL</span>
+                  <div class="my-space-xs">
+                    <span class="font-display text-2xl text-secondary font-bold" id="sim-source-post-load">35.7 MVA</span>
+                    <span class="block text-xs text-secondary font-semibold" id="sim-source-post-pct">79.3% Loading (-19.1%)</span>
+                  </div>
+                  <div class="text-xs space-y-1 mt-2">
+                    <div>Winding Temp: <strong class="text-secondary font-bold" id="sim-source-post-temp">78.5°C</strong></div>
+                    <div>Headroom: <strong class="text-secondary font-bold" id="sim-source-post-headroom">+6.5°C (SAFE)</strong></div>
+                    <div>Failure Risk: <strong class="text-secondary font-bold" id="sim-source-post-risk">28% (NORMAL)</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="font-body-sm text-xs text-on-surface-variant border-t border-surface-variant/70 pt-2 flex items-center gap-1.5">
+              <span>✅</span> <span>Averts thermal pyrolysis runaway and suppresses Buchholz relay gassing.</span>
+            </p>
+          </div>
+
+          <!-- Receiving Transformer Capacity Impact -->
+          <div class="p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-space-sm border-b border-surface-variant/80">
+                <span class="font-headline-sm text-headline-sm text-on-surface font-bold">DESTINATION: TX-Pine-02 Capacity Acceptance</span>
+                <span class="font-label-code text-[0.6875rem] px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold">N-1 SAFE MARGIN</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-space-md my-space-md">
+                <!-- Pre Transfer -->
+                <div class="p-space-md bg-surface-container rounded-xl border border-surface-variant/40">
+                  <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-semibold">CURRENT SCADA STATE</span>
+                  <div class="my-space-xs">
+                    <span class="font-display text-2xl text-on-surface font-bold">26.5 MVA</span>
+                    <span class="block text-xs text-tertiary">58.9% Rated Loading</span>
+                  </div>
+                  <div class="text-xs space-y-1 mt-2">
+                    <div>Winding Temp: <strong>48.2°C</strong></div>
+                    <div>Reserve Headroom: <strong>+18.5 MVA</strong></div>
+                  </div>
+                </div>
+
+                <!-- Post Transfer -->
+                <div class="p-space-md bg-surface-container-high rounded-xl border border-outline-variant/60">
+                  <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">NEW ACCEPTED STATE</span>
+                  <div class="my-space-xs">
+                    <span class="font-display text-2xl text-on-surface font-bold" id="sim-dest-post-load">35.0 MVA</span>
+                    <span class="block text-xs text-on-surface font-semibold" id="sim-dest-post-pct">77.8% Loading (Safe)</span>
+                  </div>
+                  <div class="text-xs space-y-1 mt-2">
+                    <div>Winding Temp: <strong id="sim-dest-post-temp">56.4°C (&lt; 85°C limit)</strong></div>
+                    <div>Remaining Reserve: <strong class="text-secondary font-bold" id="sim-dest-post-reserve">10.0 MVA</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="font-body-sm text-xs text-on-surface-variant border-t border-surface-variant/70 pt-2 flex items-center gap-1.5">
+              <span>✅</span> <span>N-1 contingency maintained. Alternate feeder operates well within its 45.0 MVA thermal envelope.</span>
+            </p>
           </div>
         </div>
+      </section>
 
-      </div>
-    </section>
+      <!-- ===================================================================== -->
+      <!-- TAB 5: SYSTEM STATUS & ML INTELLIGENCE HEALTH                         -->
+      <!-- ===================================================================== -->
+      <section id="tab-status" class="tab-pane hidden flex flex-col w-full gap-space-lg">
+        <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-code text-[0.6875rem] uppercase tracking-widest text-primary px-1.5 py-0.5 bg-primary/10 font-bold">PLATFORM OBSERVABILITY</span>
+              <span class="font-label-meta text-[0.6875rem] uppercase tracking-wider text-tertiary">CONTROL PLANE TELEMETRY &amp; SAFETY GATES</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">System Status &amp; Model Lineage</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+              Real-time auditability of model provider modes, cryptographic SHA-256 artifacts, RTU gateway latencies, and IEEE safety gate enforcement.
+            </p>
+          </div>
+          <button class="px-space-md py-2 bg-primary text-on-primary hover:bg-primary-container rounded-xl font-headline-sm text-body-sm font-semibold shadow-sm transition-all" onclick="runHealthProbe()">
+            Run Substation Diagnostic Probe
+          </button>
+        </div>
 
-  </main>
+        <!-- 3 Cards: ML Artifact Mode, Latency Stats, RTU Gateway -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+          <!-- ML Model Artifact -->
+          <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+            <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">ACTIVE MODEL ARTIFACT</span>
+              <span class="font-label-code text-[0.6875rem] text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary-fixed/50" id="status-model-mode">ARTIFACT MODE</span>
+            </div>
+            <div class="my-space-sm">
+              <span class="font-headline-md text-headline-md text-on-surface font-bold">gridguard-risk-0.1.0</span>
+              <span class="block font-label-code text-[0.6875rem] text-tertiary mt-0.5">Framework: Scikit-Learn (Calibrated)</span>
+            </div>
+            <div class="text-xs space-y-1.5 pt-2 border-t border-surface-variant/70">
+              <div class="flex justify-between"><span>Critical Recall Gate:</span><strong class="text-secondary font-label-code">96.5% (&gt;= 95.0%)</strong></div>
+              <div class="flex justify-between"><span>Calibration Error (ECE):</span><strong class="text-secondary font-label-code">0.038 (&lt;= 0.050)</strong></div>
+              <div class="flex justify-between"><span>AUC-ROC:</span><strong class="font-label-code">0.954</strong></div>
+              <div class="flex justify-between"><span>SHA-256 Verified:</span><strong class="text-secondary font-label-code">bc10fe...9dd3</strong></div>
+            </div>
+          </div>
 
-  <!-- Notification Toast Container -->
-  <div class="toast-container" id="toast-container"></div>
+          <!-- Inference Latency Percentiles -->
+          <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+            <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">INFERENCE SLA TIMINGS</span>
+              <span class="font-label-code text-[0.6875rem] text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary-fixed/50">SUB-50MS SLA</span>
+            </div>
+            <div class="my-space-sm flex items-baseline justify-between">
+              <div>
+                <span class="font-display text-4xl text-on-surface font-bold tracking-tight" id="status-latency-p95">18.4 ms</span>
+                <span class="block font-label-meta text-[0.625rem] text-tertiary mt-0.5">P95 Single-Sample Evaluation</span>
+              </div>
+              <span class="font-label-code text-xs text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary-fixed/50">0.0% FALLBACK</span>
+            </div>
+            <div class="text-xs space-y-1.5 pt-2 border-t border-surface-variant/70">
+              <div class="flex justify-between"><span>P50 Latency:</span><strong class="font-label-code">8.2 ms</strong></div>
+              <div class="flex justify-between"><span>P99 Latency:</span><strong class="font-label-code">28.1 ms</strong></div>
+              <div class="flex justify-between"><span>Max SLA Budget:</span><strong class="font-label-code">900.0 ms</strong></div>
+            </div>
+          </div>
 
-  <!-- Main UI Application Logic -->
+          <!-- RTU Gateway Matrix -->
+          <div class="relative p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-tertiary"></div>
+            <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">SUBSTATION RTU GATEWAYS</span>
+              <span class="font-label-code text-[0.6875rem] text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary-fixed/50">4/4 ACTIVE</span>
+            </div>
+            <div class="mt-space-sm space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2 bg-surface-container rounded-xl border border-surface-variant/40">
+                <span>North Substation (RTU-N01):</span>
+                <strong class="text-secondary font-label-code">14ms • DNP3</strong>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-surface-container rounded-xl border border-surface-variant/40">
+                <span>West Substation (RTU-W02):</span>
+                <strong class="text-secondary font-label-code">18ms • IEC-61850</strong>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-surface-container rounded-xl border border-surface-variant/40">
+                <span>Central Substation (RTU-C03):</span>
+                <strong class="text-secondary font-label-code">12ms • IEC-61850</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Real-Time Toast Notification Stack Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Load Interactive Logic -->
   <script src="app.js"></script>
 </body>
 </html>

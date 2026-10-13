@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "outline": "#88726b",
+        "on-surface-variant": "#55433c",
+        "tertiary-container": "#6d776f",
+        "secondary-fixed": "#c6ebd5",
+        "inverse-surface": "#31312b",
+        "on-tertiary-fixed-variant": "#404942",
+        "tertiary": "#555e57",
+        "on-primary-fixed-variant": "#79300d",
+        "on-error": "#ffffff",
+        "inverse-primary": "#ffb598",
+        "on-surface": "#1c1c17",
+        "on-background": "#1c1c17",
+        "on-error-container": "#93000a",
+        "outline-variant": "#dbc1b8",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#fffbff",
+        "secondary-container": "#c3e8d2",
+        "surface-container": "#f1eee6",
+        "error": "#ba1a1a",
+        "on-secondary-container": "#486a58",
+        "tertiary-fixed": "#dbe5dc",
+        "surface-dim": "#dddad2",
+        "surface-container-highest": "#e5e2da",
+        "on-primary-fixed": "#370e00",
+        "secondary": "#446554",
+        "error-container": "#ffdad6",
+        "background": "#fcf9f1",
+        "surface-container-high": "#ebe8e0",
+        "on-tertiary": "#ffffff",
+        "primary-fixed-dim": "#ffb598",
+        "tertiary-fixed-dim": "#bfc9c0",
+        "primary": "#944521",
+        "on-secondary": "#ffffff",
+        "secondary-fixed-dim": "#aacfba",
+        "inverse-on-surface": "#f4f1e9",
+        "primary-fixed": "#ffdbce",
+        "surface-variant": "#e5e2da",
+        "on-secondary-fixed-variant": "#2c4d3d",
+        "on-secondary-fixed": "#002114",
+        "surface-tint": "#974723",
+        "primary-container": "#b35c36",
+        "surface-container-low": "#f6f3eb",
+        "on-tertiary-container": "#f6fff6",
+        "surface-bright": "#fcf9f1",
+        "surface": "#fcf9f1",
+        "on-tertiary-fixed": "#151e18",
+        "surface-container-lowest": "#ffffff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "gutter-desktop": "1.5rem",
+        "space-xs": "0.25rem",
+        "gutter": "1rem",
+        "margin": "1rem",
+        "space-sm": "0.5rem",
+        "space-lg": "1.25rem",
+        "margin-desktop": "2rem",
+        "space-md": "0.75rem",
+        "space-xl": "2rem"
+      },
+      "fontFamily": {
+        "telemetry-num": ["Geist"],
+        "headline-sm": ["Space Grotesk"],
+        "headline-lg": ["Space Grotesk"],
+        "headline-lg-mobile": ["Space Grotesk"],
+        "label-code": ["Space Grotesk"],
+        "display": ["Space Grotesk"],
+        "body-lg": ["Geist"],
+        "body-sm": ["Geist"],
+        "body-md": ["Geist"],
+        "label-meta": ["Geist"],
+        "headline-md": ["Space Grotesk"]
+      },
+      "fontSize": {
+        "telemetry-num": ["0.875rem", {"lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "500"}],
+        "headline-sm": ["1rem", {"lineHeight": "1.25rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "headline-lg": ["2rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+        "headline-lg-mobile": ["1.5rem", {"lineHeight": "1.75rem", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+        "label-code": ["0.6875rem", {"lineHeight": "0.875rem", "letterSpacing": "0.08em", "fontWeight": "700"}],
+        "display": ["3.5rem", {"lineHeight": "3.75rem", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+        "body-lg": ["1rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+        "body-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "body-md": ["0.875rem", {"lineHeight": "1.25rem", "letterSpacing": "0em", "fontWeight": "400"}],
+        "label-meta": ["0.625rem", {"lineHeight": "0.75rem", "letterSpacing": "0.06em", "fontWeight": "600"}],
+        "headline-md": ["1.25rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+      }
+    }
+  }
+};
+</script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+<aside class="fixed left-0 top-0 h-screen w-72 bg-inverse-surface text-inverse-on-surface z-50 flex flex-col justify-between border-r border-tertiary-container/30">
+<div class="flex flex-col">
+<div class="p-space-lg border-b border-tertiary-container/30 bg-inverse-surface">
+<div class="flex items-center gap-space-md">
+<img alt="GridGuard Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3dIQeuSg8JoKFdxt3YfcNG5Fcbgyotje1oYGKKS3oAyJZFA9w8_fIKV-RyoAfrg-ahTIZ5htBf727u0BO0stCK4K2OCBPkpzjREg6HgOWh6IJhUNiJYODUTdXb5IvDKa7WzB-jh9EyOHmEfJXPH3q3Wn657E-wE4K0dTbamWT8M5LvkQ20yfCIuhKQ1yElf-LmrsXSOKsp-SM-JzGcRKjArOEEALsAI9tdpmzHNjRwGECKCBz5x0"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-inverse-on-surface font-bold">GRIDGUARD</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-code text-label-code uppercase">TX</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim uppercase tracking-widest mt-0.5">GRID INTELLIGENCE</span>
+</div>
+</div>
+<p class="mt-space-sm font-label-meta text-label-meta text-tertiary-fixed-dim uppercase tracking-wider border-l-2 border-primary pl-2">Understand the risk. Strengthen the grid.</p>
+</div>
+<div class="px-space-md py-space-sm bg-inverse-surface/60 border-b border-tertiary-container/20 flex items-center justify-between text-tertiary-fixed-dim font-label-code text-label-code">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>SUBSTATION TELEMETRY
+      </span>
+<span class="text-tertiary-fixed-dim">SYS: OK</span>
+</div>
+<nav class="flex flex-col gap-1 p-space-md" data-active-classes="bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm">
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="dashboard" href="#">Dashboard</a>
+<a aria-current="page" class="flex items-center px-space-md py-space-sm transition-colors bg-surface/10 text-inverse-on-surface border-l-4 border-primary font-headline-sm" data-path="assets" href="#">Assets</a>
+<a class="flex items-center justify-between px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="alerts" href="#">
+<span>Alerts</span>
+<span class="font-label-code text-label-code px-1.5 py-0.5 rounded bg-primary text-on-primary">7</span>
+</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="load-simulation" href="#">Load Simulation</a>
+<a class="flex items-center px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-colors border-l-4 border-transparent" data-path="system-status" href="#">System Status</a>
+</nav>
+</div>
+<div class="p-space-md border-t border-tertiary-container/30 bg-inverse-surface/80 flex flex-col gap-space-sm">
+<div class="p-space-sm bg-surface/5 border border-tertiary-container/30">
+<div class="flex items-center justify-between font-label-code text-label-code text-tertiary-fixed-dim">
+<span class="uppercase tracking-wider">BUS TOPOLOGY</span>
+<span class="text-secondary-fixed">LIVE (N-1 OK)</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-tertiary-container/20">
+<div class="h-1.5 flex-1 bg-tertiary-container/40 relative">
+<div class="absolute left-1/4 -top-1 w-2.5 h-3.5 bg-primary rounded-none"></div>
+<div class="absolute right-1/3 -top-1 w-2.5 h-3.5 bg-secondary-fixed rounded-none"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between font-label-meta text-label-meta text-tertiary-fixed-dim pt-space-xs">
+<span class="flex items-center gap-1.5 font-label-code text-label-code text-inverse-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>DNP3/IEC-61850 SECURE
+      </span>
+<span class="font-label-code text-label-code text-tertiary-fixed-dim">v2.4-ENG</span>
+</div>
+</div>
+</aside>
+<div class="pl-72 flex flex-col min-h-screen">
+<header class="fixed top-0 left-72 right-0 h-16 bg-surface-container border-b border-surface-variant z-40 px-gutter-desktop flex items-center justify-between">
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-2 font-label-code text-label-code text-on-surface-variant">
+<span class="text-primary font-bold">GRIDGUARD</span>
+<span>/</span>
+<span class="text-on-surface uppercase">Workspace</span>
+</div>
+<div class="relative w-80 hidden md:block">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-[1.125rem] text-tertiary">search</span>
+<input class="w-full pl-9 pr-space-md py-1.5 bg-surface border border-outline-variant rounded text-body-sm font-body-sm text-on-surface placeholder:text-tertiary placeholder:font-body-sm focus:outline-none focus:border-on-surface transition-colors" placeholder="Search Substations, Feeders, TX-ID (e.g. TX-402)..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="hidden xl:flex items-center gap-space-md">
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>BACKEND: CONNECTED (REST v1 / 18ms)</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-high border border-outline-variant rounded font-label-code text-label-code text-primary">
+<span class="material-symbols-outlined text-[0.875rem]">sync</span>
+<span>SCADA FEED: 4s AGO</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface border border-outline-variant rounded font-label-code text-label-code text-tertiary">
+<span class="material-symbols-outlined text-[0.875rem]">schedule</span>
+<span>16:42:19 UTC</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="relative p-1.5 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[1.25rem]">notifications</span>
+<span class="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary rounded-full font-label-code text-[0.5625rem] flex items-center justify-center font-bold">7</span>
+</button>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-space-sm">
+<img alt="Operator Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlhBWRBzsG3pQWeEAP6KNRtLKO2j4_67MsOqorHIMVY4crgXsUAYelvUiyjvnQ_z9HLY3QnYYMbyT1VuUmIFGKA5-x9NXj9VxWoTK8nAWdCh3jZDYSVCFMwbzdiqZ7X9ZxGaBDh5iPQaRHfUK_gGL8-CwJw2qeFQ6-7om88z0IGwykkSduAspcIfQVlITbpk6XUcbcRX08Ko4cOxaSQtvZCiZ6YI9zs4vFVcHqyjACwi-m4FL96I"/>
+<div class="flex flex-col text-left">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold">S. Vance, P.E.</span>
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase tracking-wider">Grid Operations Lead</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="relative pt-16 flex-1 w-full bg-surface-container-low p-gutter-desktop">
+<div class="flex flex-col w-full">
+<!-- BREADCRUMBS & TOP TACTICAL CONTROL BAR -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm font-label-code text-label-code text-on-surface-variant flex-wrap">
+<a class="text-tertiary hover:text-on-surface transition-colors" href="#">DASHBOARD</a>
+<span class="text-outline">/</span>
+<a class="text-tertiary hover:text-on-surface transition-colors" href="#">ASSETS</a>
+<span class="text-outline">/</span>
+<span class="text-primary font-bold">TX-OAK-04</span>
+<span class="px-1.5 py-0.5 bg-error text-on-error uppercase tracking-wider font-bold">CRITICAL INVESTIGATION</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-1.5 bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors font-label-code text-label-code uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[1rem]">arrow_back</span>
+<span>Back to Assets</span>
+</button>
+<div class="h-6 w-px bg-surface-dim"></div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-highest font-label-code text-label-code text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>TELEMETRY: LIVE (0.4s AGO • DNP3 SYNCED)</span>
+</div>
+</div>
+</div>
+<!-- ASSET HEADER META BANNER -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm mb-space-lg relative">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
+<div class="flex items-start gap-space-md">
+<div class="p-space-sm bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[2.25rem]">bolt</span>
+</div>
+<div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">TX-OAK-04</h1>
+<span class="px-2 py-0.5 bg-error text-on-error font-label-code text-label-code font-bold uppercase tracking-wider">
+              CRITICAL RISK • TIER 4
+            </span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface font-label-code text-label-code">
+              NODE: NORTH SUBSTATION • BUS 2
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            138kV / 13.8kV Step-Down Transformer • Station Bay 04-B • High-Voltage Network Intertie
+          </p>
+</div>
+</div>
+<!-- Quick Meta Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md bg-surface-container-low p-space-md">
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Nameplate Rating</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">50.0 MVA</span>
+<span class="font-label-code text-label-code text-secondary font-semibold">ONAN / ONAF</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Commissioned</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">2014-Q3</span>
+<span class="font-label-code text-label-code text-tertiary">AGE: 10.4 YRS</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Operational State</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">ONLINE (HOT)</span>
+<span class="font-label-code text-label-code text-primary">FAN BANK #2 FAULT</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Substation Interlock</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">BUS-2 TIE: EN</span>
+<span class="font-label-code text-label-code text-secondary font-semibold">N-1 CONTINGENCY</span>
+</div>
+</div>
+</div>
+</div>
+<!-- WORKSPACE SPLIT (65% / 35%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- MAIN COLUMN: AI RISK & TELEMETRY INVESTIGATION (8 cols ~ 66%) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- 1. PROMINENT AI RISK ASSESSMENT BANNER -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-space-md bg-surface-container -mx-space-lg -mt-space-lg px-space-lg py-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">neurology</span>
+<span class="font-headline-sm text-headline-sm text-on-surface uppercase">AI Composite Stress Diagnostics</span>
+</div>
+<span class="font-label-code text-label-code text-on-surface-variant">ENGINE: THERMAL-ACOUSTIC v4.1 • EVAL: 14:32:04 UTC (22s AGO)</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center">
+<!-- Big Score Gauge Block -->
+<div class="md:col-span-5 flex flex-col items-center justify-center p-space-md bg-error-container/30">
+<div class="flex items-baseline gap-1">
+<span class="font-display text-display text-error leading-none">91.4</span>
+<span class="font-headline-md text-headline-md text-error">/100</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 px-space-sm py-0.5 bg-error text-on-error font-label-code text-label-code uppercase tracking-wider font-bold">
+              CRITICAL RISK TIER 4
+            </div>
+<div class="mt-space-sm flex items-center gap-2 font-label-code text-label-code text-on-surface">
+<span>MODEL CONFIDENCE:</span>
+<span class="font-bold text-secondary">94.2%</span>
+</div>
+</div>
+<!-- Narrative Diagnostic Summary -->
+<div class="md:col-span-7 flex flex-col justify-between">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between font-label-code text-label-code">
+<span class="text-tertiary uppercase">Primary Failure Mode Predicted</span>
+<span class="text-error font-bold uppercase">Accelerated Insulation Pyrolysis</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Multi-sensor thermal trajectory shows top-oil approaching critical threshold within <strong class="text-error">42 minutes</strong> under prevailing 49.2 MVA load demand and non-functional Bank #2 auxiliary cooling.
+              </p>
+</div>
+<!-- Disclaimer note -->
+<div class="mt-space-md p-space-xs bg-surface-container-low text-tertiary font-label-meta text-label-meta uppercase tracking-wider leading-relaxed">
+              Calculated composite risk index based on multi-sensor stress anomaly detection; does not indicate immediate mechanical trip probability. Operator dispatch standard SOP-TX-10 applies.
+            </div>
+</div>
+</div>
+</div>
+<!-- 2. MULTI-SENSOR TELEMETRY CARDS -->
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[1rem] text-primary">sensors</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface uppercase">Real-Time Sensor Telemetry Matrix</h2>
+</div>
+<span class="font-label-code text-label-code text-tertiary">4 / 4 CHANNELS MONITORED</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-sm">
+<!-- Top-Oil Temp (Critical Alert) -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Top-Oil Temp</span>
+<span class="px-1.5 py-0.5 bg-error text-on-error font-label-code text-[0.625rem] font-bold">ALARM</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<span class="font-display text-[2.25rem] leading-none text-error font-headline-lg font-bold">94.2</span>
+<span class="font-headline-sm text-headline-sm text-error">°C</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container h-1.5 mt-space-sm relative">
+<div class="bg-error h-1.5" style="width: 89%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-[0.625rem] text-tertiary mt-1">
+<span>WARN: 85°C</span>
+<span class="text-error font-bold">TRIP: 105°C</span>
+</div>
+</div>
+<!-- Load Demand (Copper Warning) -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Load Demand</span>
+<span class="px-1.5 py-0.5 bg-primary text-on-primary font-label-code text-[0.625rem] font-bold">98.4%</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<span class="font-display text-[2.25rem] leading-none text-primary font-headline-lg font-bold">49.2</span>
+<span class="font-headline-sm text-headline-sm text-primary">MVA</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container h-1.5 mt-space-sm relative">
+<div class="bg-primary h-1.5" style="width: 98.4%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-[0.625rem] text-tertiary mt-1">
+<span>RATED: 50.0 MVA</span>
+<span class="text-primary font-bold">OVERHEAD: 0.8 MVA</span>
+</div>
+</div>
+<!-- Dissolved Hydrogen H2 (High Gas Rate) -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Dissolved H₂</span>
+<span class="px-1.5 py-0.5 bg-primary-fixed text-on-primary-fixed font-label-code text-[0.625rem] font-bold">+45 ppm/6h</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<span class="font-display text-[2.25rem] leading-none text-on-surface font-headline-lg font-bold">185</span>
+<span class="font-headline-sm text-headline-sm text-tertiary">ppm</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container h-1.5 mt-space-sm relative">
+<div class="bg-primary h-1.5" style="width: 74%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-[0.625rem] text-tertiary mt-1">
+<span>BASELINE: 40 ppm</span>
+<span class="text-primary font-bold">IEEE C57.104 T2</span>
+</div>
+</div>
+<!-- Acoustic Vibration (Resonance Detected) -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Tank Vibration</span>
+<span class="px-1.5 py-0.5 bg-error text-on-error font-label-code text-[0.625rem] font-bold">ANOMALY</span>
+</div>
+<div class="mt-space-xs flex items-baseline justify-between">
+<span class="font-display text-[2.25rem] leading-none text-error font-headline-lg font-bold">4.8</span>
+<span class="font-headline-sm text-headline-sm text-tertiary">mm/s</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container h-1.5 mt-space-sm relative">
+<div class="bg-error h-1.5" style="width: 82%;"></div>
+</div>
+<div class="flex justify-between font-label-code text-[0.625rem] text-tertiary mt-1">
+<span>NORMAL: &lt;2.5</span>
+<span class="text-error font-bold">COIL RESONANCE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. HISTORICAL 24-HOUR TELEMETRY TREND CHART (DUAL AXIS SVG) -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-space-sm mb-space-md gap-space-sm">
+<div>
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Time-Series Telemetry Analysis</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Top-Oil Temperature vs Active Load Profile</h3>
+</div>
+<!-- Time Range Tabs -->
+<div class="flex items-center bg-surface-container p-0.5 gap-0.5 font-label-code text-label-code self-start sm:self-auto">
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface">1H</button>
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface">6H</button>
+<button class="px-2.5 py-1 bg-surface-container-lowest text-on-surface font-bold shadow-xs">24H</button>
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface">7D</button>
+</div>
+</div>
+<!-- Legend and Status Tag -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-sm font-label-code text-label-code">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 bg-error"></span>
+<span class="text-on-surface">TOP-OIL TEMP (°C)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 bg-primary"></span>
+<span class="text-on-surface">ACTIVE LOAD (MVA)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-outline" style="stroke-dasharray: 2 2;"></span>
+<span class="text-tertiary">TRIP THRESHOLD (105°C)</span>
+</div>
+</div>
+<span class="text-error font-bold uppercase">Fan Bank #2 Trip Marker @ 11:20 UTC</span>
+</div>
+<!-- Inline SVG Visualization -->
+<div class="w-full h-64 bg-surface-container-low p-space-sm relative overflow-hidden">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 240">
+<!-- Grid Lines -->
+<line class="text-surface-dim" stroke="currentColor" stroke-width="1" x1="40" x2="780" y1="20" y2="20"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-width="1" x1="40" x2="780" y1="65" y2="65"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-width="1" x1="40" x2="780" y1="110" y2="110"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-width="1" x1="40" x2="780" y1="155" y2="155"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-width="1" x1="40" x2="780" y1="200" y2="200"></line>
+<!-- Time Grid Verticals -->
+<line class="text-surface-dim" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1" x1="160" x2="160" y1="10" y2="200"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1" x1="310" x2="310" y1="10" y2="200"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1" x1="470" x2="470" y1="10" y2="200"></line>
+<line class="text-surface-dim" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1" x1="630" x2="630" y1="10" y2="200"></line>
+<!-- Trip threshold line 105C at y=25 -->
+<line opacity="0.7" stroke="#ba1a1a" stroke-dasharray="4 4" stroke-width="1.5" x1="40" x2="780" y1="25" y2="25"></line>
+<text class="font-label-code" fill="#ba1a1a" font-size="9" x="730" y="21">105°C TRIP</text>
+<!-- Incident marker: Fan Bank #2 failure at ~11:20 (x=460) -->
+<line stroke="#ba1a1a" stroke-width="1.5" x1="460" x2="460" y1="10" y2="200"></line>
+<polygon fill="#ba1a1a" points="455,10 465,10 460,20"></polygon>
+<rect fill="#ba1a1a" height="16" width="80" x="420" y="24"></rect>
+<text class="font-label-code" fill="#ffffff" font-size="8" font-weight="bold" x="424" y="35">FAN #2 TRIP</text>
+<!-- Active Load Curve (Primary / Copper) -->
+<!-- Base load ~30 MVA rising to 49.2 MVA -->
+<path d="M 40,150 
+                     C 100,155 140,140 180,130 
+                     C 220,120 280,125 320,110 
+                     C 380,90 420,80 460,65 
+                     C 520,55 580,52 640,48 
+                     C 700,45 740,44 780,42" fill="none" stroke="#944521" stroke-width="2.5"></path>
+<!-- Oil Temperature Curve (Red / Critical Gradient) -->
+<!-- Starts at 62°C, after fan trip at x=460 escalates aggressively towards 94.2°C -->
+<path d="M 40,170 
+                     C 100,168 140,165 180,160 
+                     C 220,155 280,152 320,145 
+                     C 380,140 420,135 460,120 
+                     C 500,98 560,70 620,58 
+                     C 680,45 730,40 780,35" fill="none" stroke="#ba1a1a" stroke-width="3"></path>
+<!-- Current point circle -->
+<circle cx="780" cy="35" fill="#ba1a1a" r="4.5" stroke="#ffffff" stroke-width="2"></circle>
+<circle cx="780" cy="42" fill="#944521" r="4.5" stroke="#ffffff" stroke-width="2"></circle>
+<!-- X-Axis Labels -->
+<text class="font-label-code" fill="#555e57" font-size="9" x="40" y="216">17:00 (YESTERDAY)</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="160" y="216">21:00</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="310" y="216">03:00</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="470" y="216">11:00 (TODAY)</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="630" y="216">15:00</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="750" y="216">NOW</text>
+<!-- Y-Axis Left (Temp °C) -->
+<text class="font-label-code" fill="#ba1a1a" font-size="9" x="5" y="28">100°C</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="5" y="70">85°C</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="5" y="115">70°C</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="5" y="160">55°C</text>
+<text class="font-label-code" fill="#555e57" font-size="9" x="5" y="202">40°C</text>
+</svg>
+</div>
+<!-- Metric Telemetry Reading Ribbon -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm mt-space-md pt-space-sm bg-surface-container-low p-space-sm font-label-code text-label-code">
+<div>
+<span class="text-tertiary">PEAK AMBIENT TEMP:</span>
+<span class="text-on-surface font-bold ml-1">38.6°C (14:10)</span>
+</div>
+<div>
+<span class="text-tertiary">THERMAL GRADIENT:</span>
+<span class="text-error font-bold ml-1">+0.48°C / min</span>
+</div>
+<div>
+<span class="text-tertiary">EST. TIME TO TRIP:</span>
+<span class="text-error font-bold ml-1">42 MIN @ CONST</span>
+</div>
+<div>
+<span class="text-tertiary">COOLING CAPACITY:</span>
+<span class="text-primary font-bold ml-1">50% (1 OF 2 STAGES)</span>
+</div>
+</div>
+</div>
+<!-- 4. DETAILED AI CONTRIBUTING FACTORS -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[1.125rem]">fact_check</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">AI Diagnostic Attribution &amp; Root Contributing Factors</h3>
+</div>
+<span class="font-label-code text-label-code text-tertiary">WEIGHTED INFERENCE BREAKDOWN</span>
+</div>
+<div class="space-y-space-sm">
+<!-- Factor 1 -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<span class="font-label-code text-label-code font-bold text-on-primary bg-primary px-2 py-1 h-fit">#1</span>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<h4 class="font-headline-sm text-body-lg font-bold text-on-surface">Ambient Heat Surge &amp; Industrial Demand Peak</h4>
+<span class="px-1.5 py-0.2 bg-primary/20 text-on-primary-fixed-variant font-label-code text-label-code font-bold">+34% vs 30-Day Avg</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Active loading increased from nominal 36.7 MVA to 49.2 MVA concurrent with 38.6°C heat wave across regional industrial corridor feeder line.
+                </p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end min-w-[120px]">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Risk Contribution</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">38.4%</span>
+</div>
+</div>
+<!-- Factor 2 -->
+<div class="p-space-md bg-error-container/20 flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<span class="font-label-code text-label-code font-bold text-on-error bg-error px-2 py-1 h-fit">#2</span>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<h4 class="font-headline-sm text-body-lg font-bold text-on-surface">Auxiliary Cooling Fan Bank #2 Complete Trip</h4>
+<span class="px-1.5 py-0.2 bg-error text-on-error font-label-code text-label-code font-bold">CRITICAL LOSS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Telemetry registers RPM: 0 on cooling motor starter #2 following overcurrent lockout at 11:20:18 UTC. Unit operating at restricted 50% radiator air-displacement.
+                </p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end min-w-[120px]">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Risk Contribution</span>
+<span class="font-headline-sm text-headline-sm text-error font-bold">31.2%</span>
+</div>
+</div>
+<!-- Factor 3 -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<span class="font-label-code text-label-code font-bold text-on-primary bg-primary px-2 py-1 h-fit">#3</span>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<h4 class="font-headline-sm text-body-lg font-bold text-on-surface">Dissolved Hydrogen (H₂) Generation Velocity</h4>
+<span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface font-label-code text-label-code">DGA ROGERS RATIO: ALERT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Sensor probe detects rapid spike (+45 ppm in 6 hours). Gas composition implies low-energy electrical discharge / localized thermal decomposition in Coil B winding.
+                </p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end min-w-[120px]">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Risk Contribution</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">18.6%</span>
+</div>
+</div>
+<!-- Factor 4 -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<span class="font-label-code text-label-code font-bold text-on-surface-variant bg-surface-container px-2 py-1 h-fit">#4</span>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<h4 class="font-headline-sm text-body-lg font-bold text-on-surface">Phase-C Harmonic Distortion Elevation</h4>
+<span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface font-label-code text-label-code">THD: 4.2%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  2nd and 5th harmonic presence creating secondary eddy-current heating on upper tank periphery and bushing terminal clamps.
+                </p>
+</div>
+</div>
+<div class="flex flex-col sm:items-end min-w-[120px]">
+<span class="font-label-meta text-label-meta text-tertiary uppercase">Risk Contribution</span>
+<span class="font-headline-sm text-headline-sm text-tertiary font-bold">11.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: SPECIFICATIONS, TELEMETRY QUALITY & MITIGATION ACTIONS (4 cols ~ 34%) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- 1. DECISION SUPPORT & IMMEDIATE MITIGATION (PROMINENT TACTICAL CARD) -->
+<div class="bg-surface-container-lowest p-space-lg shadow-md relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+<div class="flex items-center gap-2 mb-space-sm">
+<span class="material-symbols-outlined text-primary text-[1.25rem]">alt_route</span>
+<span class="font-label-code text-label-code text-primary uppercase font-bold tracking-wider">AI MITIGATION RECOMMENDATION</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase mb-space-xs">
+          Recommended Load Shed / Transfer Action
+        </h3>
+<div class="p-space-md bg-surface-container-low my-space-sm">
+<p class="font-body-md text-body-md text-on-surface font-medium leading-snug">
+            Execute hypothetical <span class="text-primary font-bold">8.5 MVA</span> load shift from <span class="font-bold">TX-Oak-04</span> to standby unit <span class="font-bold text-secondary">TX-Pine-02</span> via Feeder Tie <span class="font-bold">F-104</span>.
+          </p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-code text-label-code text-secondary">
+<span>PROJECTED TOP-OIL TEMP DROP:</span>
+<span class="font-bold">-11.2°C IN 35 MIN</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm mt-space-md">
+<button class="w-full py-2.5 px-space-md bg-inverse-surface hover:bg-primary text-on-primary font-headline-sm text-headline-sm uppercase transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span>Launch in Simulator</span>
+<span class="material-symbols-outlined text-[1.25rem]">arrow_forward</span>
+</button>
+<button class="w-full py-2 px-space-md bg-surface-container hover:bg-surface-container-high text-on-surface font-label-code text-label-code uppercase tracking-wider transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[1.125rem]">download</span>
+<span>Export SCADA Dossier (PDF/CSV)</span>
+</button>
+</div>
+<div class="mt-space-sm flex items-center justify-between font-label-meta text-label-meta text-tertiary uppercase">
+<span>SIMULATOR PAYLOAD READY</span>
+<span>DISPATCH AUTHORIZATION REQUIRED</span>
+</div>
+</div>
+<!-- 2. TELEMETRY FRESHNESS & SENSOR DATA QUALITY MATRIX -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[1.125rem]">verified</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Sensor Integrity Matrix</h3>
+</div>
+<span class="font-label-code text-label-code text-secondary font-bold">12 / 12 HEALTHY</span>
+</div>
+<div class="space-y-space-xs font-label-code text-label-code">
+<div class="flex items-center justify-between p-space-xs bg-surface-container-low">
+<span class="text-tertiary">SCADA DNP3 POLLING RATE:</span>
+<span class="text-secondary font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> 0.4s (NORMAL)
+            </span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-low">
+<span class="text-tertiary">ON-LINE DGA CHROMATOGRAPH:</span>
+<span class="text-on-surface font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> ONLINE (15m CYC)
+            </span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-low">
+<span class="text-tertiary">FIBER WINDING TEMP PROBE:</span>
+<span class="text-secondary font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SENSOR HEALTHY
+            </span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-low">
+<span class="text-tertiary">OPTICAL BUSHING MONITOR:</span>
+<span class="text-secondary font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> C1/C2 NOMINAL
+            </span>
+</div>
+<div class="flex items-center justify-between p-space-xs bg-surface-container-low">
+<span class="text-tertiary">MISSING DATA CHANNELS:</span>
+<span class="text-secondary font-bold">0 OF 12 CHANNELS</span>
+</div>
+</div>
+<div class="mt-space-sm p-space-xs bg-surface-container text-tertiary font-label-meta text-label-meta uppercase flex items-center justify-between">
+<span>LAST CRC CHECK: PASS (14:32:00 UTC)</span>
+<span>LATENCY: 18ms</span>
+</div>
+</div>
+<!-- 3. ASSET PHYSICAL & ELECTRICAL SPECIFICATIONS -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[1.125rem]">tune</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Technical Nameplate Data</h3>
+</div>
+<span class="font-label-code text-label-code text-tertiary">ANSI / IEEE C57</span>
+</div>
+<div class="grid grid-cols-2 gap-x-space-md gap-y-space-sm font-label-code text-label-code">
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Transformer Class</div>
+<div class="text-on-surface font-bold">Step-Down Substation</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Voltage Primary/Sec</div>
+<div class="text-on-surface font-bold">138.0 kV / 13.8 kV</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Percent Impedance (%Z)</div>
+<div class="text-on-surface font-bold">8.45% @ 50 MVA</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Dielectric Oil Volume</div>
+<div class="text-on-surface font-bold">14,200 Liters (Type II)</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">On-Load Tap Position</div>
+<div class="text-on-surface font-bold">STEP 14 (+2.50%)</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Associated Breaker</div>
+<div class="text-secondary font-bold">CB-104 (CLOSED)</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Vector Group</div>
+<div class="text-on-surface font-bold">Dyn1 (Delta-Wye)</div>
+</div>
+<div class="p-space-xs bg-surface-container-low">
+<div class="text-tertiary text-label-meta uppercase">Core Construction</div>
+<div class="text-on-surface font-bold">5-Legged Silicon Steel</div>
+</div>
+</div>
+<!-- Auxiliary Hardware Status Details -->
+<div class="mt-space-md pt-space-sm space-y-space-xs font-label-code text-label-code">
+<div class="flex items-center justify-between">
+<span class="text-tertiary">COOLING STAGE 1 (FAN 1-4):</span>
+<span class="text-secondary font-bold">RUNNING (100% RPM)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-tertiary">COOLING STAGE 2 (FAN 5-8):</span>
+<span class="text-error font-bold uppercase">LOCKED OUT (MTR FAULT)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-tertiary">OIL CIRCULATION PUMP #1:</span>
+<span class="text-secondary font-bold">NORMAL (2.4 BAR)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-tertiary">BUCHHOLZ RELAY ACCUMULATION:</span>
+<span class="text-primary font-bold">TRACE GAS DETECTED</span>
+</div>
+</div>
+</div>
+<!-- 4. ON-SITE CREW & DISPATCH LOG -->
+<div class="bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface uppercase">Work Orders &amp; Dispatch</span>
+<span class="font-label-code text-label-code text-primary font-bold">PRIORITY-1</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Field Dispatch Ticket <strong class="text-on-surface">#WO-2024-9941</strong> generated for North Substation Crew 3. Relay and substation cooling technicians en route (ETA: 24 mins).
+        </p>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-code text-label-code text-tertiary">
+<span>CONTACT: DISPATCH REGION 4</span>
+<span class="text-on-surface font-bold">CH-9 DIRECT</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
