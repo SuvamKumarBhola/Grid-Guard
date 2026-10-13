@@ -35,6 +35,9 @@ run:
 validate-model:
 	$(PYTHON) scripts/validate_model_artifact.py --dir model_artifacts/registered/gridguard-risk-0.1.0 --require-approved --verify-checksum
 
+verify-model-v2:
+	$(PYTHON) scripts/verify_anomaly_v2_model.py
+
 load-test:
 	$(PYTHON) scripts/run_load_test.py --requests 200 --concurrency 10
 

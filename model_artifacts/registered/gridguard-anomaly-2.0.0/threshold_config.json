@@ -1,0 +1,11 @@
+{
+  "reference_threshold": 0.020244648295595247,
+  "threshold_basis": "training_95th_percentile",
+  "score_formula": "-decision_function(X)",
+  "action_mapping": {
+    "normal": "Telemetry aligns with historical operating patterns (score <= threshold)",
+    "watch": "Elevated statistical anomaly score; add asset to telemetry watchlist",
+    "critical": "High anomaly score (> 0.05); dispatch engineering review"
+  },
+  "disclaimer": "Statistical anomaly detection only; not calibrated transformer failure prediction."
+}

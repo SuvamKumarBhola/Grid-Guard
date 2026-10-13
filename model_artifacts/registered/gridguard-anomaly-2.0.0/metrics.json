@@ -1,0 +1,9 @@
+{
+  "training_rows": 12994,
+  "evaluation_rows": 5569,
+  "flagged_alerts": 696,
+  "alert_rate_pct": 12.5,
+  "reference_threshold": 0.020244648295595247,
+  "grouped_episodes": 156,
+  "episode_gap_rule_minutes": 30
+}

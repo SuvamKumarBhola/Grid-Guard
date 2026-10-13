@@ -275,3 +275,110 @@ class ErrorDetail(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: ErrorDetail
+
+
+# -------------------------------------------------------------------------
+# Telemetry Anomaly Detection v2 (Unsupervised Isolation Forest)
+# -------------------------------------------------------------------------
+
+class DescriptiveContributor(BaseModel):
+    feature: str
+    observed_value: float
+    training_median: float
+    shift_relative: float
+    role: str = "descriptive_contributor"
+    detail: str
+
+
+class TelemetryAnomalyScoreRequest(BaseModel):
+    features: Dict[str, Optional[float]] = Field(
+        ...,
+        description="Dictionary of numeric telemetry measurements matching the 45 trained features.",
+    )
+    timestamp: Optional[str] = None
+    asset_id: Optional[str] = "TX-TELEMETRY-STREAM"
+    request_id: Optional[str] = None
+
+
+class TelemetryAnomalyScoreResponse(BaseModel):
+    request_id: str
+    model_version: str = "2.0.0"
+    model_type: str = "IsolationForest"
+    anomaly_score: float
+    reference_threshold: float
+    is_anomaly_alert: bool
+    severity_tier: Literal["normal", "watch", "critical"]
+    feature_coverage: float
+    descriptive_contributors: List[DescriptiveContributor] = Field(default_factory=list)
+    product_claim: str = (
+        "GridGuard uses unsupervised machine learning to flag unusual transformer telemetry "
+        "and help operators investigate operating patterns. Its alerts are not yet validated predictions "
+        "of transformer failure."
+    )
+    score_interpretation: str = (
+        "Higher anomaly score indicates greater statistical isolation from learned baseline. "
+        "Alert triggered when score exceeds reference threshold (training 95th percentile). "
+        "Severity tiers are product-level prioritization cutoffs, not calibrated physical failure probabilities."
+    )
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class AnomalyEpisode(BaseModel):
+    episode_id: int
+    start_time: str
+    end_time: str
+    alert_count: int
+    max_score: float
+    mean_score: float
+    duration_minutes: float
+    summary: Optional[str] = None
+
+
+class AnomalyV2MetadataResponse(BaseModel):
+    model_version: str
+    model_type: str
+    purpose: str
+    failure_prediction_validated: bool
+    feature_columns: List[str]
+    feature_count: int
+    minimum_feature_coverage: float
+    training_fraction: float
+    reference_threshold: float
+    training_rows: int
+    future_evaluation_rows: int
+    training_start: str
+    training_end: str
+    evaluation_start: str
+    evaluation_end: str
+    evaluation_flagged_alerts: int
+    evaluation_alert_rate_pct: float
+    total_episodes_count: int
+    product_claim: str
+
+
+class DriftMetric(BaseModel):
+    feature: str
+    training_median: float
+    evaluation_median: float
+    median_shift: float
+    training_mean: Optional[float] = None
+    evaluation_mean: Optional[float] = None
+
+
+class MonthlyAlertRate(BaseModel):
+    month: str
+    alert_rate_pct: float
+    interpretation: str
+
+
+class DataQualityReportResponse(BaseModel):
+    total_records: int
+    line_voltage_zero_records: int
+    suspicious_zero_line_records: int
+    monthly_zero_rates: Dict[str, Dict[str, float]]
+    cleaned_candidate_status: str
+    controlled_validation_evaluation_records: int
+    controlled_validation_score_changes: int
+    controlled_validation_alert_decision_changes: int
+    conclusion: str
+

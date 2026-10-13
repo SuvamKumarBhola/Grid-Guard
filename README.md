@@ -96,17 +96,24 @@ Open your browser to:
 - **Operations Console:** [http://localhost:8000/ui/](http://localhost:8000/ui/) (or [http://localhost:8000/](http://localhost:8000/))
 - **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### 3. Run the Automated Test Suite (43 Tests)
+### 3. Run the Automated Test Suite (60 Tests)
 ```bash
 pytest tests/ -v
 ```
 
-### 4. Run Concurrent Load & Resilience Benchmark
+### 4. Verify Telemetry Anomaly Detector v2 (All 14 Acceptance Criteria)
+```bash
+python scripts/verify_anomaly_v2_model.py
+# or via Makefile
+make verify-model-v2
+```
+
+### 5. Run Concurrent Load & Resilience Benchmark
 ```bash
 python scripts/run_load_test.py --requests 300 --concurrency 10
 ```
 
-### 5. Validate Registered Model Bundle
+### 6. Validate Registered Model Bundle
 ```bash
 python scripts/validate_model_artifact.py \
   --dir model_artifacts/registered/gridguard-risk-0.1.0 \
@@ -178,8 +185,9 @@ mine-Grid-Guard/
 ├── docs/                   # Comprehensive documentation suite & ADRs
 ├── frontend/               # Polished operator dashboard (HTML/CSS/JS)
 ├── model_artifacts/        # Registered bundles, schemas, and checksums
-├── scripts/                # Load testing, artifact validation, model registration
-└── tests/                  # 43 automated unit, integration, contract, and failure tests
+├── models-trained/         # Trained v2 Isolation Forest model, metadata, episodes, and datasets
+├── scripts/                # Load testing, artifact validation, model registration, acceptance verification
+└── tests/                  # 60 automated unit, integration, contract, and model v2 acceptance tests
 ```
 
 ---
@@ -189,3 +197,4 @@ mine-Grid-Guard/
 - **Operator Assistance Only:** GridGuard recommends and explains. It does not operate the electrical grid.
 - **Human Approval:** All counterfactual intervention outputs enforce `requires_human_approval: true`.
 - **Zero Local Training:** Training is isolated to cloud/Kaggle environments.
+- **Model v2 Product Claim & Boundary:** *GridGuard uses unsupervised machine learning to flag unusual transformer telemetry and help operators investigate operating patterns. Its alerts are not yet validated predictions of transformer failure.* Explanations represent descriptive telemetry deviations, not causal physical fault diagnoses.

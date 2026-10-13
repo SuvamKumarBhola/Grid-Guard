@@ -168,6 +168,15 @@
           <span class="font-label-code text-[0.6875rem] px-2 py-0.5 rounded-full bg-primary text-on-primary font-bold shadow-2xs" id="sidebar-alert-badge">3</span>
         </button>
 
+        <!-- Telemetry Anomalies (v2 Isolation Forest) -->
+        <button id="nav-btn-anomalies" onclick="switchTab('anomalies')" class="nav-item flex items-center justify-between px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
+          <span class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-[1.25rem]">troubleshoot</span>
+            <span>Telemetry Anomalies</span>
+          </span>
+          <span class="font-label-code text-[0.625rem] px-1.5 py-0.5 rounded bg-primary/30 text-primary-fixed border border-primary/40 font-bold shadow-2xs">v2.0</span>
+        </button>
+
         <!-- Load Simulation -->
         <button id="nav-btn-simulation" onclick="switchTab('simulation')" class="nav-item flex items-center gap-space-md px-space-md py-space-sm text-tertiary-fixed text-body-md hover:bg-surface/5 hover:text-inverse-on-surface transition-all rounded-xl border-l-4 border-transparent text-left w-full">
           <span class="material-symbols-outlined text-[1.25rem]">bolt</span>
@@ -1143,6 +1152,658 @@
                 <span>Central Substation (RTU-C03):</span>
                 <strong class="text-secondary font-label-code">12ms • IEC-61850</strong>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 6: TELEMETRY ANOMALIES (v2 ISOLATION FOREST INVESTIGATION)        -->
+      <!-- ===================================================================== -->
+      <section id="tab-anomalies" class="tab-pane hidden flex flex-col w-full gap-space-lg">
+        <!-- Top Editorial Dispatch Header -->
+        <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-space-sm">
+              <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-code text-[0.6875rem] font-bold uppercase tracking-wider">
+                MODEL v2.0.0
+              </span>
+              <span class="font-label-code text-[0.6875rem] text-tertiary">ISOLATION FOREST • 300 ESTIMATORS</span>
+              <span class="text-tertiary">•</span>
+              <span class="font-label-code text-[0.6875rem] text-secondary font-bold">CHRONOLOGICAL EVALUATION VERIFIED</span>
+            </div>
+            <h1 class="font-headline-lg text-2xl font-bold text-on-surface tracking-tight">
+              AI Telemetry Anomaly Investigation Center
+            </h1>
+            <p class="font-body-md text-sm text-tertiary max-w-4xl">
+              Unsupervised anomaly detection across 45 electrical, thermal, and harmonic telemetry channels. Grouping statistical anomalies into investigation episodes with temporal distribution drift tracking.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-space-sm">
+            <button
+              id="btn-reproduce-eval"
+              onclick="verifyEvaluationReproduction()"
+              class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl font-headline-sm text-xs font-semibold hover:bg-primary-container transition-all shadow-xs btn-elevated"
+            >
+              <span class="material-symbols-outlined text-[1rem]">verified</span>
+              <span>Verify Evaluation (5,569 Rows)</span>
+            </button>
+            <button
+              onclick="loadSampleScenario('march_1_imbalance')"
+              class="flex items-center gap-2 px-3 py-2 bg-surface border border-outline-variant rounded-xl font-headline-sm text-xs text-on-surface hover:bg-surface-variant transition-colors"
+            >
+              <span class="material-symbols-outlined text-[1rem]">replay</span>
+              <span>Load March 1 Episode</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mandatory Operational Distinction & Disclaimer Banner -->
+        <div class="p-space-md bg-surface-container-high border-l-4 border-primary rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-[1.75rem] mt-0.5">warning</span>
+            <div class="flex flex-col">
+              <span class="font-headline-sm text-sm font-bold text-on-surface">
+                Operational Capability Boundary & Scientific Claim
+              </span>
+              <p class="font-body-sm text-xs text-on-surface-variant mt-0.5 max-w-5xl leading-relaxed">
+                <strong>GridGuard uses unsupervised machine learning to flag unusual transformer telemetry and help operators investigate operating patterns. Its alerts are not yet validated predictions of transformer failure.</strong> Higher anomaly scores indicate statistical isolation depth from the learned baseline; explanations identify descriptive telemetry deviations, not causal equipment failure diagnoses.
+              </p>
+            </div>
+          </div>
+          <span class="font-label-code text-[0.625rem] px-2.5 py-1 rounded bg-surface border border-outline-variant font-bold text-tertiary uppercase tracking-wider whitespace-nowrap">
+            UNSUPERVISED ANOMALY DETECTION
+          </span>
+        </div>
+
+        <!-- Architectural KPI Cards (4-column grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+          <!-- Card 1: Corpus & Dimensions -->
+          <div class="p-space-md bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">TELEMETRY CORPUS</span>
+              <span class="material-symbols-outlined text-tertiary text-[1.125rem]">dataset</span>
+            </div>
+            <div class="my-2">
+              <div class="font-telemetry-num text-2xl font-bold text-on-surface">20,024</div>
+              <div class="font-label-code text-xs text-secondary font-semibold">45 Model Features • Jun 19 – Apr 20</div>
+            </div>
+            <div class="text-[0.6875rem] text-tertiary border-t border-surface-variant/40 pt-1.5 flex justify-between">
+              <span>Merged Sources: 5 CSVs</span>
+              <span class="font-semibold text-on-surface">18,563 Eligible (≥80% cov)</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Chronological Split -->
+          <div class="p-space-md bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">CHRONOLOGICAL SPLIT</span>
+              <span class="material-symbols-outlined text-secondary text-[1.125rem]">schedule</span>
+            </div>
+            <div class="my-2">
+              <div class="font-telemetry-num text-2xl font-bold text-on-surface">70 / 30%</div>
+              <div class="font-label-code text-xs text-tertiary">12,994 Train / 5,569 Eval</div>
+            </div>
+            <div class="text-[0.6875rem] text-tertiary border-t border-surface-variant/40 pt-1.5 flex justify-between">
+              <span>Train: Jun 27 – Jan 21</span>
+              <span class="font-semibold text-on-surface">Eval: Jan 21 – Apr 14</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Alert Threshold & Evaluation -->
+          <div class="p-space-md bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">EVALUATION ALERTS</span>
+              <span class="material-symbols-outlined text-primary text-[1.125rem]">crisis_alert</span>
+            </div>
+            <div class="my-2">
+              <div class="font-telemetry-num text-2xl font-bold text-primary">696 Alerts</div>
+              <div class="font-label-code text-xs text-primary font-semibold">12.50% Alert Rate (5,569 rows)</div>
+            </div>
+            <div class="text-[0.6875rem] text-tertiary border-t border-surface-variant/40 pt-1.5 flex justify-between">
+              <span>Threshold:</span>
+              <span class="font-label-code font-bold text-on-surface">0.020245 (Train 95th %ile)</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Incident Episodes -->
+          <div class="p-space-md bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">GROUPED EPISODES</span>
+              <span class="material-symbols-outlined text-secondary text-[1.125rem]">segment</span>
+            </div>
+            <div class="my-2">
+              <div class="font-telemetry-num text-2xl font-bold text-on-surface">156 Episodes</div>
+              <div class="font-label-code text-xs text-secondary font-semibold">&gt;30-Min Gap Rule</div>
+            </div>
+            <div class="text-[0.6875rem] text-tertiary border-t border-surface-variant/40 pt-1.5 flex justify-between">
+              <span>Top Episode: Mar 1</span>
+              <span class="font-semibold text-primary">63 readings • Max 0.081</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reproduction Banner Confirmation Container (hidden initially) -->
+        <div id="eval-reproduction-banner" class="hidden p-space-md bg-secondary-container/60 border border-secondary/30 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary text-[1.5rem]">check_circle</span>
+            <div>
+              <span class="font-headline-sm text-sm font-bold text-on-surface">
+                Historical Chronological Reproduction 100% Verified
+              </span>
+              <p class="font-body-sm text-xs text-on-surface-variant" id="eval-reproduction-details">
+                5,569 evaluation records evaluated. Exactly 696 anomalous records flagged (12.50% alert rate). Reference threshold: 0.02024465. Zero score discrepancies vs saved metadata.
+              </p>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-secondary text-on-secondary font-label-code text-xs font-bold">
+            ZERO DISCREPANCY
+          </span>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- MAIN SECTION: INTERACTIVE SCORING LAB & ANOMALY INSPECTOR           -->
+        <!-- =================================================================== -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+          <!-- Left: Telemetry Controls & Presets (7 cols) -->
+          <div class="lg:col-span-7 p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col gap-space-md">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-surface-variant/70 pb-space-sm">
+              <div>
+                <h3 class="font-headline-sm text-base font-bold text-on-surface">
+                  Live Telemetry Inference & Scoring Lab
+                </h3>
+                <p class="font-body-sm text-xs text-tertiary">
+                  Score incoming 45-feature multi-sensor telemetry using the fitted v2 Isolation Forest pipeline.
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <label for="scenario-preset-select" class="font-label-meta text-[0.6875rem] text-tertiary font-bold uppercase">Preset:</label>
+                <select
+                  id="scenario-preset-select"
+                  onchange="loadSampleScenario(this.value)"
+                  class="px-2.5 py-1 bg-surface border border-outline-variant rounded-lg font-headline-sm text-xs text-on-surface focus:outline-none focus:border-primary"
+                >
+                  <option value="march_1_imbalance">March 1: Current Imbalance (Score: ~0.081)</option>
+                  <option value="feb_1_high_voltage">Feb 1: High-Voltage Low-Load (Score: ~0.098)</option>
+                  <option value="normal_baseline">Normal Baseline Operating Pattern</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Key Telemetry Input Fields Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <!-- VL1 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Voltage VL1 (V)</span>
+                <input id="input-VL1" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 238.3V</span>
+              </div>
+              <!-- VL2 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Voltage VL2 (V)</span>
+                <input id="input-VL2" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 238.0V</span>
+              </div>
+              <!-- VL3 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Voltage VL3 (V)</span>
+                <input id="input-VL3" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 237.9V</span>
+              </div>
+              <!-- IL1 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Current IL1 (A)</span>
+                <input id="input-IL1" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 75.1A</span>
+              </div>
+              <!-- IL2 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Current IL2 (A)</span>
+                <input id="input-IL2" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 59.1A</span>
+              </div>
+              <!-- IL3 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Phase Current IL3 (A)</span>
+                <input id="input-IL3" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 88.7A</span>
+              </div>
+              <!-- VL12 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Line Voltage VL12 (V)</span>
+                <input id="input-VL12" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 409.1V</span>
+              </div>
+              <!-- VL23 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Line Voltage VL23 (V)</span>
+                <input id="input-VL23" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 409.1V</span>
+              </div>
+              <!-- VL31 -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Line Voltage VL31 (V)</span>
+                <input id="input-VL31" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 409.8V</span>
+              </div>
+              <!-- KW -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Active Power KW (kW)</span>
+                <input id="input-KW" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 52.1 kW</span>
+              </div>
+              <!-- KVA -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Apparent Power KVA (kVA)</span>
+                <input id="input-KVA" type="number" step="0.1" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 52.8 kVA</span>
+              </div>
+              <!-- Avg_PF -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Avg Power Factor</span>
+                <input id="input-Avg_PF" type="number" step="0.001" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 0.985</span>
+              </div>
+              <!-- OTI -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Oil Temp Indicator OTI (°C)</span>
+                <input id="input-OTI" type="number" step="0.5" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 30°C</span>
+              </div>
+              <!-- ATI -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Ambient Temp ATI (°C)</span>
+                <input id="input-ATI" type="number" step="0.5" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Train Med: 28°C</span>
+              </div>
+              <!-- FRQ -->
+              <div class="p-2.5 bg-surface-container rounded-xl border border-surface-variant/60 flex flex-col gap-1">
+                <span class="font-label-meta text-[0.625rem] text-tertiary uppercase font-bold">Frequency FRQ (Hz)</span>
+                <input id="input-FRQ" type="number" step="0.05" class="bg-surface px-2 py-1 rounded border border-outline-variant/80 font-telemetry-num text-xs font-bold text-on-surface" />
+                <span class="text-[0.5625rem] text-tertiary">Nominal: 50.0 Hz</span>
+              </div>
+            </div>
+
+            <!-- Run Score Action Bar -->
+            <div class="flex items-center justify-between pt-2 border-t border-surface-variant/60">
+              <span class="font-label-code text-[0.6875rem] text-tertiary">
+                Missing telemetry values filled via fitted Median SimpleImputer
+              </span>
+              <button
+                id="btn-run-anomaly-inference"
+                onclick="runAnomalyScoring()"
+                class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-headline-sm text-xs font-bold hover:bg-primary-container transition-all flex items-center gap-2 shadow-xs btn-elevated"
+              >
+                <span class="material-symbols-outlined text-[1.125rem]">play_arrow</span>
+                <span>Score Telemetry (v2 Pipeline)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Live Inference Output & Diagnostics (5 cols) -->
+          <div class="lg:col-span-5 p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col justify-between">
+            <div class="flex flex-col gap-space-md">
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/70">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">
+                  MODEL INFERENCE RESULT
+                </span>
+                <span id="anomaly-badge" class="font-label-code text-[0.6875rem] px-2.5 py-0.5 rounded-full font-bold bg-primary text-on-primary">
+                  ALERT FLAGGED
+                </span>
+              </div>
+
+              <!-- Anomaly Score Hero Readout -->
+              <div class="flex items-baseline justify-between p-4 bg-surface-container rounded-xl border border-surface-variant/60">
+                <div class="flex flex-col">
+                  <span class="font-label-meta text-[0.6875rem] text-tertiary uppercase font-bold">Anomaly Score (-decision_fn)</span>
+                  <div id="hero-anomaly-score" class="font-telemetry-num text-3xl font-bold text-primary mt-1">
+                    +0.080994
+                  </div>
+                </div>
+                <div class="flex flex-col text-right">
+                  <span class="font-label-meta text-[0.6875rem] text-tertiary uppercase font-bold">Reference Threshold</span>
+                  <div class="font-telemetry-num text-sm font-bold text-on-surface mt-1">
+                    0.020245
+                  </div>
+                  <span class="font-label-code text-[0.5625rem] text-tertiary">Training 95th Percentile</span>
+                </div>
+              </div>
+
+              <!-- Score Gauge Visual Meter -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between font-label-code text-[0.6875rem] text-tertiary">
+                  <span>Normal (&lt; 0.0202)</span>
+                  <span class="font-bold text-primary">Alert Zone (&gt; 0.0202)</span>
+                  <span>Extreme (&gt; 0.06)</span>
+                </div>
+                <div class="relative w-full h-3 bg-surface-container rounded-full overflow-hidden border border-outline-variant/50">
+                  <div id="score-meter-bar" class="h-full bg-primary transition-all duration-500 rounded-full" style="width: 78%;"></div>
+                  <div class="absolute top-0 bottom-0 left-[35%] w-0.5 bg-on-surface/80" title="Reference Threshold 0.020245"></div>
+                </div>
+                <div class="flex justify-between font-label-meta text-[0.625rem] text-tertiary">
+                  <span>Baseline: 0.00</span>
+                  <span>Ref Cutoff: 0.0202</span>
+                  <span>Max Scale: 0.10</span>
+                </div>
+              </div>
+
+              <!-- Triage Tier Note -->
+              <div class="p-3 bg-surface border border-surface-variant rounded-xl flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-primary text-[1.125rem] mt-0.5">info</span>
+                <div class="flex flex-col text-xs">
+                  <span class="font-headline-sm font-bold text-on-surface" id="triage-tier-title">
+                    Triage Tier: CRITICAL INVESTIGATION
+                  </span>
+                  <p class="text-[0.6875rem] text-tertiary mt-0.5">
+                    Product-level prioritization cutoff for operator review. Not a physical failure probability.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Top Descriptive Contributing Deviations -->
+              <div class="flex flex-col gap-2">
+                <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">
+                  Top Descriptive Telemetry Deviations
+                </span>
+                <div id="descriptive-contributors-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                  <!-- Dynamically populated -->
+                </div>
+                <span class="font-label-meta text-[0.5625rem] text-tertiary italic">
+                  * Deviations highlight statistical distance from training median. They do not constitute physical failure diagnoses.
+                </span>
+              </div>
+            </div>
+
+            <!-- Footer Meta -->
+            <div class="pt-3 border-t border-surface-variant/60 flex items-center justify-between text-[0.6875rem] text-tertiary">
+              <span id="feature-coverage-text">Coverage: 100% (45/45 Features)</span>
+              <span id="inference-time-text">Status: Fitted Pipeline Online</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- ANOMALY EPISODES EXPLORER (156 GROUPED EPISODES)                    -->
+        <!-- =================================================================== -->
+        <div class="p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col gap-space-md">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-surface-variant/70 pb-space-sm">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-headline-sm text-base font-bold text-on-surface">
+                  Historical Anomaly Episodes Explorer
+                </h3>
+                <span class="font-label-code text-[0.6875rem] px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-bold">
+                  156 Episodes
+                </span>
+              </div>
+              <p class="font-body-sm text-xs text-tertiary">
+                Sequential anomaly alerts grouped using the 30-minute quiet gap separation rule.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                onclick="filterEpisodes('all')"
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-primary text-on-primary"
+                id="ep-filter-all"
+              >
+                All (156)
+              </button>
+              <button
+                onclick="filterEpisodes('top')"
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant"
+                id="ep-filter-top"
+              >
+                Top Episodes (&gt;15 Alerts)
+              </button>
+              <button
+                onclick="filterEpisodes('march')"
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant"
+                id="ep-filter-march"
+              >
+                March 2020
+              </button>
+              <button
+                onclick="filterEpisodes('feb')"
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant"
+                id="ep-filter-feb"
+              >
+                February 2020
+              </button>
+            </div>
+          </div>
+
+          <!-- Episodes Table -->
+          <div class="overflow-x-auto rounded-xl border border-surface-variant/60">
+            <table class="w-full text-left text-xs font-body-sm border-collapse">
+              <thead>
+                <tr class="bg-surface-container text-tertiary font-label-meta uppercase tracking-wider text-[0.625rem] border-b border-surface-variant">
+                  <th class="p-3">Ep #</th>
+                  <th class="p-3">Start Window</th>
+                  <th class="p-3">End Window</th>
+                  <th class="p-3">Duration</th>
+                  <th class="p-3">Alerts Count</th>
+                  <th class="p-3">Max Anomaly Score</th>
+                  <th class="p-3">Mean Score</th>
+                  <th class="p-3">Observed Telemetry Summary</th>
+                  <th class="p-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="episodes-table-body" class="divide-y divide-surface-variant/40 font-body-md text-on-surface">
+                <!-- Dynamically populated from /api/v1/anomalies/v2/episodes -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TWO-COLUMN DIAGNOSTICS: DATA QUALITY & DISTRIBUTION SHIFT           -->
+        <!-- =================================================================== -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
+          <!-- Left: Data Quality & Line-Voltage Zero Investigation -->
+          <div class="p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col gap-space-md">
+            <div class="border-b border-surface-variant/70 pb-space-sm">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[1.25rem]">biotech</span>
+                <h3 class="font-headline-sm text-base font-bold text-on-surface">
+                  Data-Quality Diagnostic: Line-Voltage Zero Check
+                </h3>
+              </div>
+              <p class="font-body-sm text-xs text-tertiary">
+                Investigation of 1,298 anomalous line-to-line zero readings and controlled cleaning validation.
+              </p>
+            </div>
+
+            <!-- Finding Callout -->
+            <div class="p-3 bg-surface-container rounded-xl border border-surface-variant/60 text-xs flex flex-col gap-1.5">
+              <span class="font-headline-sm font-bold text-on-surface">Investigation Findings:</span>
+              <p class="text-on-surface-variant leading-relaxed">
+                • <strong>1,298 rows</strong> in original merged dataset had <code class="font-label-code">VL12 = VL23 = VL31 = 0</code>.<br />
+                • <strong>1,295 of those rows</strong> had valid, nonzero phase voltages (<code class="font-label-code">VL1, VL2, VL3 ~ 240V</code>).<br />
+                • The zero readings were concentrated in June 2019 (96.28%) and July 2019 (20.63%), dropping to 0% from August 2019 onward.
+              </p>
+            </div>
+
+            <!-- Controlled Validation Verification Card -->
+            <div class="p-3 bg-secondary-container/50 border border-secondary/40 rounded-xl flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-headline-sm text-xs font-bold text-on-surface">Controlled Cleaning Validation:</span>
+                <span class="px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-code text-[0.625rem] font-bold">
+                  0 SCORE CHANGES
+                </span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                Candidate dataset <code class="font-label-code">merged_telemetry_cleaned_candidate.csv</code> replaced the 1,295 line zeros with NaNs without altering original files. Because suspicious zeros occurred prior to the Jan 21, 2020 evaluation start, <strong>the cleaned candidate produced identical scores (0.0 max diff) and identical 696 alerts on the evaluation set</strong>.
+              </p>
+            </div>
+
+            <!-- Monthly Zero Rate Table -->
+            <div class="overflow-x-auto rounded-xl border border-surface-variant/60">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-surface-container text-tertiary font-label-meta uppercase text-[0.625rem]">
+                    <th class="p-2">Month</th>
+                    <th class="p-2">VL12 Zero %</th>
+                    <th class="p-2">VL23 Zero %</th>
+                    <th class="p-2">VL31 Zero %</th>
+                    <th class="p-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-variant/40 font-telemetry-num text-on-surface">
+                  <tr>
+                    <td class="p-2 font-body-sm font-semibold">June 2019</td>
+                    <td class="p-2 text-primary font-bold">96.28%</td>
+                    <td class="p-2 text-primary font-bold">96.28%</td>
+                    <td class="p-2 text-primary font-bold">96.28%</td>
+                    <td class="p-2"><span class="px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold text-[0.625rem]">Channel Outage</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-semibold">July 2019</td>
+                    <td class="p-2 text-primary">20.63%</td>
+                    <td class="p-2 text-primary">20.58%</td>
+                    <td class="p-2 text-primary">20.58%</td>
+                    <td class="p-2"><span class="px-1.5 py-0.5 rounded bg-primary/20 text-primary text-[0.625rem]">Intermittent</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-semibold">August 2019</td>
+                    <td class="p-2 text-secondary">0.00%</td>
+                    <td class="p-2 text-secondary">0.00%</td>
+                    <td class="p-2 text-secondary">0.12%</td>
+                    <td class="p-2"><span class="px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-[0.625rem]">Stabilized</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-semibold">Sep 19 – Apr 20</td>
+                    <td class="p-2 text-secondary">0.00%</td>
+                    <td class="p-2 text-secondary">0.00%</td>
+                    <td class="p-2 text-secondary">0.00%</td>
+                    <td class="p-2"><span class="px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-[0.625rem]">Clean</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Distribution Shift & Drift Monitor -->
+          <div class="p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated flex flex-col gap-space-md">
+            <div class="border-b border-surface-variant/70 pb-space-sm">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[1.25rem]">trending_up</span>
+                <h3 class="font-headline-sm text-base font-bold text-on-surface">
+                  Distribution Shift & Temporal Drift Monitor
+                </h3>
+              </div>
+              <p class="font-body-sm text-xs text-tertiary">
+                Comparison of Training Medians (Jun 19 - Jan 20) vs Evaluation Medians (Jan 20 - Apr 20).
+              </p>
+            </div>
+
+            <!-- Drift Table -->
+            <div class="overflow-x-auto rounded-xl border border-surface-variant/60 max-h-56 overflow-y-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-surface-container text-tertiary font-label-meta uppercase text-[0.625rem] sticky top-0">
+                    <th class="p-2">Feature</th>
+                    <th class="p-2">Train Median</th>
+                    <th class="p-2">Eval Median</th>
+                    <th class="p-2">Observed Shift</th>
+                    <th class="p-2">Trend</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-variant/40 font-telemetry-num text-on-surface">
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">VL1</td>
+                    <td class="p-2">238.3 V</td>
+                    <td class="p-2">247.8 V</td>
+                    <td class="p-2 text-primary font-bold">+9.5 V</td>
+                    <td class="p-2"><span class="text-primary font-bold">↑ Higher Voltage</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">VL2</td>
+                    <td class="p-2">238.0 V</td>
+                    <td class="p-2">246.9 V</td>
+                    <td class="p-2 text-primary font-bold">+8.9 V</td>
+                    <td class="p-2"><span class="text-primary font-bold">↑ Higher Voltage</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">VL3</td>
+                    <td class="p-2">237.9 V</td>
+                    <td class="p-2">245.6 V</td>
+                    <td class="p-2 text-primary font-bold">+7.8 V</td>
+                    <td class="p-2"><span class="text-primary font-bold">↑ Higher Voltage</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">VL12</td>
+                    <td class="p-2">409.1 V</td>
+                    <td class="p-2">428.4 V</td>
+                    <td class="p-2 text-primary font-bold">+19.3 V</td>
+                    <td class="p-2"><span class="text-primary font-bold">↑ Higher Line V</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">IL1</td>
+                    <td class="p-2">75.1 A</td>
+                    <td class="p-2">64.0 A</td>
+                    <td class="p-2 text-secondary font-bold">-11.1 A</td>
+                    <td class="p-2"><span class="text-secondary font-bold">↓ Lower Current</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">IL2</td>
+                    <td class="p-2">59.1 A</td>
+                    <td class="p-2">40.1 A</td>
+                    <td class="p-2 text-secondary font-bold">-19.0 A</td>
+                    <td class="p-2"><span class="text-secondary font-bold">↓ Lower Current</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">IL3</td>
+                    <td class="p-2">88.7 A</td>
+                    <td class="p-2">70.7 A</td>
+                    <td class="p-2 text-secondary font-bold">-18.0 A</td>
+                    <td class="p-2"><span class="text-secondary font-bold">↓ Lower Current</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">KW</td>
+                    <td class="p-2">52.1 kW</td>
+                    <td class="p-2">41.9 kW</td>
+                    <td class="p-2 text-secondary font-bold">-10.2 kW</td>
+                    <td class="p-2"><span class="text-secondary font-bold">↓ Lower Active Power</span></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-body-sm font-bold">OTI</td>
+                    <td class="p-2">30 °C</td>
+                    <td class="p-2">26 °C</td>
+                    <td class="p-2 text-secondary font-bold">-4 °C</td>
+                    <td class="p-2"><span class="text-secondary font-bold">↓ Cooler Oil</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Monthly Alert Rate Progression -->
+            <div class="flex flex-col gap-2 pt-2 border-t border-surface-variant/60">
+              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary font-bold tracking-wider">
+                Monthly Alert Rate Progression (Evaluation Period)
+              </span>
+              <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="p-2 bg-surface-container rounded-xl">
+                  <span class="font-label-code text-[0.625rem] text-tertiary">Jan 2020</span>
+                  <div class="font-telemetry-num text-sm font-bold text-primary">18.78%</div>
+                </div>
+                <div class="p-2 bg-surface-container rounded-xl">
+                  <span class="font-label-code text-[0.625rem] text-tertiary">Feb 2020</span>
+                  <div class="font-telemetry-num text-sm font-bold text-primary">16.22%</div>
+                </div>
+                <div class="p-2 bg-surface-container rounded-xl">
+                  <span class="font-label-code text-[0.625rem] text-tertiary">Mar 2020</span>
+                  <div class="font-telemetry-num text-sm font-bold text-on-surface">10.06%</div>
+                </div>
+                <div class="p-2 bg-surface-container rounded-xl">
+                  <span class="font-label-code text-[0.625rem] text-tertiary">Apr 2020</span>
+                  <div class="font-telemetry-num text-sm font-bold text-secondary">3.55%</div>
+                </div>
+              </div>
+              <p class="font-body-sm text-[0.6875rem] text-tertiary italic leading-relaxed">
+                * Note: Declining alert rates over the evaluation period reflect ongoing distribution drift (seasonal load shifts and higher grid voltage levels), not proof of equipment improvement.
+              </p>
             </div>
           </div>
         </div>

@@ -24,6 +24,10 @@ class Settings(BaseSettings):
         default="model_artifacts/registered/gridguard-risk-0.1.0",
         alias="GRIDGUARD_MODEL_DIR",
     )
+    anomaly_v2_model_dir: str = Field(
+        default="models-trained",
+        alias="GRIDGUARD_ANOMALY_V2_MODEL_DIR",
+    )
     require_approved_model: bool = Field(
         default=False, alias="GRIDGUARD_REQUIRE_APPROVED_MODEL"
     )

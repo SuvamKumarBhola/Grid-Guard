@@ -1,0 +1,232 @@
+{
+  "schema_version": "telemetry-v2",
+  "feature_count": 45,
+  "minimum_feature_coverage": 0.8,
+  "features": [
+    {
+      "name": "VL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "IL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "IL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "IL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VL12",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VL23",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VL31",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "INUT",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "WL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "WL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "WL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VAL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VAL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "VAL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "RVAL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "RVAL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "RVAL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "PFL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "PFL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "PFL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "Avg_PF",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "Sum_PF",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "FRQ",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDVL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDVL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDVL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDIL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDIL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "THDIL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "MDIL1",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "MDIL2",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "MDIL3",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "OTI",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "ATI",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "OLI",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KWH",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KWH_I",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KVARH",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KW",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KVA",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "KVAR",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "MPD",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "MKVAD",
+      "type": "float",
+      "required": false
+    }
+  ]
+}

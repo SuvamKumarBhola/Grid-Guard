@@ -25,6 +25,7 @@ from app.services.synthetic_generator import populate_synthetic_grid
 from app.inference.resolver import ModelProviderResolver
 from app.services.safety_router import SafetyRouter
 from app.services.anomaly_service import AnomalyDetectionService
+from app.services.anomaly_v2_service import TelemetryAnomalyV2Service
 from app.services.simulation_service import SimulationService
 from app.monitoring.metrics import metrics
 from app.domain.models import ErrorResponse, ErrorDetail
@@ -67,6 +68,13 @@ class AppState:
         self.anomaly_service = AnomalyDetectionService(
             telemetry_repo=self.telemetry_repo
         )
+        try:
+            self.anomaly_v2_service = TelemetryAnomalyV2Service(
+                model_dir=self.settings.anomaly_v2_model_dir
+            )
+        except Exception as e:
+            self.logger.warning(f"TelemetryAnomalyV2Service initialization fallback: {e}")
+            self.anomaly_v2_service = None
         self.simulation_service = SimulationService(
             asset_repo=self.asset_repo,
             feeder_repo=self.feeder_repo,

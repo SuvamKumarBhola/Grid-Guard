@@ -1,0 +1,6 @@
+threshold_strategy,threshold,alerts,alert_rate_pct
+Training p95 (current),0.020245,696,12.5
+Future p90,0.024391,557,10.0
+Future p95,0.037512,279,5.01
+Future p97,0.046538,168,3.02
+Future p99,0.05936,56,1.01

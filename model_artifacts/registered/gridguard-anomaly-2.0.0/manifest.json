@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "model_name": "gridguard-anomaly",
+  "model_version": "2.0.0",
+  "artifact_format": "joblib",
+  "created_at": "2026-10-14T00:00:00Z",
+  "framework": "scikit-learn",
+  "input_schema_version": "telemetry-v2",
+  "output_schema_version": "anomaly-v2",
+  "training_dataset_reference": "kaggle://sreshta140/ai-transformer-monitoring",
+  "metrics": {
+    "evaluation_records": 5569,
+    "flagged_alerts": 696,
+    "alert_rate_pct": 12.50,
+    "reference_threshold": 0.020244648295595247,
+    "training_samples": 12994,
+    "episodes_count": 156
+  },
+  "approval_status": "approved",
+  "sha256": "c164ba908a0aeeb7df503cbb394fe06653539a1955cfcd03d763a6bc3a9077f5",
+  "notes": "Unsupervised Isolation Forest anomaly detection pipeline. Failure prediction not validated."
+}
