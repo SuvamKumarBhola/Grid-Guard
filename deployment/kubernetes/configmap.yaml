@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gridguard-config
+  namespace: gridguard
+data:
+  GRIDGUARD_ENV: "production"
+  GRIDGUARD_API_V1_PREFIX: "/api/v1"
+  GRIDGUARD_MODEL_MODE: "artifact"
+  GRIDGUARD_MODEL_DIR: "/app/model_artifacts/registered/gridguard-risk-0.1.0"
+  GRIDGUARD_MIN_SENSOR_HEALTH: "0.75"
+  GRIDGUARD_FEATURE_FRESHNESS_MAX_SECONDS: "300"
+  GRIDGUARD_MAX_INFERENCE_LATENCY_MS: "900"
+  GRIDGUARD_DRIFT_THRESHOLD: "0.35"
+  GRIDGUARD_MIN_CONFIDENCE_THRESHOLD: "0.60"
+  GRIDGUARD_AUTH_MODE: "oidc"
+  GRIDGUARD_OIDC_ISSUER: "https://auth.gridguard.internal/realms/gridguard"
+  GRIDGUARD_OIDC_AUDIENCE: "gridguard-api"
+  GRIDGUARD_LOG_LEVEL: "INFO"
+  GRIDGUARD_LOG_FORMAT: "json"

@@ -62,11 +62,11 @@
   - *Criteria:* Immutable audit log of every prediction/simulation, RBAC role-checking (Operator, Planner, Reliability Manager, Admin, Auditor), auth abstraction (dev & OIDC). Verified with security & audit tests.
 - [x] **Phase 8 — Observability and Production Operations**
   - *Criteria:* `/api/v1/health`, `/api/v1/ready`, `/api/v1/metrics`, p50/p95/p99 latencies, route distributions, fallback rates, drift indices, troubleshooting runbook. Verified with metrics and health checks.
-- [ ] **Phase 9 — Containerization, CI/CD, and Cloud Deployment**
-  - *Criteria:* Multi-stage Dockerfile, `docker-compose.yml`, GitHub Actions CI pipeline, Kubernetes manifests (Deployment, Service, HPA, PDB, ConfigMap).
-- [ ] **Phase 10 — Load, Resilience, and Failure Testing**
-  - *Criteria:* Automated load test script, failure injection test suite (worker crash, stale sensors, missing features, invalid artifact), performance report.
-- [ ] **Phase 11 — Minimal Initial UI**
-  - *Criteria:* Functional operational view consuming real APIs, displaying asset list, risk scores, runtime modes, and health metrics.
-- [ ] **Phase 12 — Final UI/UX and Presentation Layer**
-  - *Criteria:* High-polish operator dashboard, alert center, simulation workspace, decision explainability cards, responsive design, accessibility.
+- [x] **Phase 9 — Containerization, CI/CD, and Cloud Deployment**
+  - *Criteria:* Multi-stage Dockerfile, `docker-compose.yml`, GitHub Actions CI pipeline, Kubernetes manifests (Deployment, Service, HPA, PDB, ConfigMap). Verified with syntax and lint validations.
+- [x] **Phase 10 — Load, Resilience, and Failure Testing**
+  - *Criteria:* Automated load test script, failure injection test suite, performance report with measured values (132.7 req/s, 113.5ms p95, 0.00% error rate). Verified in `docs/performance-results.md`.
+- [x] **Phase 11 — Minimal Initial UI**
+  - *Criteria:* Functional operational view consuming real APIs, displaying asset list, risk scores, runtime modes, and health metrics. Verified with UI integration tests.
+- [x] **Phase 12 — Final UI/UX and Presentation Layer**
+  - *Criteria:* High-polish operator dashboard, alert center, simulation workspace, decision explainability cards, responsive design, dark mode, accessibility. Verified in `frontend/`.

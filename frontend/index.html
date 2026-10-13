@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GridGuard — Autonomous Reliability Intelligence for Power Distribution Networks</title>
+  <meta name="description" content="AI-powered reliability control plane predicting transformer and feeder failure risk, explaining multi-sensor evidence, and simulating counterfactual load redistribution.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2224%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Top Operational Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>GridGuard</h1>
+        <div class="brand-subtitle">Autonomous Reliability Intelligence</div>
+      </div>
+    </div>
+
+    <!-- Live Operational Tickers -->
+    <div class="header-stats">
+      <div class="stat-pill" title="Total active transformers registered in network">
+        <span class="label">Distribution Assets</span>
+        <span class="value" id="ticker-assets-count">50 Active</span>
+      </div>
+
+      <div class="stat-pill" title="Inference latency percentile 95">
+        <span class="label">Inference p95</span>
+        <span class="value" id="ticker-p95">-- ms</span>
+      </div>
+
+      <div class="stat-pill" title="Current safety fallback activation rate">
+        <span class="label">Fallback Rate</span>
+        <span class="value" id="ticker-fallback">-- %</span>
+      </div>
+
+      <div class="mode-badge" id="runtime-mode-badge">
+        Mode: <span id="runtime-mode-val">Stub Dev</span>
+      </div>
+
+      <div class="advisory-badge" title="Advisory system: Does not execute physical switching">
+        ⚠️ Operator Advisory Only
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="app-tabs">
+    <button class="tab-btn active" id="tab-nav-risk" onclick="switchTab('risk')">
+      ⚡ Asset Risk Intelligence
+    </button>
+    <button class="tab-btn" id="tab-nav-simulator" onclick="switchTab('simulator')">
+      🔄 Counterfactual Load Simulator
+    </button>
+    <button class="tab-btn" id="tab-nav-alerts" onclick="switchTab('alerts')">
+      🚨 Operational Alert Center (<span id="unack-alert-count">0</span>)
+    </button>
+    <button class="tab-btn" id="tab-nav-observability" onclick="switchTab('observability')">
+      📈 MLOps & System Health
+    </button>
+  </nav>
+
+  <!-- Main Application Container -->
+  <main class="container">
+
+    <!-- TAB 1: ASSET RISK INTELLIGENCE -->
+    <section class="tab-content active" id="tab-content-risk">
+      <div class="dashboard-grid">
+        
+        <!-- Left Column: Risk-Ranked Asset Table -->
+        <div class="glass table-panel" style="padding: 1.5rem;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span>Grid Asset Fleet</span>
+              <span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 500;">(Ranked by Imminent Failure Risk)</span>
+            </h2>
+
+            <div class="filter-bar">
+              <select class="control-select" id="filter-feeder" onchange="applyAssetFilters()">
+                <option value="">All Feeders (5)</option>
+                <option value="FDR-MUM-11">Bandra West (FDR-11)</option>
+                <option value="FDR-MUM-22">Andheri East (FDR-22)</option>
+                <option value="FDR-MUM-33">Kurla Central (FDR-33)</option>
+                <option value="FDR-MUM-44">Colaba Port (FDR-44)</option>
+                <option value="FDR-MUM-55">Thane Industrial (FDR-55)</option>
+              </select>
+
+              <select class="control-select" id="filter-severity" onchange="applyAssetFilters()">
+                <option value="">All Severities</option>
+                <option value="critical">Critical Risk</option>
+                <option value="watch">Watchlist</option>
+                <option value="normal">Normal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="asset-table" id="asset-table">
+              <thead>
+                <tr>
+                  <th>Asset ID</th>
+                  <th>Feeder</th>
+                  <th>Risk Score</th>
+                  <th>Severity</th>
+                  <th>Model Route</th>
+                  <th>Sensor Health</th>
+                </tr>
+              </thead>
+              <tbody id="asset-table-body">
+                <!-- Dynamically populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right Column: Detail & Explainability Panel -->
+        <div class="glass asset-detail-card" id="detail-card">
+          <div class="card-hero">
+            <div class="hero-title">
+              <h2 id="detail-asset-id">TX-MUM-1042</h2>
+              <span id="detail-asset-feeder">Substation SUB-ANDHERI • Feeder FDR-MUM-22</span>
+            </div>
+            <div class="risk-gauge-box">
+              <div class="risk-score-display critical" id="detail-risk-score">0.87</div>
+              <span class="severity-pill critical" id="detail-severity-pill">CRITICAL</span>
+            </div>
+          </div>
+
+          <!-- Failure Window & Context Tiles -->
+          <div class="detail-metric-grid">
+            <div class="metric-tile">
+              <div class="tile-label">Failure Window</div>
+              <div class="tile-value" id="detail-window" style="color: var(--color-critical);">4 - 18 hrs</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Confidence</div>
+              <div class="tile-value" id="detail-confidence">91%</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Connected Customers</div>
+              <div class="tile-value" id="detail-customers">1,840</div>
+            </div>
+          </div>
+
+          <!-- Physical Telemetry Observation Tiles -->
+          <div class="detail-metric-grid">
+            <div class="metric-tile">
+              <div class="tile-label">Winding Temp</div>
+              <div class="tile-value" id="detail-winding-temp">108.4 °C</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Load Factor</div>
+              <div class="tile-value" id="detail-load-factor">0.91x rated</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Maint Overdue</div>
+              <div class="tile-value" id="detail-maint-overdue">45 days</div>
+            </div>
+          </div>
+
+          <!-- SHAP Contributing Factors -->
+          <div>
+            <h3 style="font-size: 0.82rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.75rem;">
+              TreeSHAP Decision Explanations & Evidence
+            </h3>
+            <div class="factors-list" id="detail-factors-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Recommended Operator Action -->
+          <div class="action-box" id="detail-action-box">
+            <div class="action-title">Advisory Operator Action</div>
+            <div class="action-text" id="detail-action-text">
+              Dispatch emergency inspection crew and review feeder load transfer.
+            </div>
+          </div>
+
+          <!-- Operational Interactive Triggers -->
+          <div class="button-row">
+            <button class="btn-primary" id="btn-rescore" onclick="rescoreSelectedAsset()">
+              ⚡ Score Real-Time Risk
+            </button>
+            <button class="btn-secondary" id="btn-inject-fault" onclick="simulateSensorFault()">
+              🧪 Inject Sensor Degradation
+            </button>
+            <button class="btn-secondary" id="btn-detect-anom" onclick="detectAnomalySelectedAsset()">
+              🔍 Run Anomaly Isolation
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: COUNTERFACTUAL LOAD SIMULATOR -->
+    <section class="tab-content" id="tab-content-simulator">
+      <div class="simulator-layout">
+
+        <!-- Simulation Scenario Input Card -->
+        <div class="glass" style="padding: 1.75rem;">
+          <h2 class="section-title" style="margin-bottom: 0.5rem;">
+            🔄 Counterfactual Load Redistribution
+          </h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Simulate dynamic load transfer from an at-risk transformer to an adjacent distribution feeder before an outage occurs.
+          </p>
+
+          <form id="sim-form" onsubmit="event.preventDefault(); runSimulation();">
+            <div class="form-group">
+              <label for="sim-source-asset">Source Transformer</label>
+              <select class="control-select" id="sim-source-asset" style="width: 100%;">
+                <option value="TX-MUM-1042">TX-MUM-1042 (Critical • 108.4°C • FDR-22)</option>
+                <option value="TX-MUM-1015">TX-MUM-1015 (Watch • Degraded Sensor • FDR-11)</option>
+                <option value="TX-MUM-1028">TX-MUM-1028 (Watch • Stale Telemetry • FDR-33)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sim-target-feeder">Target Feeder (Recipient of shifted load)</label>
+              <select class="control-select" id="sim-target-feeder" style="width: 100%;">
+                <option value="FDR-MUM-11">FDR-MUM-11 (Bandra West • 25 MVA Cap • Ample Headroom)</option>
+                <option value="FDR-MUM-33">FDR-MUM-33 (Kurla Central • 20 MVA Cap)</option>
+                <option value="FDR-MUM-44">FDR-MUM-44 (Colaba Port • 18 MVA Cap • Constrained)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sim-percent">Load Shift Percentage (<span id="sim-percent-val">15%</span>)</label>
+              <input type="range" class="range-slider" id="sim-percent" min="5" max="50" step="5" value="15" oninput="document.getElementById('sim-percent-val').innerText = this.value + '%'">
+              <div class="range-display">
+                <span>5% (Conservative)</span>
+                <span>50% (Max Relief)</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="sim-duration">Duration of Intervention (<span id="sim-duration-val">6 hrs</span>)</label>
+              <input type="range" class="range-slider" id="sim-duration" min="1" max="24" step="1" value="6" oninput="document.getElementById('sim-duration-val').innerText = this.value + ' hrs'">
+              <div class="range-display">
+                <span>1 Hour</span>
+                <span>24 Hours</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-run-sim" style="width: 100%; justify-content: center; margin-top: 1rem;">
+              ⚡ Compute Counterfactual Impact
+            </button>
+          </form>
+        </div>
+
+        <!-- Simulation Comparison Results Card -->
+        <div class="glass sim-comparison-card" id="sim-result-card">
+          <div class="section-header">
+            <h3 style="font-size: 1.1rem; font-weight: 700;">Scenario Evaluation & Constraints</h3>
+            <span class="severity-pill normal" id="sim-status-badge">ADVISABLE WITH REVIEW</span>
+          </div>
+
+          <div class="comparison-columns">
+            <div class="comp-box before">
+              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Source Risk (Before)</div>
+              <div class="comp-score" id="sim-risk-before" style="color: var(--color-critical);">0.87</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">Critical Stress State</div>
+            </div>
+
+            <div class="comp-box after">
+              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Predicted Risk (After Shift)</div>
+              <div class="comp-score" id="sim-risk-after" style="color: var(--color-normal);">0.56</div>
+              <div style="font-size: 0.78rem; color: var(--color-normal);">Relieved by 35%</div>
+            </div>
+          </div>
+
+          <div class="detail-metric-grid" style="margin-top: 1rem;">
+            <div class="metric-tile">
+              <div class="tile-label">Target Overload Risk</div>
+              <div class="tile-value" id="sim-target-risk" style="color: var(--color-watch);">0.18</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Customers Protected</div>
+              <div class="tile-value" id="sim-customers-protected">1,840</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Est. Energy Loss</div>
+              <div class="tile-value" id="sim-energy-loss">42 kWh</div>
+            </div>
+          </div>
+
+          <!-- Constraints & Safety Boundary -->
+          <div style="margin-top: 1rem;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem;">
+              Enforced Grid Constraints
+            </div>
+            <ul id="sim-constraints-list" style="padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+              <li>Human operator approval is strictly required before physical action</li>
+              <li>Target feeder capacity must maintain &ge; 5% continuous headroom buffer</li>
+            </ul>
+          </div>
+
+          <div class="advisory-badge" style="margin-top: 0.5rem; justify-content: center;">
+            🔒 Safety Boundary: GridGuard never commands breaker switches. Operator authorization mandatory.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 3: OPERATIONAL ALERTS & AUDIT -->
+    <section class="tab-content" id="tab-content-alerts">
+      <div class="glass" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="section-header">
+          <h2 class="section-title">🚨 Active Operational Alerts</h2>
+          <button class="btn-secondary" onclick="loadAlerts()">🔄 Refresh Alerts</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="asset-table" id="alerts-table">
+            <thead>
+              <tr>
+                <th>Alert ID</th>
+                <th>Asset ID</th>
+                <th>Type</th>
+                <th>Severity</th>
+                <th>Description</th>
+                <th>Created</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="alerts-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="glass" style="padding: 1.5rem;">
+        <div class="section-header">
+          <h2 class="section-title">📜 Immutable Compliance Audit Trail</h2>
+          <button class="btn-secondary" onclick="loadAuditTrail()">🔄 Refresh Trail</button>
+        </div>
+
+        <div class="table-wrapper" style="max-height: 350px;">
+          <table class="asset-table" id="audit-table">
+            <thead>
+              <tr>
+                <th>Audit ID</th>
+                <th>Event Type</th>
+                <th>User / Role</th>
+                <th>Asset</th>
+                <th>Input SHA-256</th>
+                <th>Route / Decision</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MLOPS & OBSERVABILITY -->
+    <section class="tab-content" id="tab-content-observability">
+      <div class="dashboard-grid">
+
+        <!-- System & Model Health -->
+        <div class="glass" style="padding: 1.5rem;">
+          <h2 class="section-title" style="margin-bottom: 1rem;">System & ML Health Metrics</h2>
+          
+          <div class="detail-metric-grid" style="margin-bottom: 1.5rem;">
+            <div class="metric-tile">
+              <div class="tile-label">Service Status</div>
+              <div class="tile-value" style="color: var(--color-normal);" id="obs-status">HEALTHY</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Total Predictions</div>
+              <div class="tile-value" id="obs-pred-count">--</div>
+            </div>
+            <div class="metric-tile">
+              <div class="tile-label">Feature Drift Index</div>
+              <div class="tile-value" id="obs-drift">0.082</div>
+            </div>
+          </div>
+
+          <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;">Model Route Distribution</h3>
+          <div class="factors-list" id="obs-routes-list">
+            <!-- Dynamically populated -->
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;">Cost Economics</h3>
+            <div class="metric-tile">
+              <div class="tile-label">Cost per 1,000 Inferences</div>
+              <div class="tile-value">$0.045 USD</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Manifest & Artifact Lineage -->
+        <div class="glass" style="padding: 1.5rem;">
+          <h2 class="section-title" style="margin-bottom: 1rem;">Champion Model Lineage & Contract</h2>
+          <div class="table-wrapper" style="max-height: 480px;">
+            <pre id="model-manifest-viewer" style="font-family: var(--font-mono); font-size: 0.8rem; color: #a5b4fc; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">
+Loading model contract metadata...
+            </pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main UI Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

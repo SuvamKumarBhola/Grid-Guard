@@ -198,3 +198,9 @@ app.include_router(api_v1_router, prefix=app_state.settings.api_v1_prefix)
 frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
 if os.path.isdir(frontend_dir):
     app.mount("/ui", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
+from fastapi.responses import RedirectResponse
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/ui/")
