@@ -1,0 +1,19 @@
+{
+  "model_name": "gridguard-risk",
+  "model_version": "0.1.0",
+  "artifact_format": "bin",
+  "created_at": "2026-10-13T00:00:00Z",
+  "framework": "xgboost",
+  "input_schema_version": "features-v1",
+  "output_schema_version": "risk-v1",
+  "training_dataset_reference": "kaggle://owner/gridguard-risk-dataset/v1",
+  "metrics": {
+    "critical_recall": 0.965,
+    "calibration_error": 0.038,
+    "validation_samples": 8500,
+    "f1_score": 0.912,
+    "auc_roc": 0.954
+  },
+  "approval_status": "approved",
+  "sha256": "bc10fe5eb8a1cb548f3d8eae1927b16d31cfa7f7c1d60b34ec256c16f3769dd3"
+}

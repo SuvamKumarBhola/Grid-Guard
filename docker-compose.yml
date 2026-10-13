@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  gridguard-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gridguard-control-plane
+    ports:
+      - "8000:8000"
+    environment:
+      - GRIDGUARD_ENV=production
+      - GRIDGUARD_DEBUG=false
+      - GRIDGUARD_MODEL_MODE=stub
+      - GRIDGUARD_MODEL_DIR=model_artifacts/registered/gridguard-risk-0.1.0
+      - GRIDGUARD_MIN_SENSOR_HEALTH=0.75
+      - GRIDGUARD_FEATURE_FRESHNESS_MAX_SECONDS=300
+      - GRIDGUARD_MAX_INFERENCE_LATENCY_MS=900
+      - GRIDGUARD_AUTH_MODE=development
+      - GRIDGUARD_LOG_LEVEL=INFO
+      - GRIDGUARD_LOG_FORMAT=json
+    volumes:
+      - ./model_artifacts/registered:/app/model_artifacts/registered:ro
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

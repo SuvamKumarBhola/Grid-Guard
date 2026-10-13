@@ -1,0 +1,15 @@
+{
+  "method": "TreeSHAP",
+  "feature_importance": {
+    "winding_temp_c": 0.42,
+    "load_factor_current": 0.28,
+    "maintenance_overdue_days": 0.18,
+    "voltage_variance": 0.12
+  },
+  "baseline_values": {
+    "winding_temp_c": 62.5,
+    "load_factor_current": 0.58,
+    "maintenance_overdue_days": 0,
+    "voltage_variance": 0.02
+  }
+}

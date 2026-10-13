@@ -1,0 +1,8 @@
+{
+  "critical_recall": 0.965,
+  "calibration_error": 0.038,
+  "validation_samples": 8500,
+  "f1_score": 0.912,
+  "auc_roc": 0.954,
+  "evaluated_at": "2026-10-13T00:00:00Z"
+}

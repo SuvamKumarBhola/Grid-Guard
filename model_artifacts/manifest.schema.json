@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GridGuardModelManifest",
+  "type": "object",
+  "required": [
+    "model_name",
+    "model_version",
+    "artifact_format",
+    "created_at",
+    "framework",
+    "input_schema_version",
+    "output_schema_version",
+    "training_dataset_reference",
+    "metrics",
+    "approval_status",
+    "sha256"
+  ],
+  "properties": {
+    "model_name": {"type": "string"},
+    "model_version": {"type": "string"},
+    "artifact_format": {"type": "string", "enum": ["onnx", "bin", "pkl", "stub"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "framework": {"type": "string"},
+    "input_schema_version": {"type": "string"},
+    "output_schema_version": {"type": "string"},
+    "training_dataset_reference": {"type": "string"},
+    "metrics": {
+      "type": "object",
+      "required": ["critical_recall", "calibration_error", "validation_samples"],
+      "properties": {
+        "critical_recall": {"type": "number"},
+        "calibration_error": {"type": "number"},
+        "validation_samples": {"type": "integer"},
+        "f1_score": {"type": "number"},
+        "auc_roc": {"type": "number"}
+      }
+    },
+    "approval_status": {"type": "string", "enum": ["candidate", "approved", "deprecated"]},
+    "sha256": {"type": "string"}
+  }
+}

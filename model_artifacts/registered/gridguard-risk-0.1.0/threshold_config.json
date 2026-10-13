@@ -1,0 +1,17 @@
+{
+  "risk_thresholds": {
+    "normal_max": 0.40,
+    "watch_max": 0.70,
+    "critical_min": 0.70
+  },
+  "failure_windows_hours": {
+    "critical": {"low": 4, "high": 18},
+    "watch": {"low": 18, "high": 72},
+    "normal": {"low": 72, "high": 720}
+  },
+  "actions": {
+    "critical": "Dispatch inspection crew and review feeder load",
+    "watch": "Schedule thermographic scan and monitor winding temp trend",
+    "normal": "Continue routine supervisory monitoring"
+  }
+}

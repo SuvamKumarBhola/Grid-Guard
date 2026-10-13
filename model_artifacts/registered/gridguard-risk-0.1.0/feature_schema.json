@@ -1,0 +1,18 @@
+{
+  "schema_version": "features-v1",
+  "features": [
+    {"name": "load_factor_current", "type": "float", "unit": "ratio", "min": 0.0, "max": 3.0},
+    {"name": "load_p95_1h", "type": "float", "unit": "ratio", "min": 0.0, "max": 3.0},
+    {"name": "load_p95_24h", "type": "float", "unit": "ratio", "min": 0.0, "max": 3.0},
+    {"name": "winding_temp_c", "type": "float", "unit": "celsius", "min": -40.0, "max": 200.0},
+    {"name": "temp_rise_rate_c_per_hour", "type": "float", "unit": "celsius/hour", "min": -50.0, "max": 100.0},
+    {"name": "thermal_headroom_c", "type": "float", "unit": "celsius", "min": -50.0, "max": 150.0},
+    {"name": "voltage_variance", "type": "float", "unit": "pu", "min": 0.0, "max": 1.0},
+    {"name": "current_variance", "type": "float", "unit": "pu", "min": 0.0, "max": 1.0},
+    {"name": "power_factor", "type": "float", "unit": "ratio", "min": 0.0, "max": 1.0},
+    {"name": "asset_age_years", "type": "float", "unit": "years", "min": 0.0, "max": 60.0},
+    {"name": "maintenance_overdue_days", "type": "int", "unit": "days", "min": 0, "max": 1000},
+    {"name": "weather_severity_index", "type": "float", "unit": "index", "min": 0.0, "max": 1.0},
+    {"name": "historical_outage_count", "type": "int", "unit": "count", "min": 0, "max": 50}
+  ]
+}
