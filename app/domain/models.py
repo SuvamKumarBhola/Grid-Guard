@@ -226,6 +226,8 @@ class AuditEvent(BaseModel):
         "safety_fallback_triggered",
         "work_order_dispatch",
         "work_order_status_update",
+        "telemetry_injection",
+        "operational_action",
     ]
     user_id: str
     user_role: Literal["operator", "planner", "reliability_manager", "administrator", "auditor", "system"]
@@ -433,4 +435,74 @@ class DataQualityReportResponse(BaseModel):
     controlled_validation_score_changes: int
     controlled_validation_alert_decision_changes: int
     conclusion: str
+
+
+class TelemetryStreamRecord(BaseModel):
+    timestamp: str
+    features: Dict[str, Any]
+    anomaly_score: float
+    is_alert: bool
+    severity_tier: str
+    voltage_avg: float
+    current_avg: float
+    temperature_oti: float
+    power_kw: float
+
+
+class TelemetryStreamResponse(BaseModel):
+    scenario: str
+    scenario_label: str
+    record_count: int
+    records: List[TelemetryStreamRecord]
+
+
+class TelemetryInjectionRequest(BaseModel):
+    asset_id: str
+    scenario_name: str
+    features: Optional[Dict[str, Any]] = None
+    notes: Optional[str] = None
+
+
+class TelemetryInjectionResponse(BaseModel):
+    event_id: str
+    asset_id: str
+    scenario_name: str
+    anomaly_score: float
+    reference_threshold: float
+    is_alert: bool
+    severity_tier: str
+    updated_telemetry: Dict[str, Any]
+    descriptive_contributors: List[DescriptiveContributor] = Field(default_factory=list)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class AuditRecordRequest(BaseModel):
+    event_type: str = "operational_action"
+    action: str
+    asset_id: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
+
+
+class TransformerMaintenanceQueueItem(BaseModel):
+    asset_id: str
+    name: str
+    substation: str
+    maintenance_status: str
+    days_overdue: int
+    hours_to_critical: float
+    current_temperature_c: float
+    projected_temperature_4h: float
+    current_risk_score: float
+    projected_risk_4h: float
+    cascading_vulnerability_score: float
+    cascading_impact_summary: str
+    pending_task: str
+    recommended_sop: str
+
+
+class TransformerMaintenanceQueueResponse(BaseModel):
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    pending_count: int
+    critical_cascading_risk_count: int
+    queue: List[TransformerMaintenanceQueueItem]
 

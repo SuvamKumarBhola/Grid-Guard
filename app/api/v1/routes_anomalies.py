@@ -10,6 +10,10 @@ from app.domain.models import (
     AnomalyEpisode,
     AnomalyV2MetadataResponse,
     DataQualityReportResponse,
+    TelemetryStreamResponse,
+    TelemetryInjectionRequest,
+    TelemetryInjectionResponse,
+    AuditEvent,
 )
 from app.security.auth import get_current_user, UserContext
 
@@ -213,4 +217,110 @@ def get_anomaly_v2_sample_telemetry(
         )
 
     return app_state.anomaly_v2_service.get_sample_telemetry()
+
+
+@router.get(
+    "/v2/stream-records",
+    response_model=TelemetryStreamResponse,
+    summary="Get sequential historical telemetry frames for live data injection and model streaming",
+)
+def get_anomaly_v2_stream_records(
+    scenario: str = Query("march_1_imbalance", description="Dataset scenario profile"),
+    limit: int = Query(15, ge=1, le=50, description="Max frame count to return"),
+    user: UserContext = Depends(get_current_user),
+) -> TelemetryStreamResponse:
+    from app.main import app_state
+
+    if not app_state.anomaly_v2_service:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Anomaly Detection v2 service is currently uninitialized.",
+        )
+
+    return app_state.anomaly_v2_service.get_stream_records(scenario=scenario, limit=limit)
+
+
+@router.post(
+    "/v2/inject",
+    response_model=TelemetryInjectionResponse,
+    summary="Inject live telemetry scenario into a transformer, evaluate with Isolation Forest v2, and record in audit trail",
+)
+def inject_telemetry_v2(
+    payload: TelemetryInjectionRequest,
+    user: UserContext = Depends(get_current_user),
+) -> TelemetryInjectionResponse:
+    from app.main import app_state
+
+    if not app_state.anomaly_v2_service:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Anomaly Detection v2 service is currently uninitialized.",
+        )
+
+    # If features not provided directly, pull from preset samples
+    features = payload.features
+    if not features:
+        samples = app_state.anomaly_v2_service.get_sample_telemetry()
+        if payload.scenario_name in samples:
+            features = samples[payload.scenario_name]["features"]
+        else:
+            # Fallback to march 1 sample
+            features = samples["march_1_imbalance"]["features"]
+
+    # Score with Isolation Forest v2
+    score_res = app_state.anomaly_v2_service.score_record(
+        features=features,
+        asset_id=payload.asset_id,
+    )
+
+    event_id = f"inj-{uuid.uuid4().hex[:8]}"
+
+    # Extract electrical/thermal readings for updated asset telemetry
+    v_avg = float(features.get("VL1", 245.0) + features.get("VL2", 245.0) + features.get("VL3", 245.0)) / 3.0
+    i_avg = float(features.get("IL1", 40.0) + features.get("IL2", 40.0) + features.get("IL3", 40.0)) / 3.0
+    oti_temp = float(features.get("OTI", 75.0))
+    kw = float(features.get("KW", 38.0))
+
+    updated_telemetry = {
+        "temperatureC": oti_temp,
+        "activeLoadMva": round(kw / 1000.0 * 100.0, 1) if kw < 100 else round(kw, 1),
+        "voltageAvg": round(v_avg, 1),
+        "currentAvg": round(i_avg, 1),
+        "powerKw": round(kw, 1),
+        "anomalyScore": score_res.anomaly_score,
+        "isAlert": score_res.is_anomaly_alert,
+        "severityTier": score_res.severity_tier,
+    }
+
+    # Record in immutable audit trail
+    app_state.audit_repo.save(
+        AuditEvent(
+            audit_id=f"aud-{event_id}",
+            event_type="telemetry_injection",
+            user_id=user.user_id,
+            user_role=user.role,  # type: ignore
+            asset_id=payload.asset_id,
+            payload_summary={
+                "injection_id": event_id,
+                "scenario": payload.scenario_name,
+                "anomaly_score": score_res.anomaly_score,
+                "is_alert": score_res.is_anomaly_alert,
+                "severity_tier": score_res.severity_tier,
+                "temperature_c": oti_temp,
+                "notes": payload.notes or "Interactive operator telemetry injection",
+            },
+        )
+    )
+
+    return TelemetryInjectionResponse(
+        event_id=event_id,
+        asset_id=payload.asset_id,
+        scenario_name=payload.scenario_name,
+        anomaly_score=score_res.anomaly_score,
+        reference_threshold=score_res.reference_threshold,
+        is_alert=score_res.is_anomaly_alert,
+        severity_tier=score_res.severity_tier,
+        updated_telemetry=updated_telemetry,
+        descriptive_contributors=score_res.descriptive_contributors,
+    )
 

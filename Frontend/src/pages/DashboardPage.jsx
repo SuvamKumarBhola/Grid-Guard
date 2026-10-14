@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { useGrid } from '../context/GridContext';
 
 export default function DashboardPage() {
-  const { navigateToAsset, navigateToSimulation, assets, searchQuery, openDispatchModal } = useGrid();
+  const {
+    navigateToAsset,
+    navigateToSimulation,
+    assets,
+    searchQuery,
+    openDispatchModal,
+    openInjectionModal,
+    setActiveTab,
+  } = useGrid();
   const [selectedVoltage, setSelectedVoltage] = useState('345kV Bulk');
   const [riskFilter, setRiskFilter] = useState('all');
   const [assetCategoryFilter, setAssetCategoryFilter] = useState('All Assets');
@@ -132,6 +140,51 @@ export default function DashboardPage() {
           <div className="font-body-sm text-body-sm text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
             <span>Feeder 14B &amp; Sensor T-88 out of sync</span>
           </div>
+        </div>
+      </div>
+
+      {/* Multi-Transformer Predictive Maintenance & Cascading Alert Banner */}
+      <div className="p-space-md bg-surface-container-low border border-primary/40 rounded flex flex-col md:flex-row md:items-center justify-between gap-space-md shadow-xs">
+        <div className="flex items-start gap-3">
+          <span className="material-symbols-outlined text-primary text-[2rem] shrink-0 mt-0.5">
+            pending_actions
+          </span>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-headline-sm text-body-md font-bold text-on-surface uppercase tracking-wider">
+                Multi-Transformer Predictive Maintenance Queue
+              </h3>
+              <span className="px-2 py-0.5 bg-primary text-on-primary font-label-code text-[0.6875rem] font-bold uppercase rounded">
+                3 TRANSFORMERS PENDING
+              </span>
+            </div>
+            <p className="font-body-sm text-xs text-on-surface-variant mt-1 max-w-2xl">
+              Beyond TX-04, <strong>TX-09 (Feeder F-04)</strong> and <strong>TX-Pine-02 (West Sub)</strong> have overdue cooling and RTU maintenance. If TX-04 trips, redirected load will trigger cascading secondary failures within <strong>4.5 hours</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('assets');
+              window.scrollTo({ top: 150, behavior: 'smooth' });
+            }}
+            className="py-2 px-space-md bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-xs uppercase font-bold tracking-wider rounded transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <span className="material-symbols-outlined text-[1rem]">tune</span>
+            <span>View Maintenance Radar</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openInjectionModal('TX-09')}
+            className="py-2 px-space-md bg-surface hover:bg-surface-container border border-outline-variant text-on-surface font-label-code text-xs uppercase font-bold rounded transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[1rem] text-primary">stream</span>
+            <span>Inject Dataset Stream</span>
+          </button>
         </div>
       </div>
 

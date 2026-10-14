@@ -12,6 +12,7 @@ export default function DispatchCrewModal() {
     crews,
     assets,
     currentTime,
+    addToast,
   } = useGrid();
 
   const targetAsset =
@@ -51,12 +52,21 @@ export default function DispatchCrewModal() {
   const activeSop = STANDARD_SOPS.find((s) => s.code === sopCode) || STANDARD_SOPS[0];
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
+    if (!failureMode || !failureMode.trim()) {
+      addToast('Please provide an observed failure mode or inspection scope before authorizing dispatch.', 'warn');
+      return;
+    }
+    if (!ppeAcknowledged || !interlockAcknowledged) {
+      addToast('Mandatory safety requirement: Please confirm PPE briefing and SCADA breaker interlock acknowledgment.', 'warn');
+      return;
+    }
+
     dispatchFieldCrew({
       assetId: targetAsset.id,
       crewId: selectedCrew.crewId,
       priority,
-      failureMode,
+      failureMode: failureMode.trim(),
       sopReference: activeSop.code,
       notes,
       etaMinutes: selectedCrew.etaMinutes,
@@ -416,9 +426,10 @@ export default function DispatchCrewModal() {
           </button>
 
           <button
+            type="button"
+            id="modal-authorize-dispatch-btn"
             onClick={handleSubmit}
-            disabled={!ppeAcknowledged || !interlockAcknowledged || !failureMode}
-            className="py-2.5 px-space-xl bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-body-md uppercase font-bold tracking-wider transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="py-2.5 px-space-xl bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-body-md uppercase font-bold tracking-wider transition-all flex items-center gap-2 shadow-lg cursor-pointer"
           >
             <span className="material-symbols-outlined text-[1.25rem]">send</span>
             <span>Authorize &amp; Dispatch Field Crew</span>

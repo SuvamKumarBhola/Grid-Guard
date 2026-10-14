@@ -105,3 +105,50 @@ def test_api_v2_validation_error_on_poor_coverage():
         assert resp.status_code == 400
         err = resp.json()
         assert "below the required minimum threshold" in err["error"]["message"]
+
+
+def test_api_v2_stream_records_endpoint():
+    """Tests GET /api/v1/anomalies/v2/stream-records returns chronological dataset frames with IF scores."""
+    with TestClient(app) as client:
+        resp = client.get("/api/v1/anomalies/v2/stream-records?scenario=march_1_imbalance&limit=5")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["scenario"] == "march_1_imbalance"
+        assert len(data["records"]) > 0
+        record = data["records"][0]
+        assert "timestamp" in record
+        assert "features" in record
+        assert "anomaly_score" in record
+        assert "is_alert" in record
+        assert "temperature_oti" in record
+
+
+def test_api_v2_inject_telemetry_endpoint():
+    """Tests POST /api/v1/anomalies/v2/inject validates, scores, and audits live injection."""
+    with TestClient(app) as client:
+        # Get sample telemetry
+        sample_resp = client.get("/api/v1/anomalies/v2/sample")
+        assert sample_resp.status_code == 200
+        samples = sample_resp.json()
+
+        payload = {
+            "asset_id": "TX-09",
+            "scenario_name": "march_1_imbalance",
+            "notes": "Testing high load cascade onto pending transformer",
+            "features": samples["march_1_imbalance"]["features"]
+        }
+        headers = {
+            "X-User-Role": "operator",
+            "X-User-Id": "operator-lead"
+        }
+        resp = client.post("/api/v1/anomalies/v2/inject", json=payload, headers=headers)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["asset_id"] == "TX-09"
+        assert data["scenario_name"] == "march_1_imbalance"
+        assert data["is_alert"] is True
+        assert data["anomaly_score"] > 0.020245
+        assert "event_id" in data
+        assert "updated_telemetry" in data
+
+

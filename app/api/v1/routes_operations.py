@@ -10,6 +10,9 @@ from app.domain.models import (
     DispatchWorkOrderRequest,
     DispatchWorkOrder,
     WorkOrderStatusUpdateRequest,
+    AuditRecordRequest,
+    TransformerMaintenanceQueueResponse,
+    TransformerMaintenanceQueueItem,
 )
 from app.security.auth import get_current_user, UserContext, require_role
 from app.monitoring.metrics import metrics
@@ -235,3 +238,128 @@ def update_work_order_status(
     )
 
     return wo
+
+
+@router.post(
+    "/audit/record",
+    response_model=AuditEvent,
+    summary="Record an operator action or system intervention event in the immutable audit trail",
+)
+def record_audit_action(
+    payload: AuditRecordRequest,
+    user: UserContext = Depends(get_current_user),
+) -> AuditEvent:
+    from app.main import app_state
+
+    event_id = f"aud-{uuid.uuid4().hex[:10]}"
+    event = AuditEvent(
+        audit_id=event_id,
+        event_type=payload.event_type,
+        user_id=user.user_id,
+        user_role=user.role,  # type: ignore
+        asset_id=payload.asset_id or "GRID-WIDE",
+        payload_summary={
+            "action": payload.action,
+            **(payload.details or {}),
+        },
+    )
+    app_state.audit_repo.save(event)
+    return event
+
+
+@router.get(
+    "/transformers/maintenance-queue",
+    response_model=TransformerMaintenanceQueueResponse,
+    summary="Get multi-transformer predictive maintenance queue with hours-to-critical and cascading risk analysis",
+)
+def get_transformer_maintenance_queue(
+    user: UserContext = Depends(get_current_user),
+) -> TransformerMaintenanceQueueResponse:
+    queue_items = [
+        TransformerMaintenanceQueueItem(
+            asset_id="TX-04",
+            name="TX-04 (TX-Oak-04)",
+            substation="Feeder F-03 • 45 MVA Substation",
+            maintenance_status="CRITICAL_INTERVENTION",
+            days_overdue=24,
+            hours_to_critical=0.8,
+            current_temperature_c=94.2,
+            projected_temperature_4h=106.8,
+            current_risk_score=92.0,
+            projected_risk_4h=98.5,
+            cascading_vulnerability_score=96.0,
+            cascading_impact_summary="Primary feeder backbone. Sudden trip triggers immediate 15.4 MVA cascade onto Feeder F-04 (TX-09) and 8.5 MVA onto West Substation (TX-Pine-02).",
+            pending_task="Cooling fan bank #2 replacement & winding hot-spot stabilization",
+            recommended_sop="SOP-TX-10 (Forced Cooling & Hotspot Mitigation)",
+        ),
+        TransformerMaintenanceQueueItem(
+            asset_id="TX-09",
+            name="TX-09",
+            substation="Feeder F-04 • Autotransformer 33kV/11kV",
+            maintenance_status="PENDING_OVERDUE",
+            days_overdue=12,
+            hours_to_critical=4.5,
+            current_temperature_c=82.1,
+            projected_temperature_4h=93.4,
+            current_risk_score=78.0,
+            projected_risk_4h=89.2,
+            cascading_vulnerability_score=88.5,
+            cascading_impact_summary="Telemetry RTU stale for 18m. If TX-04 trips, redirected industrial load will push TX-09 to 134% rated capacity within 35 minutes.",
+            pending_task="RTU antenna protocol resync & Buchholz trace gas chromatographic test",
+            recommended_sop="SOP-DGA-01 (Emergency DGA Oil Sampling & Gas Test)",
+        ),
+        TransformerMaintenanceQueueItem(
+            asset_id="TX-Pine-02",
+            name="TX-Pine-02",
+            substation="West Substation • Bus 1 (50 MVA)",
+            maintenance_status="PENDING_OVERDUE",
+            days_overdue=18,
+            hours_to_critical=8.2,
+            current_temperature_c=68.4,
+            projected_temperature_4h=81.6,
+            current_risk_score=76.2,
+            projected_risk_4h=86.4,
+            cascading_vulnerability_score=82.0,
+            cascading_impact_summary="Designated tie-feeder for TX-04 simulator load shifts. Operating with 4.1% 2nd/5th harmonic distortion; radiator flush overdue.",
+            pending_task="Radiator fin oil flush & secondary terminal harmonic filter tune",
+            recommended_sop="SOP-TX-04 (Feeder Tie Synchronization & Harmonic Inspection)",
+        ),
+        TransformerMaintenanceQueueItem(
+            asset_id="TX-01",
+            name="TX-01",
+            substation="Feeder F-01 • 40 MVA Step-Down",
+            maintenance_status="SCHEDULED_PRECAUTIONARY",
+            days_overdue=0,
+            hours_to_critical=36.0,
+            current_temperature_c=42.0,
+            projected_temperature_4h=48.2,
+            current_risk_score=19.0,
+            projected_risk_4h=28.0,
+            cascading_vulnerability_score=34.0,
+            cascading_impact_summary="Nominal operating envelope today, but dielectric breakdown margin (28kV) approaching lower IEEE boundary if moisture ingress continues.",
+            pending_task="Scheduled oil vacuum dehydration and phase bushing seal lubrication",
+            recommended_sop="SOP-TX-02 (Transformer Oil Dehydration & Seal Maintenance)",
+        ),
+        TransformerMaintenanceQueueItem(
+            asset_id="TX-Maple-01",
+            name="TX-Maple-01",
+            substation="North Substation • Bus 1 (138kV)",
+            maintenance_status="NOMINAL_STANDBY",
+            days_overdue=0,
+            hours_to_critical=120.0,
+            current_temperature_c=54.0,
+            projected_temperature_4h=57.0,
+            current_risk_score=24.0,
+            projected_risk_4h=27.5,
+            cascading_vulnerability_score=18.0,
+            cascading_impact_summary="Healthy baseline with 100% cooling redundancy. Capable of receiving N-1 transferred load without thermal ceiling violation.",
+            pending_task="Routine bi-monthly SCADA telemetry calibration",
+            recommended_sop="SOP-TX-01 (Standard Substation Inspection)",
+        ),
+    ]
+
+    return TransformerMaintenanceQueueResponse(
+        pending_count=3,
+        critical_cascading_risk_count=2,
+        queue=queue_items,
+    )

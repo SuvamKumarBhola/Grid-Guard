@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useGrid } from '../context/GridContext';
+import TransformerMaintenanceQueue from '../components/maintenance/TransformerMaintenanceQueue';
 
 export default function AssetsPage() {
   const {
@@ -11,6 +12,8 @@ export default function AssetsPage() {
     addToast,
     currentTime,
     openDispatchModal,
+    openInjectionModal,
+    openHistoryModal,
     activeWorkOrder,
     updateWorkOrderStatus,
   } = useGrid();
@@ -189,6 +192,11 @@ export default function AssetsPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Multi-Transformer Predictive Maintenance Queue & Cascading Risk */}
+      <section>
+        <TransformerMaintenanceQueue />
       </section>
 
       {/* =========================================================================
@@ -654,6 +662,16 @@ export default function AssetsPage() {
                   ? 'Manage Field Dispatch Ticket'
                   : 'Dispatch Field Crew'}
               </span>
+            </button>
+
+            {/* Live Data Injection Studio Launcher */}
+            <button
+              onClick={() => openInjectionModal(selectedAsset.id)}
+              className="w-full py-2 px-space-md bg-surface-container hover:bg-surface-container-high text-primary border border-primary/40 font-headline-sm text-headline-sm uppercase transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer font-bold"
+              title="Inject historical telemetry stream and evaluate with Isolation Forest model"
+            >
+              <span className="material-symbols-outlined text-[1.125rem]">stream</span>
+              <span>Inject Dataset Telemetry</span>
             </button>
 
             <button

@@ -86,3 +86,36 @@ def test_update_work_order_status():
         updated = patch_resp.json()
         assert updated["status"] == "on_site"
         assert "Crew arrived" in updated["notes"]
+
+
+def test_maintenance_queue_endpoint():
+    """Tests GET /api/v1/transformers/maintenance-queue returns multi-transformer pending queue with cascading risk."""
+    with TestClient(app) as tc:
+        resp = tc.get("/api/v1/transformers/maintenance-queue")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["pending_count"] >= 3
+        assert len(data["queue"]) >= 5
+        assert data["critical_cascading_risk_count"] >= 2
+        tx_ids = [t["asset_id"] for t in data["queue"]]
+        assert "TX-04" in tx_ids
+        assert "TX-09" in tx_ids
+        assert "TX-Pine-02" in tx_ids
+
+
+def test_record_audit_event_endpoint():
+    """Tests POST /api/v1/audit/record adds operational actions to audit log."""
+    with TestClient(app) as tc:
+        payload = {
+            "action": "RTU Diagnostic Probe Initiated",
+            "asset_id": "TX-09",
+            "details": {"latency_ms": 14, "protocol": "DNP3"}
+        }
+        resp = tc.post("/api/v1/audit/record", json=payload)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "audit_id" in data
+        assert data["event_type"] == "operational_action"
+        assert data["asset_id"] == "TX-09"
+
+

@@ -2,13 +2,20 @@ import React from 'react';
 import { useGrid } from '../../context/GridContext';
 
 export default function Header() {
-  const { searchQuery, setSearchQuery, addToast } = useGrid();
+  const {
+    searchQuery,
+    setSearchQuery,
+    addToast,
+    openHistoryModal,
+    openInjectionModal,
+    actionHistory,
+  } = useGrid();
 
   return (
     <header className="fixed top-0 left-72 right-0 h-16 bg-surface-container border-b border-surface-variant z-40 px-gutter-desktop flex items-center justify-between select-none">
       {/* Search Bar */}
       <div className="flex items-center gap-gutter">
-        <div className="relative w-96">
+        <div className="relative w-80 lg:w-96">
           <span className="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-[1.125rem] text-tertiary">
             search
           </span>
@@ -22,8 +29,37 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Right Side: Alert Notification & Account / Profile Section */}
+      {/* Right Side: Quick Action Launchers, Alert Notification & User Profile */}
       <div className="flex items-center gap-space-md">
+        {/* Live Telemetry Injection Launcher */}
+        <button
+          type="button"
+          id="header-injection-btn"
+          onClick={() => openInjectionModal('TX-04')}
+          className="flex items-center gap-1.5 py-1.5 px-3 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/40 rounded font-headline-sm text-xs font-bold uppercase cursor-pointer transition-all shadow-xs"
+          title="Launch Live Data Injection Studio from Trained ML Dataset"
+        >
+          <span className="material-symbols-outlined text-[1.125rem] animate-pulse">stream</span>
+          <span className="hidden sm:inline">Live Data Injection</span>
+        </button>
+
+        {/* History Button */}
+        <button
+          type="button"
+          id="header-history-btn"
+          onClick={openHistoryModal}
+          className="flex items-center gap-1.5 py-1.5 px-3 bg-surface hover:bg-surface-container border border-outline-variant rounded font-headline-sm text-xs font-bold uppercase text-on-surface cursor-pointer shadow-xs transition-colors"
+          title="View Operational Action History & Audit Log"
+        >
+          <span className="material-symbols-outlined text-[1.125rem] text-primary">history</span>
+          <span>History</span>
+          <span className="px-1.5 py-0.2 rounded bg-primary text-on-primary font-label-code text-[0.625rem] font-bold">
+            {actionHistory.length}
+          </span>
+        </button>
+
+        <div className="h-6 w-px bg-outline-variant"></div>
+
         <button
           onClick={() =>
             addToast(

@@ -9,6 +9,8 @@ import AlertsPage from './pages/AlertsPage';
 import SimulationPage from './pages/SimulationPage';
 import StatusPage from './pages/StatusPage';
 import DispatchCrewModal from './components/dispatch/DispatchCrewModal';
+import ActionHistoryModal from './components/history/ActionHistoryModal';
+import LiveDataInjectionModal from './components/injection/LiveDataInjectionModal';
 
 function AppContent() {
   const { activeTab } = useGrid();
@@ -34,6 +36,12 @@ function AppContent() {
 
       {/* Field Dispatch Crew Modal Dialog */}
       <DispatchCrewModal />
+
+      {/* Operational Action History & Audit Modal */}
+      <ActionHistoryModal />
+
+      {/* Live Dataset Telemetry & Model Injection Modal */}
+      <LiveDataInjectionModal />
 
       {/* Real-Time Action Toast Stack */}
       <ToastContainer />

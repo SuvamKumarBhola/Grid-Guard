@@ -16,6 +16,8 @@ from app.domain.models import (
     DriftMetric,
     MonthlyAlertRate,
     DataQualityReportResponse,
+    TelemetryStreamRecord,
+    TelemetryStreamResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -511,3 +513,118 @@ class TelemetryAnomalyV2Service:
                 }
             }
         }
+
+    def get_stream_records(
+        self,
+        scenario: str = "march_1_imbalance",
+        limit: int = 15,
+    ) -> TelemetryStreamResponse:
+        """
+        Extracts chronological telemetry records from historical datasets,
+        scores them with the fitted Isolation Forest v2.0.0 model, and returns
+        structured stream frames for live simulation and data injection.
+        """
+        scenario_meta = {
+            "march_1_imbalance": {
+                "label": "March 1 Episode (Current Imbalance 56A/31A/64A)",
+                "start": "2020-03-01 02:00:00",
+                "end": "2020-03-01 08:00:00",
+            },
+            "feb_1_overvoltage": {
+                "label": "February 1 Episode (Overvoltage ~252V / Low Load)",
+                "start": "2020-02-01 01:00:00",
+                "end": "2020-02-01 07:00:00",
+            },
+            "march_2_load_surge": {
+                "label": "March 2 Episode (Active Load Surge 74kW / High KVA)",
+                "start": "2020-03-02 14:00:00",
+                "end": "2020-03-02 19:00:00",
+            },
+            "thermal_runaway_degradation": {
+                "label": "Progressive Thermal Runaway (Auxiliary Cooling Fan Trip)",
+                "synthetic": True,
+            },
+            "normal_baseline": {
+                "label": "Nominal Operating Baseline (IEEE Standard Margins)",
+                "start": "2020-01-21 06:00:00",
+                "end": "2020-01-21 11:00:00",
+            },
+        }
+
+        meta = scenario_meta.get(scenario, scenario_meta["march_1_imbalance"])
+        records: List[TelemetryStreamRecord] = []
+
+        if meta.get("synthetic"):
+            # Synthesize progressive neglected maintenance degradation stream
+            base = self.get_sample_telemetry()["normal_baseline"]["features"].copy()
+            for i in range(min(limit, 12)):
+                step_feat = base.copy()
+                # Progressive temperature and current rise
+                step_temp = 68.0 + (i * 3.4)  # 68 to 105.4 C
+                step_kw = 36.0 + (i * 1.2)
+                step_feat["OTI"] = round(step_temp, 1)
+                step_feat["WTI"] = round(step_temp + 8.5, 1)
+                step_feat["KW"] = round(step_kw, 1)
+                step_feat["KVA"] = round(step_kw * 1.05, 1)
+                step_feat["IL1"] = round(60.0 + (i * 3.2), 1)
+                step_feat["IL2"] = round(45.0 + (i * 1.5), 1)
+                step_feat["IL3"] = round(68.0 + (i * 4.1), 1)
+                step_feat["THDIL1"] = round(2.5 + (i * 0.4), 2)
+
+                score_res = self.score_record(step_feat)
+                v_avg = float(np.mean([step_feat.get("VL1", 245), step_feat.get("VL2", 245), step_feat.get("VL3", 245)]))
+                i_avg = float(np.mean([step_feat["IL1"], step_feat["IL2"], step_feat["IL3"]]))
+
+                records.append(
+                    TelemetryStreamRecord(
+                        timestamp=f"T+{(i * 15):02d}m",
+                        features=step_feat,
+                        anomaly_score=score_res.anomaly_score,
+                        is_alert=score_res.is_anomaly_alert,
+                        severity_tier=score_res.severity_tier,
+                        voltage_avg=round(v_avg, 1),
+                        current_avg=round(i_avg, 1),
+                        temperature_oti=round(step_temp, 1),
+                        power_kw=round(step_kw, 1),
+                    )
+                )
+        else:
+            # Load real historical slices from merged_telemetry.csv
+            if os.path.isfile(self.merged_csv_path):
+                df = pd.read_csv(self.merged_csv_path)
+                subset = df[(df["DeviceTimeStamp"] >= meta["start"]) & (df["DeviceTimeStamp"] <= meta["end"])].head(limit)
+                for _, row in subset.iterrows():
+                    feat_dict: Dict[str, Any] = {}
+                    for col in self.feature_columns:
+                        if col in row and pd.notnull(row[col]):
+                            feat_dict[col] = float(row[col])
+
+                    # Include standard electrical scalars if present
+                    for extra in ["VL1", "VL2", "VL3", "IL1", "IL2", "IL3", "KW", "KVA", "KVAR", "OTI", "WTI", "Avg_PF", "FRQ"]:
+                        if extra in row and pd.notnull(row[extra]):
+                            feat_dict[extra] = float(row[extra])
+
+                    score_res = self.score_record(feat_dict)
+                    v_avg = float(np.mean([feat_dict.get("VL1", 240.0), feat_dict.get("VL2", 240.0), feat_dict.get("VL3", 240.0)]))
+                    i_avg = float(np.mean([feat_dict.get("IL1", 30.0), feat_dict.get("IL2", 30.0), feat_dict.get("IL3", 30.0)]))
+
+                    records.append(
+                        TelemetryStreamRecord(
+                            timestamp=str(row["DeviceTimeStamp"]),
+                            features=feat_dict,
+                            anomaly_score=score_res.anomaly_score,
+                            is_alert=score_res.is_anomaly_alert,
+                            severity_tier=score_res.severity_tier,
+                            voltage_avg=round(v_avg, 1),
+                            current_avg=round(i_avg, 1),
+                            temperature_oti=round(float(feat_dict.get("OTI", 25.0)), 1),
+                            power_kw=round(float(feat_dict.get("KW", 35.0)), 1),
+                        )
+                    )
+
+        return TelemetryStreamResponse(
+            scenario=scenario,
+            scenario_label=meta["label"],
+            record_count=len(records),
+            records=records,
+        )
