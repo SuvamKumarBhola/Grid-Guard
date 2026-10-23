@@ -321,76 +321,105 @@
         </div>
 
         <!-- 4 KPI Metrics Row (Refined Modern Engineering Cards) -->
+        <!-- 4 KPI Metrics Row (SCADA Industrial Instrument Instrumentation Panels) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-          <!-- Card 1 -->
-          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
-            <div class="flex items-center justify-between">
-              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">TOTAL MONITORED ASSETS</span>
-              <span class="font-label-code text-[0.6875rem] text-secondary px-2 py-0.5 rounded-full bg-secondary-fixed/60 font-bold status-indicator-glow-nominal">100% ONLINE</span>
+          <!-- Card 1: Asset Fleet -->
+          <div class="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <div class="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+                <span class="w-1.5 h-1.5 rounded-xs bg-secondary"></span>
+                <span>CH-01 // FLEET INVENTORY</span>
+              </div>
+              <span class="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-secondary/30 bg-secondary/10 text-secondary font-bold tracking-wider">
+                100% ONLINE
+              </span>
             </div>
-            <div class="flex items-baseline gap-space-sm my-space-sm">
-              <span class="font-display text-4xl text-on-surface tracking-tight font-bold" id="kpi-total-assets">128</span>
-              <span class="font-body-sm text-body-sm text-tertiary">active nodes</span>
+            <div class="my-3 flex items-baseline justify-between">
+              <div>
+                <span class="font-telemetry-num text-3xl font-bold text-on-surface tracking-tight" id="kpi-total-assets">128</span>
+                <span class="font-label-meta text-xs text-tertiary ml-1.5 uppercase font-medium">Nodes</span>
+              </div>
+              <span class="font-label-code text-[0.6875rem] text-on-surface-variant">Active Polling</span>
             </div>
-            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center justify-between">
+            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between">
               <span>12 Subs</span>
-              <span class="text-tertiary">•</span>
-              <span>38 Transformers</span>
-              <span class="text-tertiary">•</span>
+              <span class="text-tertiary/40">|</span>
+              <span>38 TXs</span>
+              <span class="text-tertiary/40">|</span>
               <span>78 Feeders</span>
             </div>
           </div>
 
-          <!-- Card 2 -->
-          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
-            <div class="flex items-center justify-between">
-              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">HIGH-RISK ASSETS</span>
-              <span class="font-label-code text-[0.6875rem] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10 status-indicator-glow-amber">+1 IN PAST 4H</span>
+          <!-- Card 2: High Risk Assets -->
+          <div class="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <div class="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+                <span class="w-1.5 h-1.5 rounded-xs bg-primary"></span>
+                <span>CH-02 // THERMAL MARGINS</span>
+              </div>
+              <span class="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary font-bold tracking-wider">
+                +1 PAST 4H
+              </span>
             </div>
-            <div class="flex items-baseline gap-space-sm my-space-sm">
-              <span class="font-display text-4xl text-primary tracking-tight font-bold" id="kpi-high-risk-count">3</span>
-              <span class="font-body-sm text-body-sm text-primary font-medium">requires load relief</span>
+            <div class="my-3 flex items-baseline justify-between">
+              <div>
+                <span class="font-telemetry-num text-3xl font-bold text-primary tracking-tight" id="kpi-high-risk-count">3</span>
+                <span class="font-label-meta text-xs text-primary/80 ml-1.5 uppercase font-medium">Alert Units</span>
+              </div>
+              <span class="font-label-code text-[0.6875rem] text-primary font-semibold">Load Relief Req</span>
             </div>
-            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center gap-1.5 truncate">
-              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-              <span>TX-Oak-04, TX-Pine-02, Feeder-14A</span>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-error"></div>
-            <div class="flex items-center justify-between">
-              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">CRITICAL ALERTS</span>
-              <span class="font-label-code text-[0.6875rem] text-error font-bold px-2 py-0.5 rounded-full bg-error-container status-indicator-glow-critical">PRIORITY 1</span>
-            </div>
-            <div class="flex items-baseline gap-space-sm my-space-sm">
-              <span class="font-display text-4xl text-error tracking-tight font-bold" id="kpi-critical-alerts">1</span>
-              <span class="font-body-sm text-body-sm text-error font-medium">thermal runaway risk</span>
-            </div>
-            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
-              <span>Active breaker threshold on <strong class="text-error font-headline-sm">TX-Oak-04</strong></span>
+            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+              <span class="truncate">TX-Oak-04 • TX-Pine-02 • F-14A</span>
             </div>
           </div>
 
-          <!-- Card 4 -->
-          <div class="relative flex flex-col justify-between p-space-lg bg-surface-container-lowest border border-surface-variant/80 rounded-2xl card-elevated overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-tertiary"></div>
-            <div class="flex items-center justify-between">
-              <span class="font-label-meta text-[0.6875rem] uppercase text-tertiary tracking-wider font-semibold">STALE / DEGRADED TELEMETRY</span>
-              <span class="font-label-code text-[0.6875rem] text-tertiary px-2 py-0.5 rounded-full bg-surface-container-high">POLL DELAY</span>
+          <!-- Card 3: Critical Breakers -->
+          <div class="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <div class="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+                <span class="w-1.5 h-1.5 rounded-xs bg-error animate-pulse"></span>
+                <span>CH-03 // TRIP PROTECTION</span>
+              </div>
+              <span class="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-error/40 bg-error/10 text-error font-bold tracking-wider">
+                P1 CRITICAL
+              </span>
             </div>
-            <div class="flex items-baseline gap-space-sm my-space-sm">
-              <span class="font-display text-4xl text-on-surface tracking-tight font-bold">2</span>
-              <span class="font-body-sm text-body-sm text-tertiary">&gt;120s latency</span>
+            <div class="my-3 flex items-baseline justify-between">
+              <div>
+                <span class="font-telemetry-num text-3xl font-bold text-error tracking-tight" id="kpi-critical-alerts">1</span>
+                <span class="font-label-meta text-xs text-error/80 ml-1.5 uppercase font-medium">Trip Trigger</span>
+              </div>
+              <span class="font-label-code text-[0.6875rem] text-error font-semibold">Pyrolysis Runaway</span>
             </div>
-            <div class="font-body-sm text-xs text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
-              <span>Feeder 14B &amp; Sensor T-88 out of sync</span>
+            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+              <span>Limit Breach: <strong class="text-error font-bold">TX-Oak-04 (94.2°C)</strong></span>
+            </div>
+          </div>
+
+          <!-- Card 4: Stale Telemetry -->
+          <div class="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <div class="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+                <span class="w-1.5 h-1.5 rounded-xs bg-tertiary"></span>
+                <span>CH-04 // RTU / DNP3 SYNC</span>
+              </div>
+              <span class="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-outline-variant bg-surface-container-high text-tertiary font-bold tracking-wider">
+                POLL LAG
+              </span>
+            </div>
+            <div class="my-3 flex items-baseline justify-between">
+              <div>
+                <span class="font-telemetry-num text-3xl font-bold text-on-surface tracking-tight">2</span>
+                <span class="font-label-meta text-xs text-tertiary ml-1.5 uppercase font-medium">Stale Feeds</span>
+              </div>
+              <span class="font-label-code text-[0.6875rem] text-tertiary">&gt;120s Latency</span>
+            </div>
+            <div class="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+              <span>Feeder 14B • Sensor T-88 (-18dBm)</span>
             </div>
           </div>
         </div>
+
 
         <!-- Central Grid: Interactive Vector Topology Schematic (65%) & AI Immediate Action Card (35%) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">

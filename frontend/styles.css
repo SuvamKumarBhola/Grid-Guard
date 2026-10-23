@@ -150,20 +150,21 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 
-/* Glowing Indicator Rings */
+/* Industrial Indicator Badges (Precision, non-blurry) */
 .status-indicator-glow-critical {
-  box-shadow: 0 0 12px rgba(186, 26, 26, 0.6);
+  box-shadow: 0 0 0 1px rgba(186, 26, 26, 0.4);
 }
 
 .status-indicator-glow-nominal {
-  box-shadow: 0 0 10px rgba(68, 101, 84, 0.5);
+  box-shadow: 0 0 0 1px rgba(68, 101, 84, 0.3);
 }
 
 .status-indicator-glow-amber {
-  box-shadow: 0 0 10px rgba(148, 69, 33, 0.5);
+  box-shadow: 0 0 0 1px rgba(148, 69, 33, 0.3);
 }
 
 /* Custom Selection & Focus Ring */
+
 ::selection {
   background-color: #ffdbce;
   color: #370e00;

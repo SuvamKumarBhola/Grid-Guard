@@ -49,99 +49,113 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 2. MAIN KPI METRIC ROW (4 Refined Technical Cards) */}
+      {/* 2. MAIN KPI METRIC ROW (SCADA Industrial Instrument Instrumentation Panels) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-        {/* KPI 1 */}
-        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-surface-variant rounded shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="font-label-meta text-label-meta uppercase text-tertiary tracking-wider">
-              TOTAL MONITORED ASSETS
-            </span>
-            <span className="font-label-code text-label-code text-secondary px-1.5 py-0.5 bg-secondary-fixed/50 font-bold">
+        {/* KPI 1: Asset Fleet */}
+        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+          <div className="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+            <div className="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+              <span className="w-1.5 h-1.5 rounded-xs bg-secondary"></span>
+              <span>CH-01 // FLEET INVENTORY</span>
+            </div>
+            <span className="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-secondary/30 bg-secondary/10 text-secondary font-bold tracking-wider">
               100% ONLINE
             </span>
           </div>
-          <div className="flex items-baseline gap-space-sm my-space-sm">
-            <span className="font-display text-display text-on-surface tracking-tighter leading-none">
-              128
-            </span>
-            <span className="font-body-sm text-body-sm text-tertiary">active nodes</span>
+          <div className="my-3 flex items-baseline justify-between">
+            <div>
+              <span className="font-telemetry-num text-3xl font-bold text-on-surface tracking-tight">
+                128
+              </span>
+              <span className="font-label-meta text-xs text-tertiary ml-1.5 uppercase font-medium">Nodes</span>
+            </div>
+            <span className="font-label-code text-[0.6875rem] text-on-surface-variant">Active Polling</span>
           </div>
-          <div className="font-body-sm text-body-sm text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center justify-between">
+          <div className="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between">
             <span>12 Subs</span>
-            <span className="text-tertiary">•</span>
-            <span>38 Transformers</span>
-            <span className="text-tertiary">•</span>
+            <span className="text-tertiary/40">|</span>
+            <span>38 TXs</span>
+            <span className="text-tertiary/40">|</span>
             <span>78 Feeders</span>
           </div>
         </div>
 
-        {/* KPI 2 */}
-        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-surface-variant rounded shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="font-label-meta text-label-meta uppercase text-tertiary tracking-wider">
-              HIGH-RISK ASSETS
-            </span>
-            <span className="font-label-code text-label-code text-primary font-bold px-1.5 py-0.5 bg-primary/10">
-              +1 IN PAST 4H
-            </span>
-          </div>
-          <div className="flex items-baseline gap-space-sm my-space-sm">
-            <span className="font-display text-display text-primary tracking-tighter leading-none">
-              3
-            </span>
-            <span className="font-body-sm text-body-sm text-primary">requires load relief</span>
-          </div>
-          <div className="font-label-code text-label-code text-on-surface-variant pt-space-xs border-t border-surface-variant/60 flex items-center gap-1.5 truncate">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
-            <span>TX-Oak-04, TX-Pine-02, Feeder-14A</span>
-          </div>
-        </div>
-
-        {/* KPI 3 */}
-        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-surface-variant rounded shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="font-label-meta text-label-meta uppercase text-tertiary tracking-wider">
-              CRITICAL ALERTS
-            </span>
-            <span className="font-label-code text-label-code text-error font-bold px-1.5 py-0.5 bg-error-container">
-              PRIORITY 1
+        {/* KPI 2: High Risk Assets */}
+        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+          <div className="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+            <div className="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+              <span className="w-1.5 h-1.5 rounded-xs bg-primary"></span>
+              <span>CH-02 // THERMAL MARGINS</span>
+            </div>
+            <span className="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary font-bold tracking-wider">
+              +1 PAST 4H
             </span>
           </div>
-          <div className="flex items-baseline gap-space-sm my-space-sm">
-            <span className="font-display text-display text-error tracking-tighter leading-none">
-              1
-            </span>
-            <span className="font-body-sm text-body-sm text-error">thermal runaway risk</span>
+          <div className="my-3 flex items-baseline justify-between">
+            <div>
+              <span className="font-telemetry-num text-3xl font-bold text-primary tracking-tight">
+                3
+              </span>
+              <span className="font-label-meta text-xs text-primary/80 ml-1.5 uppercase font-medium">Alert Units</span>
+            </div>
+            <span className="font-label-code text-[0.6875rem] text-primary font-semibold">Load Relief Req</span>
           </div>
-          <div className="font-body-sm text-body-sm text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
-            <span>
-              Active breaker threshold on <strong className="text-error font-headline-sm">TX-Oak-04</strong>
-            </span>
+          <div className="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+            <span className="truncate">TX-Oak-04 • TX-Pine-02 • F-14A</span>
           </div>
         </div>
 
-        {/* KPI 4 */}
-        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-surface-variant rounded shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="font-label-meta text-label-meta uppercase text-tertiary tracking-wider">
-              STALE / DEGRADED TELEMETRY
-            </span>
-            <span className="font-label-code text-label-code text-tertiary px-1.5 py-0.5 bg-surface-container-high font-bold">
-              POLL DELAY
+        {/* KPI 3: Critical Breakers */}
+        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+          <div className="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+            <div className="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+              <span className="w-1.5 h-1.5 rounded-xs bg-error animate-pulse"></span>
+              <span>CH-03 // TRIP PROTECTION</span>
+            </div>
+            <span className="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-error/40 bg-error/10 text-error font-bold tracking-wider">
+              P1 CRITICAL
             </span>
           </div>
-          <div className="flex items-baseline gap-space-sm my-space-sm">
-            <span className="font-display text-display text-on-surface tracking-tighter leading-none">
-              2
-            </span>
-            <span className="font-body-sm text-body-sm text-tertiary">&gt;120s latency</span>
+          <div className="my-3 flex items-baseline justify-between">
+            <div>
+              <span className="font-telemetry-num text-3xl font-bold text-error tracking-tight">
+                1
+              </span>
+              <span className="font-label-meta text-xs text-error/80 ml-1.5 uppercase font-medium">Trip Trigger</span>
+            </div>
+            <span className="font-label-code text-[0.6875rem] text-error font-semibold">Pyrolysis Runaway</span>
           </div>
-          <div className="font-body-sm text-body-sm text-on-surface-variant pt-space-xs border-t border-surface-variant/60 truncate">
-            <span>Feeder 14B &amp; Sensor T-88 out of sync</span>
+          <div className="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+            <span>Limit Breach: <strong className="text-error font-bold">TX-Oak-04 (94.2°C)</strong></span>
+          </div>
+        </div>
+
+        {/* KPI 4: Stale Telemetry */}
+        <div className="flex flex-col justify-between p-space-md bg-surface-container-lowest border border-outline-variant/80 rounded-lg hover:border-outline transition-colors">
+          <div className="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+            <div className="flex items-center gap-1.5 font-label-code text-[0.6875rem] text-tertiary uppercase tracking-wider font-semibold">
+              <span className="w-1.5 h-1.5 rounded-xs bg-tertiary"></span>
+              <span>CH-04 // RTU / DNP3 SYNC</span>
+            </div>
+            <span className="font-label-code text-[0.625rem] px-2 py-0.5 rounded border border-outline-variant bg-surface-container-high text-tertiary font-bold tracking-wider">
+              POLL LAG
+            </span>
+          </div>
+          <div className="my-3 flex items-baseline justify-between">
+            <div>
+              <span className="font-telemetry-num text-3xl font-bold text-on-surface tracking-tight">
+                2
+              </span>
+              <span className="font-label-meta text-xs text-tertiary ml-1.5 uppercase font-medium">Stale Feeds</span>
+            </div>
+            <span className="font-label-code text-[0.6875rem] text-tertiary">&gt;120s Latency</span>
+          </div>
+          <div className="font-label-code text-[0.6875rem] text-on-surface-variant pt-2 border-t border-surface-variant/60 flex items-center justify-between truncate">
+            <span>Feeder 14B • Sensor T-88 (-18dBm)</span>
           </div>
         </div>
       </div>
+
 
       {/* Multi-Transformer Predictive Maintenance & Cascading Alert Banner */}
       <div className="p-space-md bg-surface-container-low border border-primary/40 rounded flex flex-col md:flex-row md:items-center justify-between gap-space-md shadow-xs">
