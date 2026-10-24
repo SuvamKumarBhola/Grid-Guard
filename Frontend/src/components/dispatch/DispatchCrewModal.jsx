@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useGrid } from '../../context/GridContext';
 import { STANDARD_SOPS } from '../../data/mockCrews';
 
-export default function DispatchCrewModal() {
+function DispatchCrewModalContent() {
   const {
-    isDispatchModalOpen,
     closeDispatchModal,
     dispatchAssetId,
     dispatchPrefill,
@@ -23,30 +22,24 @@ export default function DispatchCrewModal() {
         (dispatchAssetId === 'TX-Oak-04' && a.id === 'TX-04')
     ) || assets[0];
 
+  const prefill = dispatchPrefill || {};
   const [selectedCrewId, setSelectedCrewId] = useState('CREW-03-THERMAL');
-  const [priority, setPriority] = useState('P1-EMERGENCY');
-  const [failureMode, setFailureMode] = useState('');
-  const [sopCode, setSopCode] = useState('SOP-TX-10');
-  const [notes, setNotes] = useState('');
+  const [priority, setPriority] = useState(
+    () => prefill.priority || (targetAsset?.riskClassification === 'CRITICAL' ? 'P1-EMERGENCY' : 'P2-URGENT')
+  );
+  const [failureMode, setFailureMode] = useState(
+    () =>
+      prefill.failureMode ||
+      targetAsset?.primaryFailureMode ||
+      'Auxiliary Cooling Fan Bank #2 Complete Trip (Thermal 94.2°C)'
+  );
+  const [sopCode, setSopCode] = useState(() => prefill.sopReference || 'SOP-TX-10');
+  const [notes, setNotes] = useState(
+    () => prefill.recommendedAction || 'Emergency on-site inspection and forced cooling mitigation required.'
+  );
   const [ppeAcknowledged, setPpeAcknowledged] = useState(true);
   const [interlockAcknowledged, setInterlockAcknowledged] = useState(true);
-  const [previewTicketId, setPreviewTicketId] = useState('');
-
-  useEffect(() => {
-    if (isDispatchModalOpen) {
-      setPreviewTicketId(`#WO-2026-${Math.floor(1000 + Math.random() * 9000)}`);
-      setFailureMode(
-        dispatchPrefill.failureMode ||
-          targetAsset.primaryFailureMode ||
-          'Auxiliary Cooling Fan Bank #2 Complete Trip (Thermal 94.2°C)'
-      );
-      setSopCode(dispatchPrefill.sopReference || 'SOP-TX-10');
-      setPriority(dispatchPrefill.priority || (targetAsset.riskClassification === 'CRITICAL' ? 'P1-EMERGENCY' : 'P2-URGENT'));
-      setNotes(dispatchPrefill.recommendedAction || 'Emergency on-site inspection and forced cooling mitigation required.');
-    }
-  }, [isDispatchModalOpen, dispatchAssetId, dispatchPrefill, targetAsset]);
-
-  if (!isDispatchModalOpen) return null;
+  const [previewTicketId] = useState(() => `#WO-2026-${Math.floor(1000 + Math.random() * 9000)}`);
 
   const selectedCrew = crews.find((c) => c.crewId === selectedCrewId) || crews[0];
   const activeSop = STANDARD_SOPS.find((s) => s.code === sopCode) || STANDARD_SOPS[0];
@@ -437,5 +430,17 @@ export default function DispatchCrewModal() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DispatchCrewModal() {
+  const { isDispatchModalOpen, dispatchAssetId, dispatchPrefill } = useGrid();
+
+  if (!isDispatchModalOpen) return null;
+
+  return (
+    <DispatchCrewModalContent
+      key={`${dispatchAssetId || 'dispatch-modal'}-${dispatchPrefill?.failureMode || ''}`}
+    />
   );
 }

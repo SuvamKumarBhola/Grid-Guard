@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGrid } from '../../context/GridContext';
 
-export default function LiveDataInjectionModal() {
+function LiveDataInjectionModalContent() {
   const {
-    isInjectionModalOpen,
     closeInjectionModal,
     injectionAssetId,
     assets,
@@ -17,24 +16,13 @@ export default function LiveDataInjectionModal() {
   const [streamRecords, setStreamRecords] = useState([]);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoadingFrames, setIsLoadingFrames] = useState(false);
   const [lastScoredResult, setLastScoredResult] = useState(null);
-  const [operatorNotes, setOperatorNotes] = useState('Live telemetry injection from trained Isolation Forest dataset.');
+  const [operatorNotes] = useState('Live telemetry injection from trained Isolation Forest dataset.');
   const playTimerRef = useRef(null);
-
-  // Sync targetAssetId when modal opens with new injectionAssetId
-  useEffect(() => {
-    if (isInjectionModalOpen && injectionAssetId) {
-      setTargetAssetId(injectionAssetId);
-    }
-  }, [isInjectionModalOpen, injectionAssetId]);
 
   // Fetch sequence frames for selected scenario
   useEffect(() => {
-    if (!isInjectionModalOpen) return;
-
     let isMounted = true;
-    setIsLoadingFrames(true);
 
     fetch(`/api/v1/anomalies/v2/stream-records?scenario=${selectedScenario}&limit=12`, {
       headers: {
@@ -96,16 +84,13 @@ export default function LiveDataInjectionModal() {
           setCurrentFrameIndex(0);
           setLastScoredResult(fallbackFrames[0]);
         }
-      })
-      .finally(() => {
-        if (isMounted) setIsLoadingFrames(false);
       });
 
     return () => {
       isMounted = false;
       if (playTimerRef.current) clearInterval(playTimerRef.current);
     };
-  }, [isInjectionModalOpen, selectedScenario]);
+  }, [selectedScenario]);
 
   // Continuous Playback Loop
   useEffect(() => {
@@ -134,8 +119,6 @@ export default function LiveDataInjectionModal() {
       if (playTimerRef.current) clearInterval(playTimerRef.current);
     };
   }, [isPlaying, streamRecords, targetAssetId, selectedScenario, injectTelemetryScenario]);
-
-  if (!isInjectionModalOpen) return null;
 
   const currentFrame = streamRecords[currentFrameIndex] || null;
   const currentAsset = assets.find((a) => a.id === targetAssetId) || assets[0];
@@ -551,3 +534,12 @@ export default function LiveDataInjectionModal() {
     </div>
   );
 }
+
+export default function LiveDataInjectionModal() {
+  const { isInjectionModalOpen, injectionAssetId } = useGrid();
+
+  if (!isInjectionModalOpen) return null;
+
+  return <LiveDataInjectionModalContent key={injectionAssetId || 'injection-modal'} />;
+}
+
