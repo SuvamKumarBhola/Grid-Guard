@@ -1,4 +1,3 @@
-import React from 'react';
 import { GridProvider, useGrid } from './context/GridContext';
 import Sidebar from './components/common/Sidebar';
 import Header from './components/common/Header';
