@@ -49,3 +49,5 @@ dist/
 *.sqlite3-journal
 data/*.db
 data/*.sqlite
+
+BUGS_AND_IRREGULARITIES.md
