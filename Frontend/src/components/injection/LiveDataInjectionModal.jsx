@@ -283,8 +283,11 @@ function LiveDataInjectionModalContent() {
               </div>
               <div className="h-6 w-px bg-outline-variant"></div>
               <div>
-                <span className="font-label-meta text-[0.625rem] text-tertiary uppercase block">RISK SCORE</span>
-                <span className="font-headline-sm text-sm font-bold text-primary">{currentAsset.riskScore} / 100</span>
+                <span className="font-headline-sm text-sm font-bold text-primary">
+                  {typeof currentAsset.riskScore === 'number' && currentAsset.riskScore <= 1.0 && currentAsset.riskScore > 0
+                    ? Math.round(currentAsset.riskScore * 100)
+                    : currentAsset.riskScore} / 100
+                </span>
               </div>
             </div>
           </div>

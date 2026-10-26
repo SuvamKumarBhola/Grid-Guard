@@ -19,6 +19,8 @@ export const INITIAL_ASSETS = [
     tempCeilingC: 85.0,
     tempTripC: 105.0,
     riskScore: 92,
+    riskPercentage: 92,
+    riskProbability: 0.92,
     riskClassification: "CRITICAL",
     riskTier: "Tier 4",
     telemetryLag: "0.4s",

@@ -28,23 +28,31 @@ export default function AssetsPage() {
   const directoryNodes = useMemo(() => {
     return PRIORITY_NODE_IDS.map((id) => {
       const match = assets.find((a) => a.id === id || a.displayCode === id || (id === 'TX-04' && a.id === 'TX-Oak-04'));
-      return (
-        match || {
-          id,
-          name: id,
-          displayCode: id,
-          classType: 'Substation Element',
-          substation: 'Feeder F-01 • Substation Node',
-          riskScore: 50,
-          riskClassification: 'MEDIUM',
-          activeLoadMva: 20.0,
-          ratedMva: 30.0,
-          temperatureC: 55.0,
-          h2Ppm: 30,
-          vibrationMmS: 1.5,
-          contributingFactors: []
-        }
-      );
+      if (match) {
+        const rawScore = match.riskScore ?? match.risk_score ?? match.risk_percentage;
+        const normalizedScore = typeof rawScore === 'number' && rawScore <= 1.0 && rawScore > 0
+          ? Math.round(rawScore * 100)
+          : rawScore;
+        return {
+          ...match,
+          riskScore: normalizedScore,
+        };
+      }
+      return {
+        id,
+        name: id,
+        displayCode: id,
+        classType: 'Substation Element',
+        substation: 'Feeder F-01 • Substation Node',
+        riskScore: 50,
+        riskClassification: 'MEDIUM',
+        activeLoadMva: 20.0,
+        ratedMva: 30.0,
+        temperatureC: 55.0,
+        h2Ppm: 30,
+        vibrationMmS: 1.5,
+        contributingFactors: []
+      };
     });
   }, [assets]);
 
@@ -85,7 +93,10 @@ export default function AssetsPage() {
     }, 1200);
   };
 
-  const getRiskColor = (score) => {
+  const getRiskColor = (rawScore) => {
+    const score = rawScore !== undefined && rawScore !== null && rawScore <= 1.0 && rawScore > 0
+      ? rawScore * 100
+      : rawScore;
     if (score >= 80) return '#ef4444'; // Red
     if (score >= 60) return '#f59e0b'; // Amber
     if (score >= 40) return '#eab308'; // Yellow
@@ -333,7 +344,9 @@ export default function AssetsPage() {
                         className="font-headline-lg text-[1.75rem] leading-none font-bold tracking-tight"
                         style={{ color: getRiskColor(node.riskScore) }}
                       >
-                        {node.riskScore}
+                        {typeof node.riskScore === 'number' && node.riskScore <= 1.0 && node.riskScore > 0
+                          ? Math.round(node.riskScore * 100)
+                          : node.riskScore}
                       </div>
                       <div className="font-label-meta text-[0.625rem] text-[#94a3b8] uppercase tracking-wider mt-1">
                         RISK INDEX

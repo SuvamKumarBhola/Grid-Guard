@@ -31,9 +31,19 @@ def list_assets(
         if severity and current_sev != severity:
             continue
 
+        score_raw = latest_pred.risk_score if latest_pred else 0.0
+        score_pct = (
+            latest_pred.risk_percentage
+            if (latest_pred and hasattr(latest_pred, "risk_percentage") and latest_pred.risk_percentage)
+            else (round(score_raw * 100.0, 1) if score_raw <= 1.0 else round(score_raw, 1))
+        )
+        score_prob = round(score_raw, 4) if score_raw <= 1.0 else round(score_raw / 100.0, 4)
+
         results.append({
             "asset": a,
-            "risk_score": latest_pred.risk_score if latest_pred else 0.0,
+            "risk_score": score_pct,
+            "risk_percentage": score_pct,
+            "risk_probability": score_prob,
             "severity": current_sev,
             "model_route": latest_pred.route if latest_pred else "unscored",
             "model_version": latest_pred.model_version if latest_pred else "none",
