@@ -28,6 +28,9 @@ class BaseAssetRepository(ABC):
     def save(self, asset: Asset) -> None:
         pass
 
+    def register_alias(self, alias: str, canonical_id: str) -> None:
+        pass
+
 
 class BaseFeederRepository(ABC):
     @abstractmethod
@@ -40,6 +43,9 @@ class BaseFeederRepository(ABC):
 
     @abstractmethod
     def save(self, feeder: Feeder) -> None:
+        pass
+
+    def register_alias(self, alias: str, canonical_id: str) -> None:
         pass
 
 

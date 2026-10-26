@@ -4,6 +4,8 @@ export const INITIAL_ASSETS = [
   {
     id: "TX-04",
     alias: "TX-Oak-04",
+    canonicalId: "TX-MUM-1042",
+    canonicalFeederId: "FDR-MUM-22",
     name: "TX-04",
     displayCode: "TX-04",
     classType: "Step-Down Transformer",
@@ -128,6 +130,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-09",
+    alias: "TX-09",
+    canonicalId: "TX-MUM-1028",
+    canonicalFeederId: "FDR-MUM-33",
     name: "TX-09",
     displayCode: "TX-09",
     classType: "Autotransformer 33kV/11kV",
@@ -306,6 +311,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-01",
+    alias: "TX-01",
+    canonicalId: "TX-MUM-1001",
+    canonicalFeederId: "FDR-MUM-11",
     name: "TX-01",
     displayCode: "TX-01",
     classType: "Step-Down Transformer",
@@ -342,6 +350,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-Pine-02",
+    alias: "TX-Pine-02",
+    canonicalId: "TX-MUM-1015",
+    canonicalFeederId: "FDR-MUM-11",
     name: "TX-Pine-02",
     classType: "138/13.8kV Step-Down",
     category: "Transformers",
@@ -413,6 +424,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-Maple-01",
+    alias: "TX-Maple-01",
+    canonicalId: "TX-MUM-1035",
+    canonicalFeederId: "FDR-MUM-44",
     name: "TX-Maple-01",
     classType: "138/13.8kV Step-Down",
     category: "Transformers",
@@ -457,6 +471,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-Elm-01",
+    alias: "TX-Elm-01",
+    canonicalId: "TX-MUM-1045",
+    canonicalFeederId: "FDR-MUM-55",
     name: "TX-Elm-01",
     classType: "138/13.8kV Step-Down",
     category: "Transformers",
@@ -479,6 +496,9 @@ export const INITIAL_ASSETS = [
   },
   {
     id: "TX-Cedar-03",
+    alias: "TX-Cedar-03",
+    canonicalId: "TX-MUM-1018",
+    canonicalFeederId: "FDR-MUM-11",
     name: "TX-Cedar-03",
     classType: "230/138kV Auto-Transformer",
     category: "Transformers",

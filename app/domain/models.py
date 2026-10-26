@@ -15,6 +15,8 @@ class AssetLocation(BaseModel):
 
 class Asset(BaseModel):
     asset_id: str = Field(..., description="Unique asset identifier (e.g. TX-MUM-1042)")
+    alias: Optional[str] = Field(default=None, description="Operational alias or secondary identifier (e.g. TX-Oak-04)")
+    canonical_id: Optional[str] = Field(default=None, description="Canonical asset identifier if aliased")
     asset_type: Literal["transformer", "feeder", "substation"] = "transformer"
     feeder_id: str = Field(..., description="Parent feeder ID (e.g. FDR-MUM-22)")
     location: AssetLocation
@@ -28,6 +30,8 @@ class Asset(BaseModel):
 
 class Feeder(BaseModel):
     feeder_id: str
+    alias: Optional[str] = Field(default=None, description="Operational feeder alias (e.g. Feeder F-03)")
+    canonical_id: Optional[str] = Field(default=None, description="Canonical feeder identifier if aliased")
     feeder_name: str
     substation_id: str
     nominal_capacity_mva: float = Field(..., gt=0.0)
@@ -487,6 +491,8 @@ class TransformerMaintenanceQueueItem(BaseModel):
     asset_id: str
     name: str
     substation: str
+    alias: Optional[str] = None
+    canonical_asset_id: Optional[str] = None
     maintenance_status: str
     days_overdue: int
     hours_to_critical: float
