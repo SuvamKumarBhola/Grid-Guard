@@ -99,6 +99,8 @@ export const INITIAL_ACTION_HISTORY = [
 export const INITIAL_MAINTENANCE_QUEUE = [
   {
     assetId: "TX-04",
+    alias: "TX-Oak-04",
+    canonicalAssetId: "TX-MUM-1042",
     name: "TX-04 (TX-Oak-04)",
     displayCode: "TX-04",
     substation: "Feeder F-03 • 45 MVA Substation",
@@ -120,6 +122,8 @@ export const INITIAL_MAINTENANCE_QUEUE = [
   },
   {
     assetId: "TX-09",
+    alias: "TX-09",
+    canonicalAssetId: "TX-MUM-1028",
     name: "TX-09 (Feeder F-04)",
     displayCode: "TX-09",
     substation: "Feeder F-04 • Autotransformer 33kV/11kV",
@@ -141,6 +145,8 @@ export const INITIAL_MAINTENANCE_QUEUE = [
   },
   {
     assetId: "TX-Pine-02",
+    alias: "TX-Pine-02",
+    canonicalAssetId: "TX-MUM-1015",
     name: "TX-Pine-02",
     displayCode: "TX-Pine-02",
     substation: "West Substation • Bus 1 (50 MVA)",
@@ -162,6 +168,8 @@ export const INITIAL_MAINTENANCE_QUEUE = [
   },
   {
     assetId: "TX-01",
+    alias: "TX-01",
+    canonicalAssetId: "TX-MUM-1001",
     name: "TX-01 (Feeder F-01)",
     displayCode: "TX-01",
     substation: "Feeder F-01 • 40 MVA Step-Down",
@@ -183,6 +191,8 @@ export const INITIAL_MAINTENANCE_QUEUE = [
   },
   {
     assetId: "TX-Maple-01",
+    alias: "TX-Maple-01",
+    canonicalAssetId: "TX-MUM-1035",
     name: "TX-Maple-01",
     displayCode: "TX-Maple-01",
     substation: "North Substation • Bus 1 (138kV)",

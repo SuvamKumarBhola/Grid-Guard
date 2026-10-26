@@ -718,8 +718,8 @@ async function commitSimulationSwitching() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        source_asset_id: "TX-MUM-1042",
-        target_feeder_id: "FDR-MUM-22",
+        source_asset_id: "TX-04",
+        target_feeder_id: "WEST-SUB",
         redistribution_percent: Math.min(100.0, Math.max(1.0, (shiftMva / 45.0) * 100)),
         duration_hours: 6.0,
       })

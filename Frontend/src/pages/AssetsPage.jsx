@@ -1,19 +1,19 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useGrid } from '../context/GridContext';
 import TransformerMaintenanceQueue from '../components/maintenance/TransformerMaintenanceQueue';
+
+// The 7 Priority Directory Nodes matching user's reference image
+const PRIORITY_NODE_IDS = ['TX-04', 'CB-12', 'TX-09', 'RECL-03', 'CAP-02', 'SW-18', 'TX-01'];
 
 export default function AssetsPage() {
   const {
     selectedAsset,
-    selectedAssetId,
     setSelectedAssetId,
     assets,
     navigateToSimulation,
     addToast,
-    currentTime,
     openDispatchModal,
     openInjectionModal,
-    openHistoryModal,
     activeWorkOrder,
     updateWorkOrderStatus,
   } = useGrid();
@@ -24,12 +24,9 @@ export default function AssetsPage() {
   const [typeFilter, setTypeFilter] = useState('ALL');
   const [activeTimeRange, setActiveTimeRange] = useState('24H');
 
-  // The 7 Priority Directory Nodes matching user's reference image
-  const priorityNodeIds = ['TX-04', 'CB-12', 'TX-09', 'RECL-03', 'CAP-02', 'SW-18', 'TX-01'];
-
   // Priority directory nodes list with fallback to assets
   const directoryNodes = useMemo(() => {
-    return priorityNodeIds.map((id) => {
+    return PRIORITY_NODE_IDS.map((id) => {
       const match = assets.find((a) => a.id === id || a.displayCode === id || (id === 'TX-04' && a.id === 'TX-Oak-04'));
       return (
         match || {

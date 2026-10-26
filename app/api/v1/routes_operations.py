@@ -278,6 +278,8 @@ def get_transformer_maintenance_queue(
     queue_items = [
         TransformerMaintenanceQueueItem(
             asset_id="TX-04",
+            alias="TX-Oak-04",
+            canonical_asset_id="TX-MUM-1042",
             name="TX-04 (TX-Oak-04)",
             substation="Feeder F-03 • 45 MVA Substation",
             maintenance_status="CRITICAL_INTERVENTION",
@@ -294,6 +296,8 @@ def get_transformer_maintenance_queue(
         ),
         TransformerMaintenanceQueueItem(
             asset_id="TX-09",
+            alias="TX-09",
+            canonical_asset_id="TX-MUM-1028",
             name="TX-09",
             substation="Feeder F-04 • Autotransformer 33kV/11kV",
             maintenance_status="PENDING_OVERDUE",
@@ -310,6 +314,8 @@ def get_transformer_maintenance_queue(
         ),
         TransformerMaintenanceQueueItem(
             asset_id="TX-Pine-02",
+            alias="TX-Pine-02",
+            canonical_asset_id="TX-MUM-1015",
             name="TX-Pine-02",
             substation="West Substation • Bus 1 (50 MVA)",
             maintenance_status="PENDING_OVERDUE",
@@ -326,6 +332,8 @@ def get_transformer_maintenance_queue(
         ),
         TransformerMaintenanceQueueItem(
             asset_id="TX-01",
+            alias="TX-01",
+            canonical_asset_id="TX-MUM-1001",
             name="TX-01",
             substation="Feeder F-01 • 40 MVA Step-Down",
             maintenance_status="SCHEDULED_PRECAUTIONARY",
@@ -342,6 +350,8 @@ def get_transformer_maintenance_queue(
         ),
         TransformerMaintenanceQueueItem(
             asset_id="TX-Maple-01",
+            alias="TX-Maple-01",
+            canonical_asset_id="TX-MUM-1035",
             name="TX-Maple-01",
             substation="North Substation • Bus 1 (138kV)",
             maintenance_status="NOMINAL_STANDBY",

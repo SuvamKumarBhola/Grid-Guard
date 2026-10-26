@@ -25,20 +25,45 @@ from app.repositories.base import (
 )
 
 
+from app.domain.grid_mapping import (
+    WESTERN_TO_MUMBAI_ASSET_MAP,
+    WESTERN_TO_MUMBAI_FEEDER_MAP,
+    resolve_canonical_asset_id,
+    resolve_canonical_feeder_id,
+)
+
+
 class InMemoryAssetRepository(BaseAssetRepository):
     def __init__(self):
         self._assets: Dict[str, Asset] = {}
+        self._aliases: Dict[str, str] = dict(WESTERN_TO_MUMBAI_ASSET_MAP)
         self._lock = threading.RLock()
+
+    def register_alias(self, alias: str, canonical_id: str) -> None:
+        with self._lock:
+            self._aliases[alias] = canonical_id
 
     def get(self, asset_id: str) -> Optional[Asset]:
         with self._lock:
-            return self._assets.get(asset_id)
+            if asset_id in self._assets:
+                return self._assets[asset_id]
+            canonical_id = self._aliases.get(asset_id) or resolve_canonical_asset_id(asset_id)
+            if canonical_id in self._assets:
+                canonical_asset = self._assets[canonical_id]
+                asset_copy = canonical_asset.model_copy()
+                asset_copy.asset_id = asset_id
+                asset_copy.canonical_id = canonical_id
+                if not asset_copy.alias:
+                    asset_copy.alias = canonical_asset.alias or canonical_id
+                return asset_copy
+            return None
 
     def list(self, feeder_id: Optional[str] = None, criticality_class: Optional[str] = None) -> List[Asset]:
         with self._lock:
             result = list(self._assets.values())
             if feeder_id:
-                result = [a for a in result if a.feeder_id == feeder_id]
+                canonical_feeder = resolve_canonical_feeder_id(feeder_id)
+                result = [a for a in result if a.feeder_id == feeder_id or a.feeder_id == canonical_feeder]
             if criticality_class:
                 result = [a for a in result if a.criticality_class == criticality_class]
             return result
@@ -46,16 +71,36 @@ class InMemoryAssetRepository(BaseAssetRepository):
     def save(self, asset: Asset) -> None:
         with self._lock:
             self._assets[asset.asset_id] = asset
+            if asset.alias:
+                self._aliases[asset.alias] = asset.asset_id
+            if asset.canonical_id and asset.canonical_id != asset.asset_id:
+                self._aliases[asset.asset_id] = asset.canonical_id
 
 
 class InMemoryFeederRepository(BaseFeederRepository):
     def __init__(self):
         self._feeders: Dict[str, Feeder] = {}
+        self._aliases: Dict[str, str] = dict(WESTERN_TO_MUMBAI_FEEDER_MAP)
         self._lock = threading.RLock()
+
+    def register_alias(self, alias: str, canonical_id: str) -> None:
+        with self._lock:
+            self._aliases[alias] = canonical_id
 
     def get(self, feeder_id: str) -> Optional[Feeder]:
         with self._lock:
-            return self._feeders.get(feeder_id)
+            if feeder_id in self._feeders:
+                return self._feeders[feeder_id]
+            canonical_id = self._aliases.get(feeder_id) or resolve_canonical_feeder_id(feeder_id)
+            if canonical_id in self._feeders:
+                canonical_feeder = self._feeders[canonical_id]
+                feeder_copy = canonical_feeder.model_copy()
+                feeder_copy.feeder_id = feeder_id
+                feeder_copy.canonical_id = canonical_id
+                if not feeder_copy.alias:
+                    feeder_copy.alias = canonical_feeder.alias or canonical_id
+                return feeder_copy
+            return None
 
     def list(self) -> List[Feeder]:
         with self._lock:
@@ -64,6 +109,10 @@ class InMemoryFeederRepository(BaseFeederRepository):
     def save(self, feeder: Feeder) -> None:
         with self._lock:
             self._feeders[feeder.feeder_id] = feeder
+            if feeder.alias:
+                self._aliases[feeder.alias] = feeder.feeder_id
+            if feeder.canonical_id and feeder.canonical_id != feeder.feeder_id:
+                self._aliases[feeder.feeder_id] = feeder.canonical_id
 
 
 class InMemoryTelemetryRepository(BaseTelemetryRepository):
@@ -90,19 +139,48 @@ class InMemoryTelemetryRepository(BaseTelemetryRepository):
     def get_latest(self, asset_id: str) -> Optional[TelemetryIngestPayload]:
         with self._lock:
             records = self._history.get(asset_id, [])
+            target_id = asset_id
+            if not records:
+                canonical_id = resolve_canonical_asset_id(asset_id)
+                if canonical_id != asset_id:
+                    records = self._history.get(canonical_id, [])
+                    target_id = canonical_id
             if not records:
                 return None
-            return sorted(records, key=lambda x: x.observed_at, reverse=True)[0]
+            latest = sorted(records, key=lambda x: x.observed_at, reverse=True)[0]
+            if target_id != asset_id:
+                copy = latest.model_copy()
+                copy.asset_id = asset_id
+                return copy
+            return latest
 
     def get_latest_quality(self, asset_id: str) -> Optional[DataQualityReport]:
         with self._lock:
-            return self._quality.get(asset_id)
+            if asset_id in self._quality:
+                return self._quality[asset_id]
+            canonical_id = resolve_canonical_asset_id(asset_id)
+            return self._quality.get(canonical_id)
 
     def get_history(self, asset_id: str, limit: int = 50) -> List[TelemetryIngestPayload]:
         with self._lock:
             records = self._history.get(asset_id, [])
-            sorted_records = sorted(records, key=lambda x: x.observed_at, reverse=True)
-            return sorted_records[:limit]
+            target_id = asset_id
+            if not records:
+                canonical_id = resolve_canonical_asset_id(asset_id)
+                if canonical_id != asset_id:
+                    records = self._history.get(canonical_id, [])
+                    target_id = canonical_id
+            if not records:
+                return []
+            sorted_records = sorted(records, key=lambda x: x.observed_at, reverse=True)[:limit]
+            if target_id != asset_id:
+                mapped = []
+                for r in sorted_records:
+                    rc = r.model_copy()
+                    rc.asset_id = asset_id
+                    mapped.append(rc)
+                return mapped
+            return sorted_records
 
 
 class InMemoryAlertRepository(BaseAlertRepository):
@@ -163,9 +241,20 @@ class InMemoryPredictionRepository(BasePredictionRepository):
     def get_latest(self, asset_id: str) -> Optional[RiskPrediction]:
         with self._lock:
             history = self._predictions.get(asset_id, [])
+            target_id = asset_id
+            if not history:
+                canonical_id = resolve_canonical_asset_id(asset_id)
+                if canonical_id != asset_id:
+                    history = self._predictions.get(canonical_id, [])
+                    target_id = canonical_id
             if not history:
                 return None
-            return sorted(history, key=lambda p: p.created_at, reverse=True)[0]
+            latest = sorted(history, key=lambda p: p.created_at, reverse=True)[0]
+            if target_id != asset_id:
+                copy = latest.model_copy()
+                copy.asset_id = asset_id
+                return copy
+            return latest
 
     def list(self, limit: int = 100) -> List[RiskPrediction]:
         with self._lock:
@@ -316,7 +405,12 @@ class InMemoryWorkOrderRepository(BaseWorkOrderRepository):
         with self._lock:
             results = list(self._work_orders.values())
             if asset_id:
-                results = [wo for wo in results if wo.asset_id == asset_id or (asset_id in ["TX-04", "TX-Oak-04"] and wo.asset_id in ["TX-04", "TX-Oak-04"])]
+                canonical_target = resolve_canonical_asset_id(asset_id)
+                results = [
+                    wo for wo in results
+                    if wo.asset_id == asset_id
+                    or resolve_canonical_asset_id(wo.asset_id) == canonical_target
+                ]
             if status:
                 results = [wo for wo in results if wo.status == status]
             return sorted(results, key=lambda w: w.created_at, reverse=True)[:limit]

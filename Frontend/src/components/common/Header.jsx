@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGrid } from '../../context/GridContext';
 
 export default function Header() {

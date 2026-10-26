@@ -539,6 +539,7 @@ export function GridProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useGrid() {
   const context = useContext(GridContext);
   if (!context) {

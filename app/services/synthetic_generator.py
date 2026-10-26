@@ -13,6 +13,14 @@ from app.repositories.base import (
     BaseFeederRepository,
     BaseTelemetryRepository,
 )
+from app.domain.grid_mapping import (
+    WESTERN_TO_MUMBAI_ASSET_MAP,
+    WESTERN_TO_MUMBAI_FEEDER_MAP,
+    get_primary_asset_alias,
+    get_primary_feeder_alias,
+    resolve_canonical_asset_id,
+    resolve_canonical_feeder_id,
+)
 from app.services.telemetry_service import TelemetryService
 
 
@@ -35,6 +43,8 @@ def generate_synthetic_grid(seed: int = 42) -> Tuple[List[Feeder], List[Asset], 
         feeders.append(
             Feeder(
                 feeder_id=f["id"],
+                alias=get_primary_feeder_alias(f["id"]),
+                canonical_id=f["id"],
                 feeder_name=f["name"],
                 substation_id=f["sub"],
                 nominal_capacity_mva=f["cap"],
@@ -111,6 +121,8 @@ def generate_synthetic_grid(seed: int = 42) -> Tuple[List[Feeder], List[Asset], 
 
         asset = Asset(
             asset_id=asset_id,
+            alias=get_primary_asset_alias(asset_id),
+            canonical_id=asset_id,
             asset_type="transformer",
             feeder_id=feeder_id,
             location=AssetLocation(
@@ -154,6 +166,13 @@ def populate_synthetic_grid(
     seed: int = 42,
 ) -> None:
     """Populates repositories with the synthetic distribution network."""
+    # Register Western utility aliases on repositories
+    for alias, can_id in WESTERN_TO_MUMBAI_FEEDER_MAP.items():
+        feeder_repo.register_alias(alias, can_id)
+
+    for alias, can_id in WESTERN_TO_MUMBAI_ASSET_MAP.items():
+        asset_repo.register_alias(alias, can_id)
+
     feeders, assets, telemetry_list = generate_synthetic_grid(seed=seed)
 
     for f in feeders:

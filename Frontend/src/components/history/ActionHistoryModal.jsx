@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useGrid } from '../../context/GridContext';
 
 export default function ActionHistoryModal() {
