@@ -536,7 +536,7 @@ function renderFleetTable() {
       <td class="py-3 px-space-md text-tertiary text-xs">${asset.substation}</td>
       <td class="py-3 px-space-md font-label-code font-bold">${asset.activeLoadMva} MVA <span class="text-tertiary font-normal">(${asset.loadPercentage}%)</span></td>
       <td class="py-3 px-space-md font-label-code ${tempClass}">${asset.temperatureC}°C</td>
-      <td class="py-3 px-space-md font-display font-bold text-base">${asset.riskScore}%</td>
+      <td class="py-3 px-space-md font-display font-bold text-base">${typeof asset.riskScore === 'number' && asset.riskScore <= 1.0 && asset.riskScore > 0 ? Math.round(asset.riskScore * 100) : asset.riskScore}%</td>
       <td class="py-3 px-space-md">${riskBadge}</td>
       <td class="py-3 px-space-md font-label-code text-xs text-tertiary">${asset.telemetryLag}</td>
       <td class="py-3 px-space-md text-right">

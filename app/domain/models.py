@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Dict, List, Literal, Optional, Any
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 # -------------------------------------------------------------------------
@@ -119,7 +119,8 @@ class ContributingFactor(BaseModel):
 class RiskPrediction(BaseModel):
     request_id: str
     asset_id: str
-    risk_score: float = Field(..., ge=0.0, le=1.0)
+    risk_score: float = Field(..., ge=0.0, le=1.0, description="Risk failure probability (0.0 to 1.0 scale)")
+    risk_percentage: float = Field(default=0.0, ge=0.0, le=100.0, description="Risk score percentage (0.0 to 100.0 scale)")
     severity: Literal["normal", "watch", "critical"]
     failure_window_hours: FailureWindow
     confidence: float = Field(..., ge=0.0, le=1.0)
@@ -130,6 +131,25 @@ class RiskPrediction(BaseModel):
     recommended_action: str
     data_quality: DataQualityReport
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_risk_scales(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            raw_score = data.get("risk_score")
+            raw_pct = data.get("risk_percentage")
+            if raw_score is not None:
+                val = float(raw_score)
+                if val > 1.0:
+                    data["risk_score"] = round(val / 100.0, 4)
+                    if raw_pct is None:
+                        data["risk_percentage"] = round(val, 1)
+                elif raw_pct is None:
+                    data["risk_percentage"] = round(val * 100.0, 1)
+            elif raw_pct is not None:
+                val_pct = float(raw_pct)
+                data["risk_score"] = round(val_pct / 100.0, 4)
+        return data
 
 
 # -------------------------------------------------------------------------
@@ -498,12 +518,30 @@ class TransformerMaintenanceQueueItem(BaseModel):
     hours_to_critical: float
     current_temperature_c: float
     projected_temperature_4h: float
-    current_risk_score: float
+    current_risk_score: float = Field(..., description="Risk score on 0-100 scale")
+    current_risk_percentage: Optional[float] = Field(default=None, description="Risk percentage (0-100 scale)")
+    current_risk_probability: Optional[float] = Field(default=None, description="Risk probability (0.0-1.0 scale)")
     projected_risk_4h: float
     cascading_vulnerability_score: float
     cascading_impact_summary: str
     pending_task: str
     recommended_sop: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_queue_risks(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            raw_score = data.get("current_risk_score")
+            if raw_score is not None:
+                val = float(raw_score)
+                if val <= 1.0 and val > 0:
+                    data["current_risk_score"] = round(val * 100.0, 1)
+                    data["current_risk_percentage"] = data["current_risk_score"]
+                    data["current_risk_probability"] = round(val, 4)
+                else:
+                    data["current_risk_percentage"] = round(val, 1)
+                    data["current_risk_probability"] = round(val / 100.0, 4)
+        return data
 
 
 class TransformerMaintenanceQueueResponse(BaseModel):

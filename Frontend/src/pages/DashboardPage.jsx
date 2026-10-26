@@ -371,7 +371,9 @@ export default function DashboardPage() {
                           : 'text-on-surface-variant'
                       }`}
                     >
-                      {asset.riskScore !== null ? `${asset.riskScore}%` : '--'}
+                      {asset.riskScore !== null && asset.riskScore !== undefined
+                        ? `${typeof asset.riskScore === 'number' && asset.riskScore <= 1.0 && asset.riskScore > 0 ? Math.round(asset.riskScore * 100) : asset.riskScore}%`
+                        : '--'}
                     </td>
 
                     {/* CLASSIFICATION */}
